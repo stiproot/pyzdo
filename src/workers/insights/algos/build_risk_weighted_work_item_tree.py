@@ -1,11 +1,11 @@
 from .summarize import summarize_node
 
 severity_hash = {
-    "Negligible": 1,
-    "Moderate": 2,
-    "Minor": 3,
-    "Major": 4,
-    "Catastrophic": 5,
+    "(1) Negligible": 1,
+    "(2) Minor": 3,
+    "(3) Moderate": 2,
+    "(4) Major": 4,
+    "(5) Catastrophic": 5,
 }
 
 prop_rule_map = [
@@ -41,7 +41,7 @@ prop_rule_map = [
         "trgt_prop_path": "severity",
         "type": "int",
         "path_separator": "_",
-        "map": lambda x: severity_hash[x.strip()] if x and x != "" else 1,
+        "map": lambda x: severity_hash.get(x.strip(), 1) if x and x != "" else 1,
         "is_path": True,
         "default": "Negligible",
     },

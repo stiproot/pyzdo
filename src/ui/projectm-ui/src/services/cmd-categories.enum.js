@@ -1,0 +1,6 @@
+export const CMD_CATEGORIES = {
+  GATHER: "GATHER",
+  STRUCTURE: "STRUCTURE",
+  EXT: "EXT",
+  PERSIST: "PERSIST",
+};

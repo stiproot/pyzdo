@@ -2,25 +2,17 @@ from multiprocessing import JoinableQueue, Process
 from gather_project_units_of_work_workflow import (
     gather_project_units_of_work_workflow,
 )
-from kafka_consumer_cmd_provider import KafkaConsumerCmdProvider
-from uuid import uuid4
-import os
-import sys
+from pm_common import (
+    CmdTypes,
+    KafkaConsumerRootCmdProvider,
+    EnvVarProvider,
+)
+import time
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+env_var_provider = EnvVarProvider()
 
-from common.cmd_types import CmdTypes
-
-
-def generate_consumer_group_id() -> str:
-    return f"tmp_consumer_group_{uuid4()}"
-
-
-consumer_group_id = "azdo_worker"
-topic = "topic_projectm_cmd_insights_gather"
-
-cmd_provider = KafkaConsumerCmdProvider(
-    consumer_group_id=generate_consumer_group_id(), topic=topic
+WORKER_TOPIC = env_var_provider.get_env_var(
+    "WORKER_TOPIC", "topic_projectm_cmd_insights_gather"
 )
 
 workflow_hash = {
@@ -29,6 +21,8 @@ workflow_hash = {
 
 
 def queue_cmds(queue: JoinableQueue) -> None:
+    cmd_provider = KafkaConsumerRootCmdProvider(topic=WORKER_TOPIC)
+
     while True:
         cmds = cmd_provider.provide()
         if cmds is None:
@@ -44,7 +38,7 @@ def process_cmds(queue: JoinableQueue):
         if msg is None:
             break
 
-        workflow_hash[msg.cmd.cmd_type](msg)
+        workflow_hash[msg.cmd_type](msg)
 
         queue.task_done()
 
@@ -76,4 +70,5 @@ def main():
 
 
 if __name__ == "__main__":
+    time.sleep(30)
     main()

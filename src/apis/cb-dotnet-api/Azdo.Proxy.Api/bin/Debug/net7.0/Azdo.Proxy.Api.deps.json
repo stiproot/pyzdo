@@ -1,0 +1,89 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Azdo.Proxy.Api/1.0.0": {
+        "dependencies": {
+          "Algo.RectangleStacking": "1.0.0.7",
+          "Azdo.Engine": "0.0.1.4",
+          "Newtonsoft.Json": "13.0.3",
+          "XPlatform.TaskWorkflowEngine": "5.4.5.2"
+        },
+        "runtime": {
+          "Azdo.Proxy.Api.dll": {}
+        }
+      },
+      "Algo.RectangleStacking/1.0.0.7": {
+        "runtime": {
+          "lib/net6.0/Algo.RectangleStacking.dll": {
+            "assemblyVersion": "1.0.0.7",
+            "fileVersion": "1.0.0.7"
+          }
+        }
+      },
+      "Azdo.Engine/0.0.1.4": {
+        "runtime": {
+          "lib/net6.0/Azdo.Engine.dll": {
+            "assemblyVersion": "0.0.1.4",
+            "fileVersion": "0.0.1.4"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "XPlatform.TaskWorkflowEngine/5.4.5.2": {
+        "runtime": {
+          "lib/net6.0/XPlatform.TaskWorkflowEngine.dll": {
+            "assemblyVersion": "5.4.5.2",
+            "fileVersion": "5.4.5.2"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Azdo.Proxy.Api/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Algo.RectangleStacking/1.0.0.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6nDjz90A2i562k7sV5oFoPK63YUR3tDLrTR5uCXy4nZAHoUCXdzV8MTGJRP7tS8+QunEAdTSOpYeXGIWyW2vaQ==",
+      "path": "algo.rectanglestacking/1.0.0.7",
+      "hashPath": "algo.rectanglestacking.1.0.0.7.nupkg.sha512"
+    },
+    "Azdo.Engine/0.0.1.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9RJlwbX05sNAuAWfVVzv0ILldnbV45O5V9UJ+MoPm0sccVluWfYhNGUyY+kNTvZTK5/SpTwmC2eXgd2Lus2Hgg==",
+      "path": "azdo.engine/0.0.1.4",
+      "hashPath": "azdo.engine.0.0.1.4.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "XPlatform.TaskWorkflowEngine/5.4.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eUSTbkn8HyFYIp6Z+x1dWpRYn7uGe3XwT8UnrOpPs4rKpRwbqDC5AF/cWXGyVQk86298m0m5V9Ji/9nibC3uqQ==",
+      "path": "xplatform.taskworkflowengine/5.4.5.2",
+      "hashPath": "xplatform.taskworkflowengine.5.4.5.2.nupkg.sha512"
+    }
+  }
+}

@@ -1,34 +1,27 @@
-const express = require('express');
-const cors = require('cors');
-const { get, post } = require('./http-client.js');
+const express = require("express");
+const cors = require("cors");
+const { processQry } = require("./controllers/qrys.js");
+const {
+  processPersistCmd,
+  processGatherCmd,
+  processStructureCmd,
+  processAzdoProxyCmd,
+} = require("./controllers/cmds.js");
 
-const corsOptions = {
-  origin: ['http://localhost:3000'],
-};
+const BASE_URL = "/ui-api";
+const PORT = process.env.PORT || 3001;
 
 const app = express();
-app.use(cors(corsOptions));
+app.use(cors());
 
-const BASE_URL = '/ui-api';
-
-app.post(`${BASE_URL}/data/query`, express.json(), async (req, res) => {
-  try {
-
-    const reqBody = req.body;
-    const data = await post('cb/query', reqBody.query);
-    const nodeType = reqBody.filter.node_type;
-    const refined = data['result'].map(item => item[nodeType]);
-    res.json(refined);
-
-  } catch (error) {
-    debugger;
-    console.error('GET request error:', error);
-    res.status(500).json({ error: 'Error fetching data' });
-  }
+app.post(`${BASE_URL}/data/qry`, express.json(), processQry);
+app.post(`${BASE_URL}/data/cmd/persist`, express.json(), processPersistCmd);
+app.post(`${BASE_URL}/data/cmd/gather`, express.json(), processGatherCmd);
+app.post(`${BASE_URL}/data/cmd/structure`, express.json(), processStructureCmd);
+app.post(`${BASE_URL}/proxy/azdo/cmd`, express.json(), processAzdoProxyCmd);
+app.get(`${BASE_URL}/health`, (req, res) => {
+  res.json({ healthy: true });
 });
-
-
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

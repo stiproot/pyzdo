@@ -1,3 +1,19 @@
 node_modules/
+
 __pycache__/
+dist/
+*.egg-info/
+
 .env
+PAT.txt
+
+clone.sh
+
+/src/apis/couchbase-api/src/.env
+/src/apis/kafka-api/src/.env
+/src/apis/ui-api/.env
+# src/ui/projectm-ui/.env
+/src/workers/azdo/.env
+/src/workers/azdo_proxy/.env
+/src/workers/insights/.env
+/src/workers/persist/.env

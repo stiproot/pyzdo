@@ -1,40 +1,36 @@
 from multiprocessing import JoinableQueue, Process
-from build_work_item_tree_workflow import build_work_item_tree_workflow
+from build_summarized_work_item_tree_workflow import (
+    build_summarized_work_item_tree_workflow,
+)
 from build_weighted_work_item_tree_workflow import (
     build_weighted_work_item_tree_workflow,
 )
-from kafka_consumer_cmd_provider import KafkaConsumerCmdProvider
-from datetime import datetime
-from uuid import uuid4
-import os
-import sys
+from pm_common import (
+    KafkaConsumerRootCmdProvider,
+    CmdTypes,
+    generate_unique_name,
+    EnvVarProvider,
+)
+import time
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from common.cmd_types import CmdTypes
-
-
-def generate_consumer_group_id() -> str:
-    dt = datetime.utcnow()
-    formatted_dt = dt.strftime("%Y%m%dT%H%M%S")
-    # return f"structure_insights_worker_{formatted_dt}"
-    # return f"structure_insights_worker_123"
-    return f"structure_insights_worker{uuid4()}"
-
-
-consumer_group_id = "insights_worker"
-topic = "topic_projectm_cmd_insights_structure"
-
-cmd_provider = KafkaConsumerCmdProvider(
-    consumer_group_id=generate_consumer_group_id(), topic=topic
+env_var_provider = EnvVarProvider()
+GROUP_ID = env_var_provider.get_env_var(
+    "GROUP_ID", generate_unique_name("insights_worker_")
+)
+WORKER_TOPIC = env_var_provider.get_env_var(
+    "WORKER_TOPIC", "topic_projectm_cmd_insights_structure"
 )
 
+
 workflow_hash = {
-    CmdTypes.BUILD_WORK_ITEM_TREE: build_work_item_tree_workflow,
+    CmdTypes.BUILD_SUMMARIZED_WORK_ITEM_TREE: build_summarized_work_item_tree_workflow,
     CmdTypes.BUILD_WEIGHTED_WORK_ITEM_TREE: build_weighted_work_item_tree_workflow,
 }
 
 
 def queue_cmds(queue: JoinableQueue) -> None:
+    cmd_provider = KafkaConsumerRootCmdProvider(topic=WORKER_TOPIC)
+
     while True:
         cmds = cmd_provider.provide()
         if cmds is None:
@@ -48,7 +44,7 @@ def process_cmds(queue: JoinableQueue):
         msg = queue.get()
         if msg is None:
             break
-        workflow_hash[msg.cmd.cmd_type](msg)
+        workflow_hash[msg.cmd_type](msg)
         queue.task_done()
 
 
@@ -79,4 +75,5 @@ def main():
 
 
 if __name__ == "__main__":
+    time.sleep(30)
     main()

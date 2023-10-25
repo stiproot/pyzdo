@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/Azdo.Proxy.Api.props" />
+</Project>

@@ -1,20 +1,4 @@
-import os
-import sys
-from .raw_inspectors import (
-    get_relation_type_from_relation_structure,
-    get_id_from_relation_structure,
-)
 from .summarize import summarize_node
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-from common.cmd_types import CmdTypes
-from common.dict_functions import get_nested_property
-
-# Microsoft.VSTS.Scheduling.RemainingWork
-# Microsoft.VSTS.Scheduling.OriginalEstimate
-# Microsoft.VSTS.Scheduling.CompletedWork
-# Custom.IsBlocked
 
 field_map = [
     {

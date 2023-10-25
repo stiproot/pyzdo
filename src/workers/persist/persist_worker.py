@@ -1,45 +1,39 @@
 from multiprocessing import JoinableQueue, Process
-from kafka_consumer_cmd_provider import KafkaConsumerCmdProvider
-from persist_cmd_processor import PersistCmdProcessor
-from datetime import datetime
-from uuid import uuid4
-import os
-import sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from http_clients.http_client import HttpClient
-
-
-def generate_consumer_group_id() -> str:
-    dt = datetime.utcnow()
-    formatted_dt = dt.strftime("%Y%m%dT%H%M%S")
-    return f"persist_worker_{uuid4()}"
-
-
-consumer_group_id = "persist_worker"
-topic = "topic_core_persist"
-perist_url = "http://localhost:8000/cb/command"
-http_client = HttpClient(perist_url)
-
-
-cmd_provider = KafkaConsumerCmdProvider(
-    topic=topic, consumer_group_id=generate_consumer_group_id()
+from pm_common import (
+    HttpClient,
+    KafkaConsumerRootCmdProvider,
+    EnvVarProvider,
 )
-cmd_processor = PersistCmdProcessor(http_client=http_client)
+from persist_cmd_processor import PersistCmdProcessor
+import time
+
+env_var_provider = EnvVarProvider()
+WORKER_TOPIC = env_var_provider.get_env_var(
+    "WORKER_TOPIC", "topic_projectm_cmd_persist"
+)
+PERSIST_URL = env_var_provider.get_env_var(
+    "PERSIST_URL", "http://localhost:8000/cb/cmd"
+)
+print("ENVIRONMENT VARIABLES:")
+print(f"WORKER_TOPIC: {WORKER_TOPIC}")
+print(f"PERSIST_URL: {PERSIST_URL}")
 
 
 def queue_cmds(queue: JoinableQueue) -> None:
+    cmd_provider = KafkaConsumerRootCmdProvider(topic=WORKER_TOPIC)
+
     while True:
         cmds = cmd_provider.provide()
         if cmds is None:
-            print("No commands to to q.")
             break
         for cmd in cmds:
             queue.put(cmd)
 
 
 def process_cmds(queue: JoinableQueue):
+    http_client = HttpClient(PERSIST_URL)
+    cmd_processor = PersistCmdProcessor(http_client=http_client)
+
     while True:
         msg = queue.get()
         if msg is None:
@@ -49,6 +43,7 @@ def process_cmds(queue: JoinableQueue):
 
 
 def main():
+    print("Starting persist worker...")
     NUM_PROCS = 1
     queue = JoinableQueue()
 
@@ -75,4 +70,5 @@ def main():
 
 
 if __name__ == "__main__":
+    time.sleep(30)
     main()

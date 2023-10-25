@@ -1,35 +1,33 @@
-from typing import Optional
-from pyxi_process_manager import CmdProcessor, ProcessCmd
+from pyxi_process_manager import CmdProcessor
 from pyxi_azdo_http_client import AzdoHttpClient, AzdoUrlBuilder
-from wiql_cmd_processor import WiqlCmdProcessor, WiqlCmd
 import json
+import logging
 
 
-class GetWisByWiqlCmd(ProcessCmd):
-    query: Optional[str] = None
-    wiql_cmd: Optional[WiqlCmd] = None
+class GetWisByWiqlCmd:
+    query: str
 
-    def __init__(self, query: Optional[str] = None, wiql_cmd: Optional[WiqlCmd] = None):
+    def __init__(self, query: str):
         self.query = query
-        self.wiql_cmd = wiql_cmd
+
+    def _to_dict_(self) -> dict:
+        return {"query": self.query}
 
 
 class GetWisByWiqlCmdProcessor(CmdProcessor):
     def __init__(self):
-        self._wiql_cmd_processor = WiqlCmdProcessor()
         self._client = AzdoHttpClient(
             AzdoUrlBuilder(organization="Derivco", project_name="Software")
         )
 
     def process(self, cmd: GetWisByWiqlCmd) -> dict:
-        if cmd.query is None and cmd.wiql_cmd is None:
-            raise Exception("Invalid operation.")
-
-        if cmd.query is None:
-            cmd.query = self._wiql_cmd_processor.process(cmd.wiql_cmd)
-
-        wis = self._client.get_wis_with_wiql({"query": cmd.query})
-
-        resp = json.loads(wis.text)
-
-        return resp
+        try:
+            dic = cmd._to_dict_()
+            logging.info(f"GetWisByWiqlCmdProcessor: dic: {dic}")
+            wis = self._client.get_wis_with_wiql(dic)
+            resp = json.loads(wis.text)
+            logging.info(f"GetWisByWiqlCmdProcessor: resp: {resp}")
+            return resp
+        except Exception as e:
+            logging.error(f"GetWisByWiqlCmdProcessor: error: {e}")
+            raise e

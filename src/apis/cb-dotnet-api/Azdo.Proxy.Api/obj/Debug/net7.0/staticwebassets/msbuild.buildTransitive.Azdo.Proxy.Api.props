@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/Azdo.Proxy.Api.props" />
+</Project>

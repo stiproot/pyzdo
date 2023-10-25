@@ -1,0 +1,1625 @@
+{
+	"info": {
+		"_postman_id": "4363b2bb-627a-4fdd-a410-d9b5bde154fe",
+		"name": "project_m",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9729201"
+	},
+	"item": [
+		{
+			"name": "azdo",
+			"item": [
+				{
+					"name": "get by wiql",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Feature' AND [System.Tags] CONTAINS 'ProjectX'\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/wiql?api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"wiql"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [feature]",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1066390?$expand=all&api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"workitems",
+								"1066390"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "all"
+								},
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [feature] Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic OnY0M3RsN2dmdXRqbTZwdWhwejdocG1jajc1NWpxbXk2cXgyYWRmd2ZlemNvdjRoaHoyeXE=",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1066390?$expand=all&api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"workitems",
+								"1066390"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "all"
+								},
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [task]",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1116071?$expand=all&api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"workitems",
+								"1116071"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "all"
+								},
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [user story]",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1078800?$expand=all&api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"workitems",
+								"1078800"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "all"
+								},
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [user story] Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/queries/Shared%20Queries/Customers%20and%20Emerging%20Markets/Rapid%20Response/N2%20Chapmans%20Peak%20Project%20Team/Sprint%2014%202023?api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"queries",
+								"Shared%20Queries",
+								"Customers%20and%20Emerging%20Markets",
+								"Rapid%20Response",
+								"N2%20Chapmans%20Peak%20Project%20Team",
+								"Sprint%2014%202023"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "wiql",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/wiql?api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"wiql"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "features by wiql",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Feature' AND [System.Tags] CONTAINS 'N2CP-RACI-Template' AND [System.Tags] CONTAINS 'HDT'\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/wiql?api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"wiql"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ui-api",
+			"item": [
+				{
+					"name": "query (tree)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from project_m.structures.summarized_trees where __metadata__.project_id = 'hdt'\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"summarized_trees\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "gather",
+			"item": [
+				{
+					"name": "ui api / epics",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"GATHER\",\n    \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n    \"cmd_data\": {\n        \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"get_epics_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"enrichment\": {\n                \"add_property_map\": [\n                    {\n                        \"key\": \"__metadata__\",\n                        \"val\": {\n                            \"project_id\": \"hdt\"\n                        }\n                    }\n                ]\n            },\n            \"store\": {\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"azdo\",\n                \"trgt_collection\": \"epics\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/gather",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"gather"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / features",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"GATHER\",\n    \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n    \"cmd_data\": {\n        \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Feature' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"get_epics_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"enrichment\": {\n                \"add_property_map\": [\n                    {\n                        \"key\": \"__metadata__\",\n                        \"val\": {\n                            \"project_id\": \"hdt\"\n                        }\n                    }\n                ]\n            },\n            \"store\": {\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"azdo\",\n                \"trgt_collection\": \"features\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/gather",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"gather"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / user_stories",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"GATHER\",\n    \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n    \"cmd_data\": {\n        \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'User Story' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"get_epics_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"enrichment\": {\n                \"add_property_map\": [\n                    {\n                        \"key\": \"__metadata__\",\n                        \"val\": {\n                            \"project_id\": \"hdt\"\n                        }\n                    }\n                ]\n            },\n            \"store\": {\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"azdo\",\n                \"trgt_collection\": \"user_stories\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/gather",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"gather"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / tasks",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"GATHER\",\n    \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n    \"cmd_data\": {\n        \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Task' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"get_epics_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"enrichment\": {\n                \"add_property_map\": [\n                    {\n                        \"key\": \"__metadata__\",\n                        \"val\": {\n                            \"project_id\": \"hdt\"\n                        }\n                    }\n                ]\n            },\n            \"store\": {\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"azdo\",\n                \"trgt_collection\": \"tasks\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/gather",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"gather"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / epics",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"hdt\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"epics\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "structure",
+			"item": [
+				{
+					"name": "kafka api / summarized tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_SUMMARIZED_WORK_ITEM_TREE\",\n        \"cmd_data\": {\n            \"root_collection\": \"epics\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_summarized_tree_001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"store\": {\n                    \"trgt_bucket\": \"hdt\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"summarized_trees\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / weighted tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_WEIGHTED_WORK_ITEM_TREE\",\n        \"cmd_data\": {\n            \"root_collection\": \"epics\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_weighted_tree_001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"store\": {\n                    \"trgt_bucket\": \"hdt\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"weighted_trees\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / summarized tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"STRUCTURE\",\n    \"cmd_type\": \"BUILD_SUMMARIZED_WORK_ITEM_TREE\",\n    \"cmd_data\": {\n        \"root_collection\": \"epics\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"structure_summarized_tree_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"store\": {\n                \"trgt_bucket\": \"hdt\",\n                \"trgt_scope\": \"structures\",\n                \"trgt_collection\": \"summarized_trees\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/structure",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"structure"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / weighted tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"STRUCTURE\",\n    \"cmd_type\": \"BUILD_WEIGHTED_WORK_ITEM_TREE\",\n    \"cmd_data\": {\n        \"root_collection\": \"epics\"\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"structure_weighted_tree_001\",\n        \"project_id\": \"hdt\",\n        \"cmd_post_op\": {\n            \"store\": {\n                \"trgt_bucket\": \"hdt\",\n                \"trgt_scope\": \"structures\",\n                \"trgt_collection\": \"weighted_trees\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/structure",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"structure"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ext",
+			"item": [
+				{
+					"name": "ui api / clone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"EXT\",\n    \"cmd_type\": \"CLONE_UNIT_OF_WORK\",\n    \"cmd_data\": {\n        \"cmd\": {\n            \"id\": 1116048,\n            \"parentId\": 1101238,\n            \"iterationName\": \"Sprint 13 2023\",\n            \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\",\n            \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n            \"areaPath\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n            \"tags\": \"project_m_demo_0\"\n        }\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"clone_unit_of_work_006\",\n        \"project_id\": \"hdt\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/proxy/azdo/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"proxy",
+								"azdo",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / create dashboard",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"EXT\",\n    \"cmd_type\": \"CREATE_DASHBOARD\",\n    \"cmd_data\": {\n        \"cmd\": {\n            \"iterationName\": \"Sprint 14 2023\",\n            \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\",\n            \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n            \"dashboardName\": \"Chapmans Peak Sprint 14\",\n            \"queryFolderBasePath\": \"Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team\",\n            \"initiatives\": [\n                {\n                    \"title\": \"HDT - Product Enhancements\",\n                    \"tag\": \"N2CP-IS-HelpDesk\",\n                    \"desc\": \"\",\n                    \"queryFolderName\": \"Sprint 14 2023\"\n                },\n                {\n                    \"title\": \"Reboot\",\n                    \"tag\": \"N2CP-Reboot\",\n                    \"desc\": \"This goal is to spend 30% of our time towards process improvement, fixing technical debt and approved learning.\",\n                    \"queryFolderName\": \"Sprint 14 2023\"\n                },\n                {\n                    \"title\": \"Dreadnought Training\",\n                    \"tag\": \"N2CP-DreadnoughtTraining\",\n                    \"desc\": \"\",\n                    \"queryFolderName\": \"Sprint 14 2023\"\n                }\n            ]\n        }\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"create_dashboard_001\",\n        \"project_id\": \"hdt\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/proxy/azdo/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"proxy",
+								"azdo",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / bulk create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"EXT\",\n    \"cmd_type\": \"BULK_CREATE_UNITS_OF_WORK\",\n    \"cmd_data\": {\n        \"cmds\": [\n            {\n                \"type\": \"User Story\",\n                \"area_path\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n                \"iteration_path\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 13 2023\",\n                \"title\": \"User Story - Tmp\",\n                \"description\": \"\",\n                \"acceptance_criteria\": \"Document is parsed by team respectively.\",\n                \"state\": \"New\",\n                \"tags\": \"project_m_demo_0\",\n                \"assigned_to\": \"Simon Stipcich\",\n                \"story_points\": \"3\",\n                \"relation\": {\n                    \"relation_type\": \"Child\",\n                    \"url\": \"https://dev.azure.com/Derivco/Software/_workitems/edit/1116048\"\n                },\n                \"children\": [\n                    {\n                        \"type\": \"Task\",\n                        \"area_path\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n                        \"iteration_path\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 13 2023\",\n                        \"title\": \"Task - Tmp\",\n                        \"description\": \"\",\n                        \"state\": \"New\",\n                        \"tags\": \"project_m_demo_0\",\n                        \"assigned_to\": \"Simon Stipcich\",\n                        \"remaining\": \"6.5\",\n                        \"original_estimate\": \"6.5\"\n                    }\n                ]\n            }\n        ]\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"bulk_create_units_of_work_001\",\n        \"project_id\": \"hdt\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/proxy/azdo/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"proxy",
+								"azdo",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / clone",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd\": {\n        \"id\": 1130998,\n        \"parentId\": 1130997,\n        \"iterationName\": \"Sprint 13 2023\",\n        \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\",\n        \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n        \"areaPath\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n        \"tags\": \"project_m_demo_0\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5079/azdo/clone",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5079",
+							"path": [
+								"azdo",
+								"clone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / bulk create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmds\": [\n        {\n            \"type\": \"User Story\",\n            \"area_path\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 13 2023\",\n            \"title\": \"User Story - Tmp\",\n            \"description\": \"\",\n            \"acceptance_criteria\": \"Document is parsed by team respectively.\",\n            \"state\": \"New\",\n            \"tags\": \"project_m_demo_0\",\n            \"assigned_to\": \"Simon Stipcich\",\n            \"story_points\": \"3\",\n            \"relation\": {\n                \"relation_type\": \"Child\",\n                \"url\": \"https://dev.azure.com/Derivco/Software/_workitems/edit/1116048\"\n            },\n            \"children\": [\n                {\n                    \"type\": \"Task\",\n                    \"area_path\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n                    \"iteration_path\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 13 2023\",\n                    \"title\": \"Task - Tmp\",\n                    \"description\": \"\",\n                    \"state\": \"New\",\n                    \"tags\": \"project_m_demo_0\",\n                    \"assigned_to\": \"Simon Stipcich\",\n                    \"remaining\": \"6.5\",\n                    \"original_estimate\": \"6.5\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/azdo/bulk/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"azdo",
+								"bulk",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / health",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/health/cert/two",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"health",
+								"cert",
+								"two"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / create dashboard",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd\": {\n        \"iterationName\": \"Sprint 13 2023\",\n        \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\",\n        \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n        \"dashboardName\": \"Chapmans Peak Sprint 13\",\n        \"queryFolderBasePath\": \"Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team\",\n        \"initiatives\": [\n            {\n                \"title\": \"HDT - Product Enhancements\",\n                \"tag\": \"N2CP-IS-HelpDesk\",\n                \"desc\": \"\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            },\n            {\n                \"title\": \"Reboot\",\n                \"tag\": \"N2CP-Reboot\",\n                \"desc\": \"This goal is to spend 30% of our time towards process improvement, fixing technical debt and approved learning.\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            },\n            {\n                \"title\": \"Dreadnought Training\",\n                \"tag\": \"N2CP-DreadnoughtTraining\",\n                \"desc\": \"\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5079/azdo/dashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5079",
+							"path": [
+								"azdo",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "definitions",
+			"item": [
+				{
+					"name": "ui api / creat project",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"id\": \"hdt\",\n        \"name\": \"Help Desk Traditional\",\n        \"description\": \"Underage + Duplicate check feature enhancements.\",\n        \"owner\": \"Anish Reddy\",\n        \"created\": \"2023-09-01T09:40:40\",\n        \"queries\": [\n            {\n                \"id\": \"hdt_epics\",\n                \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n            },\n            {\n                \"id\": \"hdt_features\",\n                \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Feature' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n            },\n            {\n                \"id\": \"hdt_user_stories\",\n                \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'User Story' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n            },\n            {\n                \"id\": \"hdt_user_tasks\",\n                \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'User Story' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n            }\n        ]\n    },\n    \"store_metadata\": {\n        \"bucket_name\": \"project_m\",\n        \"scope_name\": \"definitions\",\n        \"trgt_collection\": \"projects\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/persist",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"persist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / create default",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"PERSIST\",\n    \"cmd_type\": \"PERSIST_TO_STORE\",\n    \"cmd_data\": {\n        \"id\": \"default\",\n        \"name\": \"default_project\",\n        \"description\": \"\",\n        \"owner\": \"project_m\",\n        \"created\": \"2023-09-01T09:40:40\"\n    },\n    \"cmd_metadata\": {\n        \"cmd_post_op\": {\n            \"store\": {\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"definitions\",\n                \"trgt_collection\": \"projects\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/cmd/persist",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"cmd",
+								"persist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "persist core project",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let json = {",
+									"    cmd_category: \"PERSIST\",",
+									"    cmd_type: \"PERSIST_TO_STORE\",",
+									"    cmd_data: {",
+									"        \"id\": \"sibot123\",",
+									"        \"name\": \"project_m\",",
+									"        \"description\": \"...\", ",
+									"        \"owner\": \"Sibot\",",
+									"        \"created\": \"2023-09-01T09:40:40\"",
+									"    },",
+									"    cmd_metadata:{",
+									"        cmd_post_op:{",
+									"            store:{",
+									"                trgt_bucket: \"project_m\",",
+									"                trgt_scope: \"definitions\",",
+									"                trgt_collection: \"projects\",",
+									"            }",
+									"        }",
+									"    }",
+									"}",
+									"",
+									"pm.collectionVariables.set(\"persist-project-payload\", JSON.stringify(json));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_persist\",\n    \"key\": \"8888\",\n    \"payload\": {{persist-project-payload}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / test",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let json = {",
+									"    payload: {",
+									"        \"id\": \"hdt\",",
+									"        \"name\": \"Help Desk Traditional\",",
+									"        \"description\": \"Underage + Duplicate check feature enhancements.\", ",
+									"        \"owner\": \"Anish Reddy\",",
+									"        \"created\": \"2023-09-01T09:40:40\"",
+									"    },",
+									"    store_metadata: {",
+									"        bucket_name: \"core\",",
+									"        scope_name: \"projects\",",
+									"        trgt_collection: \"projects\",",
+									"        store_type: \"couchbase\"",
+									"    }",
+									"}",
+									"",
+									"pm.collectionVariables.set(\"persist-project-payload\", JSON.stringify(json));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bucket_name\": \"project_m\",\n    \"scope_name\": \"definitions\",\n    \"collection_name\": \"projects\",\n    \"key\": \"444\",\n    \"payload\": \"{\\\"id\\\": \\\"xyz\\\"}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "persist project properties",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let json = {",
+									"    payload: {",
+									"        \"id\": \"hdt\",",
+									"        \"name\": \"Help Desk Traditional\",",
+									"        \"description\": \"Underage + Duplicate check feature enhancements.\", ",
+									"        \"owner\": \"Anish Reddy\",",
+									"        \"created\": \"2023-09-01T09:40:40\"",
+									"    },",
+									"    store_metadata: {",
+									"        bucket_name: \"hdt\",",
+									"        scope_name: \"definition\",",
+									"        trgt_collection: \"properties\",",
+									"        store_type: \"couchbase\"",
+									"    }",
+									"}",
+									"",
+									"pm.collectionVariables.set(\"persist-project-properties-payload\", JSON.stringify(json));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_persist\",\n    \"key\": \"12345\",\n    \"payload\": {{persist-project-properties-payload}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "qrys",
+			"item": [
+				{
+					"name": "ui api / get weighted tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from hdt.azdo.structured_trees where id = 'weighted_tree'\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"structured_trees\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / projects",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from project_m.definitions.projects\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"projects\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/ui-api/data/qry",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"ui-api",
+								"data",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ui api / query get subset of features",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from project_m.azdo.features where id in [1, 2, 1121841]\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"features\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/data/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"data",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / query multiple user stories",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"SELECT id FROM PROJECTX.AZDO.FEATURE\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/query",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / query single user story",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"SELECT * FROM PROJECTX.AZDO.USER_STORY WHERE id = 1097284\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/query",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / query single task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"select * from PROJECTX.AZDO.TASK where id = 1102345\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/query",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / query single feature",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"select * from PROJECTX.AZDO.FEATURE where id = 1097282\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/query",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"query"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "topics",
+			"item": [
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "Cookie",
+								"value": "ui-auth-localhost%3A8091=11c196a366fe6c4bd038c7ca80ac5992"
+							},
+							{
+								"key": "Origin",
+								"value": "http://localhost:9021"
+							},
+							{
+								"key": "Referer",
+								"value": "http://localhost:9021/clusters/MkU3OEVBNTcwNTJENDM2Qg/management/topics/topic_projectm_cmd_insights_gather/settings"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "same-origin"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "X-Requested-By",
+								"value": "9f2a7aa2-3e3d-4ade-927d-0f79de84a2de"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "undefined"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"macOS\""
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9021/2.0/kafka/MkU3OEVBNTcwNTJENDM2Qg/topics/topic_projectm_cmd_insights_gather",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9021",
+							"path": [
+								"2.0",
+								"kafka",
+								"MkU3OEVBNTcwNTJENDM2Qg",
+								"topics",
+								"topic_projectm_cmd_insights_gather"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US,en;q=0.9"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive"
+							},
+							{
+								"key": "Cookie",
+								"value": "ui-auth-localhost%3A8091=11c196a366fe6c4bd038c7ca80ac5992"
+							},
+							{
+								"key": "Referer",
+								"value": "http://localhost:9021/clusters/MkU3OEVBNTcwNTJENDM2Qg/management/topics/topic_projectm_cmd_insights_gather/settings"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": "empty"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": "cors"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": "same-origin"
+							},
+							{
+								"key": "User-Agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "X-Requested-By",
+								"value": "749fa0f5-5b44-41f4-9edf-cdad1085fb7c"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "undefined"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"macOS\""
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9021/2.0/kafka/MkU3OEVBNTcwNTJENDM2Qg/topics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9021",
+							"path": [
+								"2.0",
+								"kafka",
+								"MkU3OEVBNTcwNTJENDM2Qg",
+								"topics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// pm.collectionVariables.set('base64-access-token', 'OjdvNHlyNDI3cmkybGprbmV6M29sdjR3bXNwam55c3p5Z2RwZHZzZ29ua3ZwZ2xjaDVwaHE=');",
+					"pm.collectionVariables.set('base64-access-token', 'OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=');"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base64-access-token",
+			"value": ""
+		},
+		{
+			"key": "persist-project-payload",
+			"value": ""
+		},
+		{
+			"key": "persist-project-properties-payload",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,3 @@
+confluent-kafka
+pyxi_process_manager==0.0.10
+requests

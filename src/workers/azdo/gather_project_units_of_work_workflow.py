@@ -1,49 +1,37 @@
-from pyxi_process_manager import ProcessCmd
-from persist_cmd_processor import PersistCmdProcessor, PersistCmd
 from get_wi_details_cmd_processor import GetWiDetailsCmdProcessor, GetWiDetailsCmd
 from get_wis_by_wiql_cmd_processor import GetWisByWiqlCmdProcessor, GetWisByWiqlCmd
-from json import dumps as json_dumps
-import os
-import sys
+from pm_common import (
+    PublishToTopicCmdProcessor,
+    EnvVarProvider,
+    KafkaHttpClient,
+    RootCmd,
+    CmdTypes,
+    build_persist_cmd,
+    build_post_proc_status_update_persist_cmd,
+    build_publish_to_topic_cmd,
+    enrich_payload,
+)
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+env_var_provider = EnvVarProvider()
 
-from http_clients.kafka_http_client import KafkaHttpClient
-from common.cmd_types import CmdTypes
-from common.enum_functions import string_to_enum
+PERSIST_TOPIC = env_var_provider.get_env_var(
+    "PERSIST_TOPIC", "topic_projectm_cmd_persist"
+)
 
-
-persist_topic = "topic_projectm_cmd_persist"
-persist_url = "http://localhost:8001/kafka/topic/publish"
+PERSIST_URL = env_var_provider.get_env_var(
+    "PERSIST_URL", "http://localhost:9092/kafka-api/publish"
+)
 
 wi_by_wiql_proc = GetWisByWiqlCmdProcessor()
 wi_details_proc = GetWiDetailsCmdProcessor()
-persist_proc = PersistCmdProcessor(KafkaHttpClient(base_url=persist_url))
+persist_proc = PublishToTopicCmdProcessor(KafkaHttpClient(base_url=PERSIST_URL))
 
 
-class CoreCmd:
-    cmd_type: CmdTypes
-    ql: str
-
-    def __init__(self, cmd_type: str, ql: str):
-        self.cmd_type = string_to_enum(CmdTypes, cmd_type)
-        self.ql = ql
-
-
-class WorkflowCmd(ProcessCmd):
-    cmd: CoreCmd
-    metadata: dict
-
-    def __init__(self, cmd: dict, metadata: dict):
-        self.cmd = CoreCmd(**cmd)
-        self.metadata = metadata
-
-
-def gather_project_units_of_work_workflow(cmd: WorkflowCmd) -> int:
-    ql = cmd.cmd.ql
+def gather_project_units_of_work_workflow(cmd: RootCmd) -> int:
+    ql = cmd.cmd_data["ql"]
     get_by_wiql_cmd = GetWisByWiqlCmd(query=ql)
 
-    wis_resp = wi_by_wiql_proc.process(get_by_wiql_cmd)
+    wis_resp = wi_by_wiql_proc.process(cmd=get_by_wiql_cmd)
     wis = list(wis_resp["workItems"])
     if len(wis) == 0:
         return 1
@@ -51,21 +39,21 @@ def gather_project_units_of_work_workflow(cmd: WorkflowCmd) -> int:
     details = []
     for wi in wis:
         id = int(wi["id"])
+        print(f"Attempting to get work item details: {id}")
         get_details_cmd = GetWiDetailsCmd(id=id)
         details_resp = wi_details_proc.process(get_details_cmd)
         details.append(details_resp)
 
     for wi in details:
-        id = str(wi["id"])
-        payload = json_dumps(
-            {
-                "payload": {
-                    "store_metadata": cmd.metadata["store"],
-                    "payload": wi,
-                },
-                "topic": persist_topic,
-                "key": id,
-            }
-        )
-        persist_cmd = PersistCmd(payload=payload)
-        persist_proc.process(persist_cmd)
+        enrich_payload(wi, cmd)
+        persist_cmd = build_persist_cmd(wi, cmd)
+        publish_to_topic_cmd = build_publish_to_topic_cmd(persist_cmd, PERSIST_TOPIC)
+        persist_proc.process(publish_to_topic_cmd)
+
+    proc_status_update_persist_cmd = build_post_proc_status_update_persist_cmd(
+        status="COMPLETE", cmd=cmd, cmd_type=CmdTypes.GATHER_PROJECT_UNITS_OF_WORK
+    )
+    proc_status_update_publish_to_topic_cmd = build_publish_to_topic_cmd(
+        proc_status_update_persist_cmd, PERSIST_TOPIC
+    )
+    persist_proc.process(proc_status_update_publish_to_topic_cmd)

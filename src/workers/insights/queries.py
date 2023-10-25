@@ -1,10 +1,11 @@
 from json import dumps as json_dumps
 from json import loads as json_loads
-from http_clients.couchbase_http_client import CouchbaseHttpClient
+from pm_common import CouchbaseHttpClient, EnvVarProvider
 
 
-store_url = "http://localhost:8000/cb/query"
-couchbase_http_client = CouchbaseHttpClient(base_url=store_url)
+env_var_provider = EnvVarProvider()
+STORE_URL = env_var_provider.get_env_var("STORE_URL", "http://localhost:8000/cb/qry")
+couchbase_http_client = CouchbaseHttpClient(base_url=STORE_URL)
 
 
 def safe_query(qry: str, node_type: str) -> dict:
@@ -37,7 +38,7 @@ def build_raw_node_query(
 def build_get_node_query_fn(bucket_name: str, scope_name: str):
     return lambda node_id, node_type: json_dumps(
         {
-            "query": build_raw_node_query(bucket_name, scope_name, node_type, node_id),
+            "ql": build_raw_node_query(bucket_name, scope_name, node_type, node_id),
             "params": [],
         }
     )
@@ -46,7 +47,7 @@ def build_get_node_query_fn(bucket_name: str, scope_name: str):
 def get_node_ids(bucket_name: str, scope_name: str, collection_name: str) -> list:
     n1ql = f"SELECT id FROM {bucket_name}.{scope_name}.{collection_name}"
     node_ids_query = {
-        "query": n1ql,
+        "ql": n1ql,
         "params": [],
     }
 

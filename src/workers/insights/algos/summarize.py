@@ -1,8 +1,8 @@
 from .raw_inspectors import (
     get_relation_type_from_relation_structure,
     get_id_from_relation_structure,
-    get_nested_property,
 )
+from pm_common import get_nested_property
 
 
 def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict:
@@ -55,7 +55,12 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
 
         if relation_type == "child":
             child_type = ""
-            if summary["type"] == "Feature":
+            unit_of_work_type = summary["type"]
+            if unit_of_work_type == "Initiative":
+                child_type = "epics"
+            elif unit_of_work_type == "Epic":
+                child_type = "features"
+            elif unit_of_work_type == "Feature":
                 child_type = "user_stories"
             else:
                 child_type = "tasks"

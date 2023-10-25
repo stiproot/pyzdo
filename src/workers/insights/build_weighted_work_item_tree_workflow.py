@@ -1,24 +1,23 @@
-from json import dumps as json_dumps
-from json import loads as json_loads
 from algos.build_risk_weighted_work_item_tree import build_risk_weighted_work_item_tree
-from queries import safe_query, build_get_node_query_fn, build_get_node_fn, get_node_ids
+from queries import build_get_node_query_fn, build_get_node_fn, get_node_ids
 from persists import persist_payload
-from workflow_cmds import WorkflowCmd
+from pm_common import RootCmd
 
 
-def build_weighted_work_item_tree_workflow(cmd: WorkflowCmd) -> int:
-    store_metadata = cmd.metadata["store"]
-    bucket_name = store_metadata["bucket_name"]
-    scope_name = store_metadata["scope_name"]
-    root_collection_name = store_metadata["root_collection"]
+BUCKET_NAME = "project_m"
+SCOPE_NAME = "azdo"
+
+
+def build_weighted_work_item_tree_workflow(cmd: RootCmd) -> int:
+    root_collection_name = cmd.cmd_data["root_collection"]
 
     root_node_ids = get_node_ids(
-        bucket_name=bucket_name,
-        scope_name=scope_name,
+        bucket_name=BUCKET_NAME,
+        scope_name=SCOPE_NAME,
         collection_name=root_collection_name,
     )
 
-    get_node_fn = build_get_node_fn(build_get_node_query_fn(bucket_name, scope_name))
+    get_node_fn = build_get_node_fn(build_get_node_query_fn(BUCKET_NAME, SCOPE_NAME))
 
     structured_nodes = []
     for node_id in root_node_ids:
@@ -30,4 +29,7 @@ def build_weighted_work_item_tree_workflow(cmd: WorkflowCmd) -> int:
 
     tree = {"id": "weighted_tree", "type": "root", "children": structured_nodes}
 
-    persist_payload(store_metadata=store_metadata, payload=tree)
+    persist_payload(
+        payload=tree,
+        cmd=cmd,
+    )

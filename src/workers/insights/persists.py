@@ -1,23 +1,35 @@
-from persist_cmd_processor import PersistCmdProcessor, PersistCmd
-from json import dumps as json_dumps
-from http_clients.kafka_http_client import KafkaHttpClient
+from pm_common import (
+    PublishToTopicCmdProcessor,
+    KafkaHttpClient,
+    RootCmd,
+    EnvVarProvider,
+    build_persist_cmd,
+    build_post_proc_status_update_persist_cmd,
+    build_publish_to_topic_cmd,
+    enrich_payload,
+)
 
-persist_topic = "topic_core_persist"
-persist_url = "http://localhost:8001/kafka/topic/publish"
-persist_proc = PersistCmdProcessor(KafkaHttpClient(base_url=persist_url))
+env_var_provider = EnvVarProvider()
+PERSIST_TOPIC = env_var_provider.get_env_var(
+    "PERSIST_TOPIC", "topic_projectm_cmd_persist"
+)
+PERSIST_URL = env_var_provider.get_env_var(
+    "PERSIST_URL", "http://localhost:9092/kafka-api/publish"
+)
+
+persist_proc = PublishToTopicCmdProcessor(KafkaHttpClient(base_url=PERSIST_URL))
 
 
-def persist_payload(store_metadata: dict, payload: dict) -> int:
-    id = payload["id"]
-    json_payload = json_dumps(
-        {
-            "payload": {
-                "store_metadata": store_metadata,
-                "payload": payload,
-            },
-            "topic": persist_topic,
-            "key": id,
-        }
+def persist_payload(payload: dict, cmd: RootCmd) -> int:
+    enrich_payload(payload, cmd)
+    persist_cmd = build_persist_cmd(payload, cmd)
+    publish_to_topic_cmd = build_publish_to_topic_cmd(persist_cmd, PERSIST_TOPIC)
+    persist_proc.process(publish_to_topic_cmd)
+
+    proc_status_update_persist_cmd = build_post_proc_status_update_persist_cmd(
+        status="COMPLETE", cmd=cmd, cmd_type=cmd.cmd_type
     )
-    persist_cmd = PersistCmd(payload=json_payload)
-    persist_proc.process(persist_cmd)
+    proc_status_update_publish_to_topic_cmd = build_publish_to_topic_cmd(
+        proc_status_update_persist_cmd, PERSIST_TOPIC
+    )
+    persist_proc.process(proc_status_update_publish_to_topic_cmd)
