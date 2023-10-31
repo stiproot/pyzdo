@@ -37,15 +37,11 @@ export default {
     const data = reactive({ projects: enrichedProjects, isLoading });
 
     const handleViewClick = (e) => {
-      nav.goToProjectDefinition(e);
-    };
-
-    const handleInsightsClick = (e) => {
-      nav.goToInsights(e);
+      nav.goToProjectDefinition(e.item.id);
     };
 
     const handleVisualsClick = (e) => {
-      nav.goToVis(e);
+      nav.goToVis(e.item.id);
     };
 
     const handleAddClick = () => {
@@ -62,7 +58,6 @@ export default {
       ...toRefs(data),
       handleViewClick,
       handleVisualsClick,
-      handleInsightsClick,
       handleAddClick,
     };
   },

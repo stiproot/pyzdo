@@ -9,11 +9,9 @@ const TRGT_COLLECTION_HASH = {
 };
 
 const buildStructureCmd = (data) => {
-  const { cmdType, idempotencyId, projectId, rootCollection } = data;
+  const { cmdType, idempotencyId, projectId, key } = data;
 
-  const cmdData = {
-    root_collection: rootCollection,
-  };
+  const cmdData = {};
 
   const cmdPostOp = {
     enrichment: {
@@ -28,6 +26,7 @@ const buildStructureCmd = (data) => {
       trgt_bucket: "project_m",
       trgt_scope: "structures",
       trgt_collection: TRGT_COLLECTION_HASH[cmdType],
+      key: key,
     },
   };
   const cmdPreOp = {};

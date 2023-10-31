@@ -3,6 +3,9 @@ from .raw_inspectors import (
     get_id_from_relation_structure,
 )
 from pm_common import get_nested_property
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict:
@@ -28,6 +31,12 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
 
         value = value if prop["map"] is None else prop["map"](value)
         summary[prop["trgt_prop_path"]] = value
+
+    raw_relations = raw_node.get("relations", None)
+    if raw_relations is None:
+        logging.debug(f"No relations for {raw_node['id']}")
+        logging.debug(f"Raw node: {raw_node}")
+        raise Exception("No relations")
 
     relations = list(
         filter(
@@ -66,6 +75,10 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
                 child_type = "tasks"
 
             raw_child_node = get_raw_node_fn(relation_id, child_type)
+            if not raw_child_node:
+                logging.debug(f"Could not find child node. Node id: {relation_id}")
+                continue
+
             child_summary = summarize_node(
                 raw_child_node,
                 prop_rule_map=prop_rule_map,

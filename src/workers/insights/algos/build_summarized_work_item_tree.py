@@ -88,8 +88,10 @@ field_map = [
 def build_summarized_work_item_tree(
     node_id: int, node_type: str, get_raw_node_fn
 ) -> dict:
-    node = get_raw_node_fn(node_id=node_id, node_type=node_type)
+    node = get_raw_node_fn(node_id, node_type)
+
     summary = summarize_node(
         raw_node=node, prop_rule_map=field_map, get_raw_node_fn=get_raw_node_fn
     )
+
     return summary

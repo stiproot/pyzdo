@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Xo.AzDO.Engine" Version="2.0.2" />
+    <PackageReference Include="Xo.AzDO.Engine" Version="2.1.8" />
     <PackageReference Include="Xo.Tasktree" Version="5.8.10" />
   </ItemGroup>
 

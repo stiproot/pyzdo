@@ -2,7 +2,7 @@
   <ProcessesComponent title="procs" :blueprints="processes" />
 </template>
 <script>
-import { onMounted, watch, reactive, toRefs, ref } from "vue";
+import { onMounted, reactive, toRefs, ref } from "vue";
 import { useProcessStore, ProcessProvider } from "@/stores/process.store";
 import ProcessesComponent from "./ProcessesComponent.vue";
 export default {
@@ -21,8 +21,7 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const processStore = useProcessStore();
-    const processProvider = new ProcessProvider(processStore);
+    const processProvider = new ProcessProvider(useProcessStore());
 
     const { processes, refresh, syncAll, isStillRunning } = processProvider;
 
@@ -33,38 +32,24 @@ export default {
 
     const procs = ref([]);
     const executing = ref(false);
-    let intervalId;
-
-    function uninitInterval() {
-      clearInterval(intervalId);
-      intervalId = undefined;
-    }
 
     function emitEvent() {
       emit("processes-complete", {});
     }
 
     function initInterval() {
-      return setInterval(async () => {
+      let intervalId = setInterval(async () => {
         if (data.isStillRunning) {
           console.log("still running");
           await refresh();
         } else {
           console.log("not still running");
           executing.value = false;
+          clearInterval(intervalId);
           emitEvent();
         }
       }, 3000);
     }
-
-    watch(
-      () => executing.value,
-      (val) => {
-        if (val === false) {
-          uninitInterval();
-        }
-      }
-    );
 
     const start = async () => {
       if (props.blueprints && props.blueprints.length) {
@@ -72,7 +57,7 @@ export default {
         processes.value = props.blueprints;
         await syncAll();
         executing.value = true;
-        intervalId = initInterval();
+        initInterval();
       }
     };
 

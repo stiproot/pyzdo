@@ -1,36 +1,40 @@
 from pyxi_process_manager import CmdProcessor
-from json import dumps as json_dumps
-from pm_common import HttpClient, RootCmd
+from pm_common import HttpClient, RootCmd, CmdTypes, update_proc_status
 
 
 class PersistCmdProcessor(CmdProcessor):
-    def __init__(self, http_client: HttpClient):
+    def __init__(self, http_client: HttpClient, bulk_http_client: HttpClient):
         self._http_client = http_client
+        self._bulk_http_client = bulk_http_client
 
-    def map_cmd_to_req(self, cmd: RootCmd) -> str:
-        id = str(cmd.cmd_data.get("id", 0))
-        store = cmd._cmd_post_op_store_()
+    # def __map__(self, cmd: RootCmd) -> str:
+    #     idempotency_id = cmd.cmd_metadata["idempotency_id"]
+    #     project_id = cmd.cmd_metadata["project_id"]
 
-        payload = json_dumps(cmd.cmd_data)
+    #     n1ql = f"UPDATE project_m.definitions.processes as c set c.status = 'COMPLETE' where c.id = '{idempotency_id}' AND c.project_id = '{project_id}'"
 
-        req = {
-            "bucket_name": store["trgt_bucket"],
-            "scope_name": store["trgt_scope"],
-            "collection_name": store["trgt_collection"],
-            "key": id,
-            "payload": payload,
-        }
+    #     cmd.cmd_metadata["cmd_post_op"]["post_persist_qrys"] = [n1ql]
 
-        json_payload = json_dumps(req)
-        return json_payload
+    #     return cmd
 
     def process(self, cmd: RootCmd) -> None:
         try:
-            json = self.map_cmd_to_req(cmd)
-            print(f"Sending command to persist: {json}")
+            print("Processing command...")
+            print("Building command...")
+            # json = self.__map__(cmd)._serialize_()
+            json = cmd._serialize_()
+
+            if cmd.cmd_type == CmdTypes.BULK_PERSIST_TO_STORE:
+                print("Sending command to persist in bulk")
+                self._bulk_http_client.post(json=json)
+                update_proc_status("COMPLETE", cmd)
+                return
+
+            print("Sending command to persist")
             self._http_client.post(json=json)
+            update_proc_status("COMPLETE", cmd)
         except:
             print(f"Error processing command: {cmd._serialize_()}")
             raise
         finally:
-            print(f"Successfully processed command: {cmd._serialize_()}")
+            print(f"Successfully processed command.")

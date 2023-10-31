@@ -7,9 +7,7 @@ import { generateGuid } from "@/services/guids.service";
 const defaultState = () => ({
   id: null,
   parentId: null,
-  iterationName: null,
-  iterationBasePath: null,
-  teamName: null,
+  iterationPath: null,
   areaPath: null,
   tags: null,
 });
@@ -19,9 +17,7 @@ const ACTIONS = {
   UPSERT: "upsert",
   SET_ID: "setId",
   SET_PARENT_ID: "setParentId",
-  SET_ITERATION_NAME: "setIterationName",
-  SET_ITERATION_BASE_PATH: "setIterationBasePath",
-  SET_TEAM_NAME: "setTeamName",
+  SET_ITERATION_PATH: "setIterationPath",
   SET_AREA_PATH: "setAreaPath",
   SET_TAGS: "setTags",
 };
@@ -31,30 +27,19 @@ const GETTERS = {
   GET_STATE: "getState",
   GET_ID: "getId",
   GET_PARENT_ID: "getParentId",
-  GET_ITERATION_NAME: "getIterationName",
-  GET_ITERATION_BASE_PATH: "getIterationBasePath",
-  GET_TEAM_NAME: "getTeamName",
+  GET_ITERATION_PATH: "getIterationPath",
   GET_AREA_PATH: "getAreaPath",
   GET_TAGS: "getTags",
 };
 
 const actions = {
   [ACTIONS.INIT](data) {
-    const {
-      id,
-      parentId,
-      iterationName,
-      iterationBasePath,
-      teamName,
-      areaPath,
-      tags,
-    } = data || defaultState();
+    const { id, parentId, iterationPath, areaPath, tags } =
+      data || defaultState();
 
     this[ACTIONS.SET_ID](id);
     this[ACTIONS.SET_PARENT_ID](parentId);
-    this[ACTIONS.SET_ITERATION_NAME](iterationName);
-    this[ACTIONS.SET_ITERATION_BASE_PATH](iterationBasePath);
-    this[ACTIONS.SET_TEAM_NAME](teamName);
+    this[ACTIONS.SET_ITERATION_PATH](iterationPath);
     this[ACTIONS.SET_AREA_PATH](areaPath);
     this[ACTIONS.SET_TAGS](tags);
   },
@@ -74,14 +59,8 @@ const actions = {
   [ACTIONS.SET_PARENT_ID](value) {
     this.parentId = value;
   },
-  [ACTIONS.SET_ITERATION_NAME](value) {
-    this.iterationName = value;
-  },
-  [ACTIONS.SET_ITERATION_BASE_PATH](value) {
-    this.iterationBasePath = value;
-  },
-  [ACTIONS.SET_TEAM_NAME](value) {
-    this.teamName = value;
+  [ACTIONS.SET_ITERATION_PATH](value) {
+    this.iterationPath = value;
   },
   [ACTIONS.SET_AREA_PATH](value) {
     this.areaPath = value;
@@ -96,9 +75,7 @@ const getters = {
     return (
       this.id &&
       this.parentId &&
-      this.iterationName &&
-      this.iterationBasePath &&
-      this.teamName &&
+      this.iterationPath &&
       this.areaPath &&
       this.tags
     );
@@ -112,14 +89,8 @@ const getters = {
   [GETTERS.GET_PARENT_ID]() {
     return this.parentId;
   },
-  [GETTERS.GET_ITERATION_NAME]() {
-    return this.iterationName;
-  },
-  [GETTERS.GET_ITERATION_BASE_PATH]() {
-    return this.iterationBasePath;
-  },
-  [GETTERS.GET_TEAM_NAME]() {
-    return this.teamName;
+  [GETTERS.GET_ITERATION_PATH]() {
+    return this.iterationPath;
   },
   [GETTERS.GET_AREA_PATH]() {
     return this.areaPath;
@@ -176,29 +147,11 @@ export class CloneAzdoWiProvider {
     });
   }
 
-  get iterationName() {
+  get iterationPath() {
     return computed({
-      get: () => this._store[GETTERS.GET_ITERATION_NAME],
+      get: () => this._store[GETTERS.GET_ITERATION_PATH],
       set: (value) => {
-        this._store[ACTIONS.SET_ITERATION_NAME](value);
-      },
-    });
-  }
-
-  get iterationBasePath() {
-    return computed({
-      get: () => this._store[GETTERS.GET_ITERATION_BASE_PATH],
-      set: (value) => {
-        this._store[ACTIONS.SET_ITERATION_BASE_PATH](value);
-      },
-    });
-  }
-
-  get teamName() {
-    return computed({
-      get: () => this._store[GETTERS.GET_TEAM_NAME],
-      set: (value) => {
-        this._store[ACTIONS.SET_TEAM_NAME](value);
+        this._store[ACTIONS.SET_ITERATION_PATH](value);
       },
     });
   }

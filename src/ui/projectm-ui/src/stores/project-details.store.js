@@ -2,6 +2,10 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import { getProject } from "@/services/projects.qry.service";
 import { upsertProject } from "@/services/projects.service";
+import { generateGuid } from "@/services/guids.service";
+import { CMD_TYPES } from "@/services/cmd-types.enum.js";
+import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
+import { gather } from "@/services/gather.service";
 
 const defaultState = () => ({
   id: null,
@@ -26,6 +30,8 @@ const ACTIONS = {
   ADD_QUERY: "addQuery",
   REMOVE_QUERY: "removeQuery",
   SYNC: "sync",
+  RUN_QUERIES: "runQueries",
+  MAP_QUERIES_TO_PROCESSES: "mapQueriesToProcesses",
 };
 
 const GETTERS = {
@@ -93,8 +99,36 @@ const actions = {
   [ACTIONS.ADD_QUERY](data) {
     this.queries.push(data);
   },
-  [ACTIONS.REMOVE_QUERY](id) {
-    this.queries = this.queries.filter((query) => query.id !== id);
+  [ACTIONS.REMOVE_QUERY](name) {
+    this.queries = this.queries.filter((query) => query.name !== name);
+  },
+  async [ACTIONS.RUN_QUERIES](procs) {
+    console.log("runQueries", procs);
+    try {
+      await Promise.all(
+        procs.map((proc) => {
+          gather({
+            processId: proc.id,
+            projectId: proc.project_id,
+            ql: proc.ql,
+          });
+        })
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  [ACTIONS.MAP_QUERIES_TO_PROCESSES](projectId) {
+    const procs = this.queries.map((i) => ({
+      id: generateGuid(),
+      display: i.name,
+      project_id: projectId,
+      status: PROCESS_STATUSES.RUNNING,
+      cmd_type: CMD_TYPES.GATHER_PROJECT_UNITS_OF_WORK,
+      ql: i.ql,
+    }));
+
+    return procs;
   },
 };
 
@@ -112,7 +146,6 @@ const validateState = (state) => {
 
 const getters = {
   [GETTERS.IS_STATE_VALID]() {
-    console.log("validating state", this.$state);
     return validateState(this.$state);
   },
   [GETTERS.GET_STATE]() {
@@ -142,7 +175,7 @@ const getters = {
   [GETTERS.GET_ENRICHED_QUERIES]() {
     return this.queries.map((query) => ({
       ...query,
-      title: query.name || query.id,
+      title: query.name,
       actions: [
         {
           evtId: "item-click",
@@ -155,8 +188,8 @@ const getters = {
       ],
     }));
   },
-  [GETTERS.GET_QUERY](id) {
-    return this.queries.find((query) => query.id === id);
+  [GETTERS.GET_QUERY](name) {
+    return this.queries.find((query) => query.name === name);
   },
 };
 
@@ -174,6 +207,8 @@ export class ProjectDetailsProvider {
     this.getQuery = this.getQuery.bind(this);
     this.addQuery = this.addQuery.bind(this);
     this.removeQuery = this.removeQuery.bind(this);
+    this.runQueries = this.runQueries.bind(this);
+    this.mapQueriesToProcesses = this.mapQueriesToProcesses.bind(this);
   }
 
   async init(projectId) {
@@ -184,24 +219,32 @@ export class ProjectDetailsProvider {
     await this._store[ACTIONS.SYNC]();
   }
 
-  get isStateValid() {
-    return computed(() => this._store[GETTERS.IS_STATE_VALID]);
+  getQuery(name) {
+    return computed(() => this._store[GETTERS.GET_QUERY](name));
   }
 
-  getQuery(id) {
-    return computed(() => this._store[GETTERS.GET_QUERY](id));
+  mapQueriesToProcesses(projectId) {
+    return this._store[ACTIONS.MAP_QUERIES_TO_PROCESSES](projectId);
   }
 
-  get enrichedQueries() {
-    return computed(() => this._store[GETTERS.GET_ENRICHED_QUERIES]);
+  async runQueries(data) {
+    await this._store[ACTIONS.RUN_QUERIES](data);
   }
 
   addQuery(data) {
     this._store[ACTIONS.ADD_QUERY](data);
   }
 
-  removeQuery(id) {
-    this._store[ACTIONS.REMOVE_QUERY](id);
+  removeQuery(name) {
+    this._store[ACTIONS.REMOVE_QUERY](name);
+  }
+
+  get isStateValid() {
+    return computed(() => this._store[GETTERS.IS_STATE_VALID]);
+  }
+
+  get enrichedQueries() {
+    return computed(() => this._store[GETTERS.GET_ENRICHED_QUERIES]);
   }
 
   get state() {

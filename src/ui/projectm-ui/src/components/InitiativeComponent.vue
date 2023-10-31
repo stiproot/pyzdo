@@ -21,15 +21,6 @@
         label="Description *"
         :rules="[(val) => (val && val.length) || 'Description is required']"
       />
-
-      <q-input
-        v-model="queryFolderName"
-        label="Query folder name *"
-        lazy-rules
-        :rules="[
-          (val) => (val && val.length) || 'Query folder name is required',
-        ]"
-      />
     </q-form>
   </div>
 
@@ -55,13 +46,12 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const { title, tag, desc, queryFolderName } = ref(props.value);
+    const { title, tag, desc } = ref(props.value);
 
     const data = reactive({
       title,
       tag,
       desc,
-      queryFolderName,
     });
 
     const isValid = computed(() => {
@@ -69,11 +59,9 @@ export default {
         data.title &&
         data.tag &&
         data.desc &&
-        data.queryFolderName &&
         data.title.length > 0 &&
         data.tag.length > 0 &&
-        data.desc.length > 0 &&
-        data.queryFolderName.length > 0
+        data.desc.length > 0
       );
     });
 

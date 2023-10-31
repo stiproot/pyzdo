@@ -1,4 +1,41 @@
 <template>
+  <q-dialog v-model="searching">
+    <q-card style="width: 700px; max-width: 80vw">
+      <q-card-section>
+        <div class="text-h6">Search</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <SelectTeamComponent
+          @selected="handleTeamSelect"
+          default=""
+          label="Name"
+          optionValue="id"
+          optionLabel="name"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="searchingIterations">
+    <q-card style="width: 700px; max-width: 80vw">
+      <q-card-section>
+        <div class="text-h6">Search</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <SelectIterationComponent
+          @selected="handleIterationSelect"
+          default=""
+          label="Iterations"
+          optionValue="id"
+          optionLabel="name"
+          :team-name="teamName"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
   <div class="text-h4 q-mb-md">Dashboards</div>
   <div v-if="!creating" class="q-pa-md">
     <InitiativeComponent
@@ -6,12 +43,14 @@
       v-if="showInitiative"
       @updated="handleInitiativeUpdated"
     />
+
     <BtnComponent
       class="float-right"
       v-if="showInitiative"
       icon="close"
       @click="handleCloseClick"
     />
+
     <q-form class="q-gutter-md" v-if="!showInitiative && !isExpanded">
       <q-input
         v-model="dashboardName"
@@ -21,25 +60,36 @@
       />
 
       <q-input
-        v-model="iterationName"
-        label="Iteration Name *"
-        lazy-rules
-        :rules="[(val) => (val && val.length) || 'Iteration name is required']"
-      />
-
-      <q-input
-        v-model="iterationBasePath"
-        label="Iteration Path *"
-        lazy-rules
-        :rules="[(val) => (val && val.length) || 'Iteration path is required']"
-      />
-
-      <q-input
         v-model="teamName"
         label="Team Name *"
         lazy-rules
         :rules="[(val) => (val && val.length) || 'Team name is required']"
-      />
+      >
+        <template v-slot:after>
+          <q-btn
+            round
+            color="primary"
+            icon="search"
+            @click="searching = true"
+          />
+        </template>
+      </q-input>
+
+      <q-input
+        v-model="iterationPath"
+        label="Iteration Path *"
+        lazy-rules
+        :rules="[(val) => (val && val.length) || 'Iteration path is required']"
+      >
+        <template v-slot:after>
+          <q-btn
+            round
+            color="primary"
+            icon="search"
+            @click="searchingIterations = true"
+          />
+        </template>
+      </q-input>
 
       <q-input
         v-model="queryFolderBasePath"
@@ -100,11 +150,7 @@
     </q-expansion-item>
   </div>
 
-  <ProcessOrchestratorComponent
-    v-if="creating"
-    :blueprints="blueprints"
-    @processes-complete="handleCreateProcessesComplete"
-  />
+  <ProcessesComponent v-if="creating" :blueprints="processes" />
 
   <BtnComponent
     class="float-right"
@@ -119,7 +165,10 @@ import { generateGuid } from "@/services/guids.service";
 import { CMD_TYPES } from "@/services/cmd-types.enum";
 import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
 import BtnComponent from "./BtnComponent.vue";
-import ProcessOrchestratorComponent from "./ProcessOrchestratorComponent.vue";
+import ProcessesComponent from "./ProcessesComponent.vue";
+import { useProcessStore, ProcessProvider } from "@/stores/process.store";
+import SelectTeamComponent from "./SelectTeamComponent.vue";
+import SelectIterationComponent from "./SelectIterationComponent.vue";
 import InitiativeComponent from "./InitiativeComponent.vue";
 import {
   useCreateAzdoDashboardStore,
@@ -129,30 +178,18 @@ export default {
   name: "AzdoDashboardComponent",
   components: {
     BtnComponent,
-    ProcessOrchestratorComponent,
+    ProcessesComponent,
     InitiativeComponent,
+    SelectTeamComponent,
+    SelectIterationComponent,
   },
   setup() {
-    const store = useCreateAzdoDashboardStore();
-    const provider = new CreateAzdoDashboardProvider(store);
-
-    const createPayload = ref("");
-    const blueprints = ref([]);
-    const creating = ref(false);
-    const isExpanded = ref(false);
-    const showInitiative = ref(false);
-
-    const defaultInitiativeState = () => ({
-      title: "",
-      tag: "",
-      desc: "",
-      queryFolderName: "",
-    });
-
+    const provider = new CreateAzdoDashboardProvider(
+      useCreateAzdoDashboardStore()
+    );
     const {
       dashboardName,
-      iterationName,
-      iterationBasePath,
+      iterationPath,
       teamName,
       queryFolderBasePath,
       initiatives,
@@ -163,19 +200,36 @@ export default {
       upsert,
     } = provider;
 
+    const processProvider = new ProcessProvider(useProcessStore());
+    const { processes, refresh, syncAll, isStillRunning } = processProvider;
+
+    const createPayload = ref("");
+    const creating = ref(false);
+    const isExpanded = ref(false);
+    const showInitiative = ref(false);
+    const searching = ref(false);
+    const searchingIterations = ref(false);
+
+    const defaultInitiativeState = () => ({
+      title: "",
+      tag: "",
+      desc: "",
+    });
+
     const canCreate = computed(() => isValidState);
 
     const data = reactive({
       dashboardName,
-      iterationName,
-      iterationBasePath,
+      iterationPath,
       teamName,
       queryFolderBasePath,
       initiatives,
       createPayload,
-      blueprints,
       creating,
       canCreate,
+      searching,
+      searchingIterations,
+      processes,
     });
 
     const initiativeModel = ref(defaultInitiativeState());
@@ -205,6 +259,26 @@ export default {
       isExpanded.value = false;
     };
 
+    const handleTeamSelect = (item) => {
+      if (!item || item === "") {
+        return;
+      }
+
+      teamName.value = item.name;
+      searching.value = false;
+    };
+
+    const handleIterationSelect = (item) => {
+      if (!item || item === "") {
+        return;
+      }
+
+      iterationPath.value = item.path;
+      searchingIterations.value = false;
+    };
+
+    // Software\Non-Aligned\Customers and Emerging Markets\Teams\N2 Chapmans Peak Project Team\2023\Sprint 14 2023
+
     const mergeInitiatives = (val) => {
       const existing = initiatives.value.find((i) => i.tag === val.tag);
 
@@ -226,29 +300,67 @@ export default {
       showInitiative.value = false;
     };
 
+    // const handleCreateClick = async () => {
+    //   const idempotencyId = generateGuid();
+
+    //   try {
+    //     await upsert(idempotencyId);
+    //     const procs = [
+    //       {
+    //         id: idempotencyId,
+    //         project_id: "default",
+    //         status: PROCESS_STATUSES.RUNNING,
+    //         cmd_type: CMD_TYPES.CREATE_DASHBOARD,
+    //       },
+    //     ];
+
+    //     blueprints.value = procs;
+    //     creating.value = true;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
+
     const handleCreateClick = async () => {
       const idempotencyId = generateGuid();
+      const procs = [
+        {
+          id: idempotencyId,
+          display: "Creating dashboard",
+          project_id: "default",
+          status: PROCESS_STATUSES.RUNNING,
+          cmd_type: CMD_TYPES.CREATE_DASHBOARD,
+        },
+      ];
 
-      try {
-        await upsert(idempotencyId);
-        const procs = [
-          {
-            id: idempotencyId,
-            project_id: "default",
-            status: PROCESS_STATUSES.RUNNING,
-            cmd_type: CMD_TYPES.CREATE_DASHBOARD,
-          },
-        ];
+      console.log("handleCreateClick", "procs", procs);
 
-        blueprints.value = procs;
-        creating.value = true;
-      } catch (e) {
-        console.log(e);
-      }
+      processes.value = procs;
+      creating.value = true;
+
+      await syncAll();
+      await upsert(idempotencyId);
+
+      initProcessInterval();
+    };
+
+    const initProcessInterval = () => {
+      let intervalId = setInterval(async () => {
+        if (isStillRunning.value) {
+          console.log("processes still running, refreshing...");
+          await refresh();
+        } else {
+          console.log("processes finished, cleaning interval...");
+          clearInterval(intervalId);
+          setTimeout(() => {
+            handleCreateProcessesComplete();
+          }, 2000);
+        }
+      }, 3000);
     };
 
     const handleCreateProcessesComplete = () => {
-      blueprints.value = [];
+      processes.value = [];
       createPayload.value = "";
       creating.value = false;
       init();
@@ -269,6 +381,8 @@ export default {
       handleCloseClick,
       handleInitiativeUpdated,
       handlePayloadBlur,
+      handleTeamSelect,
+      handleIterationSelect,
     };
   },
 };

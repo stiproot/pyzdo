@@ -4,7 +4,6 @@ from pm_common import (
     RootCmd,
     EnvVarProvider,
     build_persist_cmd,
-    build_post_proc_status_update_persist_cmd,
     build_publish_to_topic_cmd,
     enrich_payload,
 )
@@ -24,12 +23,5 @@ def persist_payload(payload: dict, cmd: RootCmd) -> int:
     enrich_payload(payload, cmd)
     persist_cmd = build_persist_cmd(payload, cmd)
     publish_to_topic_cmd = build_publish_to_topic_cmd(persist_cmd, PERSIST_TOPIC)
-    persist_proc.process(publish_to_topic_cmd)
 
-    proc_status_update_persist_cmd = build_post_proc_status_update_persist_cmd(
-        status="COMPLETE", cmd=cmd, cmd_type=cmd.cmd_type
-    )
-    proc_status_update_publish_to_topic_cmd = build_publish_to_topic_cmd(
-        proc_status_update_persist_cmd, PERSIST_TOPIC
-    )
-    persist_proc.process(proc_status_update_publish_to_topic_cmd)
+    persist_proc.process(publish_to_topic_cmd)

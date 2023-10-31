@@ -1,14 +1,40 @@
 <template>
+  <q-dialog v-model="searching">
+    <q-card style="width: 700px; max-width: 80vw">
+      <q-card-section>
+        <div class="text-h6">Search</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <InfiniteScrollComponent
+          @selected="handleQuerySelect"
+          default=""
+          v-model="model"
+          label="Name"
+          optionValue="id"
+          optionLabel="name"
+        />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
   <div class="q-pa-md">
     <q-form class="q-gutter-md">
       <q-input
-        v-model="id"
-        label="Id *"
+        v-model="name"
+        label="Name *"
         lazy-rules
-        @blur="handleIdBlur"
-        :rules="[(val) => (val && val.length) || 'Id is required']"
-      />
-      <q-input v-model="name" label="Name" lazy-rules @blur="handleNameBlur" />
+        :rules="[(val) => (val && val.length) || 'Name is required']"
+      >
+        <template v-slot:after>
+          <q-btn
+            round
+            color="primary"
+            icon="search"
+            @click="searching = true"
+          />
+        </template>
+      </q-input>
       <q-input
         v-model="ql"
         label="WIQL *"
@@ -17,71 +43,106 @@
         :rules="[(val) => (val && val.length) || 'WIQL is required']"
       />
 
+      <q-input
+        v-model="tags"
+        label="Tags (semi-colon separated)"
+        lazy-rules
+        @blur="handleTagsBlur"
+      />
+
       <BtnComponent icon="expand_more" @click="handleTestClick" />
-      <FabActionComponent> </FabActionComponent>
     </q-form>
   </div>
 
-  <div class="q-pa-md" v-if="rows && rows.length">
-    <q-table title="Work Items" :rows="rows" :columns="columns" row-key="id">
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="id" :props="props">
-            {{ props.row.id }}
-          </q-td>
-          <q-td key="url" :props="props">
-            <a :href="props.row.url" target="_blank"> {{ props.row.url }}</a>
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
+  <div class="q-pa-md">
+    <div v-if="rows && rows.length === 0">
+      <div>Nothing found.</div>
+    </div>
+
+    <div v-if="rows && rows.length">
+      <q-table title="Work Items" :rows="rows" :columns="columns" row-key="id">
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="id" :props="props">
+              {{ props.row.id }}
+            </q-td>
+            <q-td key="url" :props="props">
+              <a :href="props.row.url" target="_blank"> {{ props.row.url }}</a>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
   </div>
+
   <slot />
 </template>
 <script>
 import { ref, reactive, toRefs } from "vue";
 import { useQueryStore, QueryProvider } from "@/stores/query.store.js";
-import { getQuery, runWiql } from "@/services/azdo.service";
-import FabActionComponent from "./FabActionComponent.vue";
+import { runWiql } from "@/services/azdo.service";
 import BtnComponent from "./BtnComponent.vue";
+import InfiniteScrollComponent from "./InfiniteScrollComponent.vue";
 
 export default {
   name: "QueryComponent",
-  components: { FabActionComponent, BtnComponent },
+  components: { BtnComponent, InfiniteScrollComponent },
   setup() {
     const store = useQueryStore();
     const provider = new QueryProvider(store);
 
-    const { id, name, ql, isValid } = provider;
-    const data = reactive({ id, name, ql, isValid });
+    const rows = ref(null);
+    const tags = ref(null);
+    const { name, ql, isValid } = provider;
+    const searching = ref(false);
+    const data = reactive({ name, ql, isValid, tags, searching });
 
-    const checkForQuery = async () => {
-      if ((data.id && data.id.length) || (data.name && data.name.length)) {
-        const resp = await getQuery({ id: data.id, name: data.name });
-        if (resp) {
-          data.id = resp.id;
-          data.name = resp.name;
-          data.ql = resp.wiql;
-        }
+    const clearTags = () => {
+      tags.value = "";
+    };
+
+    const handleTagsBlur = async () => {
+      if (!tags.value || !tags.value.length) {
+        return;
       }
-      return null;
+
+      const tagsArr = tags.value.split(";");
+      const tagFilter = tagsArr
+        .map((t) => `[System.Tags] CONTAINS '${t}'`)
+        .join(" AND ");
+
+      const wiql =
+        `SELECT ` +
+        `[System.Id], ` +
+        `[System.WorkItemType], ` +
+        `[System.Title], ` +
+        `[System.AssignedTo], ` +
+        `[System.State], ` +
+        `[System.Tags]  ` +
+        `FROM WorkItems WHERE ${tagFilter}`;
+
+      ql.value = wiql;
+      name.value = tagsArr.join("_");
     };
 
-    const handleIdBlur = async () => {
-      await checkForQuery();
-    };
-
-    const handleNameBlur = async () => {
-      await checkForQuery();
-    };
-
-    const rows = ref([]);
     const handleTestClick = async () => {
       const resp = await runWiql(data.ql);
       if (resp) {
         rows.value = resp.workItems;
+      } else {
+        rows.value = [];
       }
       console.log("handleTestClick", resp);
+    };
+
+    const handleQuerySelect = (item) => {
+      if (!item || item === "") {
+        return;
+      }
+      name.value = item.name;
+      ql.value = item.wiql;
+      searching.value = false;
+      clearTags();
     };
 
     const columns = ref([
@@ -108,9 +169,10 @@ export default {
 
     return {
       ...toRefs(data),
-      handleIdBlur,
-      handleNameBlur,
+      handleTagsBlur,
       handleTestClick,
+      handleQuerySelect,
+      clearTags,
       columns,
       rows,
     };

@@ -10,30 +10,16 @@
 
       <q-input
         v-model="parentId"
-        label="Parent Id *"
+        label="New Parent Id *"
         lazy-rules
         :rules="[(val) => (val && val.length) || 'Parent ID is required']"
       />
 
       <q-input
-        v-model="iterationName"
-        label="Iteration Name *"
-        lazy-rules
-        :rules="[(val) => (val && val.length) || 'Iteration name is required']"
-      />
-
-      <q-input
-        v-model="iterationBasePath"
+        v-model="iterationPath"
         label="Iteration Path *"
         lazy-rules
         :rules="[(val) => (val && val.length) || 'Iteration path is required']"
-      />
-
-      <q-input
-        v-model="teamName"
-        label="Team Name *"
-        lazy-rules
-        :rules="[(val) => (val && val.length) || 'Team name is required']"
       />
 
       <q-input
@@ -43,12 +29,7 @@
         :rules="[(val) => (val && val.length) || 'Area path is required']"
       />
 
-      <q-input
-        v-model="tags"
-        label="Tags *"
-        lazy-rules
-        :rules="[(val) => (val && val.length) || 'Tags are required']"
-      />
+      <q-input v-model="tags" label="Additional Tags" lazy-rules />
     </q-form>
 
     <q-separator />
@@ -73,11 +54,7 @@
     </q-expansion-item>
   </div>
 
-  <ProcessOrchestratorComponent
-    v-if="cloning"
-    :blueprints="cloningBlueprints"
-    @processes-complete="handleCloneProcessesComplete"
-  />
+  <ProcessesComponent v-if="cloning" :blueprints="processes" />
 
   <BtnComponent
     class="float-right"
@@ -87,7 +64,7 @@
   />
 </template>
 <script>
-import { computed, reactive, toRefs, ref } from "vue";
+import { computed, reactive, toRefs, ref, watch } from "vue";
 import { generateGuid } from "@/services/guids.service";
 import { CMD_TYPES } from "@/services/cmd-types.enum.js";
 import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
@@ -96,12 +73,15 @@ import {
   CloneAzdoWiProvider,
 } from "@/stores/clone-azdo-wi.store";
 import BtnComponent from "./BtnComponent.vue";
-import ProcessOrchestratorComponent from "./ProcessOrchestratorComponent.vue";
+import ProcessesComponent from "./ProcessesComponent.vue";
+import { getWiDetails } from "@/services/azdo.service";
+import { useProcessStore, ProcessProvider } from "@/stores/process.store";
+
 export default {
   name: "CloneAzdoWiComponent",
   components: {
     BtnComponent,
-    ProcessOrchestratorComponent,
+    ProcessesComponent,
   },
   setup() {
     const store = useCloneAzdoWiStore();
@@ -110,9 +90,7 @@ export default {
     const {
       id,
       parentId,
-      iterationName,
-      iterationBasePath,
-      teamName,
+      iterationPath,
       areaPath,
       tags,
       upsert,
@@ -120,26 +98,41 @@ export default {
       isValidState,
     } = provider;
 
+    const processProvider = new ProcessProvider(useProcessStore());
+    const { processes, refresh, syncAll, isStillRunning } = processProvider;
+
     const clonePayload = ref("");
-    const cloningBlueprints = ref([]);
     const cloning = ref(false);
     const canClone = computed(() => isValidState);
 
     const data = reactive({
       id,
       parentId,
-      iterationName,
-      iterationBasePath,
-      teamName,
+      iterationPath,
       areaPath,
       tags,
       clonePayload,
-      cloningBlueprints,
       cloning,
       canClone,
+      processes,
     });
 
     const isExpanded = ref(false);
+
+    watch(
+      () => parentId.value,
+      async (newVal) => {
+        if (!newVal) {
+          return;
+        }
+
+        const wi = await getWiDetails(newVal);
+        if (wi) {
+          iterationPath.value = wi.fields["System.IterationPath"];
+          areaPath.value = wi.fields["System.AreaPath"];
+        }
+      }
+    );
 
     const handlePayloadBlur = () => {
       if (!clonePayload.value) {
@@ -152,30 +145,68 @@ export default {
       isExpanded.value = false;
     };
 
+    // const handleCloneClick = async () => {
+    //   const idempotencyId = generateGuid();
+
+    //   try {
+    //     await upsert(idempotencyId);
+    //     const procs = [
+    //       {
+    //         id: idempotencyId,
+    //         project_id: "default",
+    //         status: PROCESS_STATUSES.RUNNING,
+    //         cmd_type: CMD_TYPES.CLONE_UNIT_OF_WORK,
+    //       },
+    //     ];
+
+    //     cloningBlueprints.value = procs;
+    //     cloning.value = true;
+    //   } catch (ex) {
+    //     console.log(ex);
+    //   }
+    // };
+
     const handleCloneClick = async () => {
       const idempotencyId = generateGuid();
+      const procs = [
+        {
+          id: idempotencyId,
+          display: "Cloning Work Item Tree",
+          project_id: "default",
+          status: PROCESS_STATUSES.RUNNING,
+          cmd_type: CMD_TYPES.CLONE_UNIT_OF_WORK,
+        },
+      ];
 
-      try {
-        await upsert(idempotencyId);
-        const procs = [
-          {
-            id: idempotencyId,
-            project_id: "default",
-            status: PROCESS_STATUSES.RUNNING,
-            cmd_type: CMD_TYPES.CLONE_UNIT_OF_WORK,
-          },
-        ];
+      console.log("handleCloneClick", "procs", procs);
 
-        cloningBlueprints.value = procs;
-        cloning.value = true;
-      } catch (ex) {
-        console.log(ex);
-      }
+      processes.value = procs;
+      cloning.value = true;
+
+      await syncAll();
+      await upsert(idempotencyId);
+
+      initProcessInterval();
+    };
+
+    const initProcessInterval = () => {
+      let intervalId = setInterval(async () => {
+        if (isStillRunning.value) {
+          console.log("processes still running, refreshing...");
+          await refresh();
+        } else {
+          console.log("processes finished, cleaning interval...");
+          clearInterval(intervalId);
+          setTimeout(() => {
+            handleCloneProcessesComplete();
+          }, 2000);
+        }
+      }, 3000);
     };
 
     const handleCloneProcessesComplete = () => {
       clonePayload.value = "";
-      cloningBlueprints.value = [];
+      processes.value = [];
       cloning.value = false;
       init();
     };

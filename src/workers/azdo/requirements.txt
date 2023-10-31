@@ -1,5 +1,5 @@
 confluent-kafka
 pyxi_process_manager==0.0.10
-pyxi_azdo_http_client==0.0.7
+pyxi_azdo_http_client==0.0.9
 httpx
 requests

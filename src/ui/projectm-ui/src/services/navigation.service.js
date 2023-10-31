@@ -45,14 +45,6 @@ export class NavigationService {
     });
   }
 
-  // goToInsights(projId) {
-  //   this._router.push({
-  //     name: "project.insights",
-  //     params: { projectId: projId },
-  //     query: { tab: "gather" },
-  //   });
-  // }
-
   goToVis(projId) {
     this._router.push({
       name: "project.vis",
@@ -91,5 +83,9 @@ export class NavigationService {
 
   get chartId() {
     return this.getRouteParam("chartId");
+  }
+
+  get isNew() {
+    return this._router.currentRoute.value.path.includes("new");
   }
 }

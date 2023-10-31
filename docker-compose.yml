@@ -265,6 +265,8 @@ services:
       - BOOTSTRAP_SERVERS=broker:29092
       - WORKER_TOPIC=topic_projectm_cmd_persist
       - PERSIST_URL=http://mandy-cb-api:8001/cb/cmd
+      - BULK_PERSIST_URL=http://mandy-cb-api:8001/cb/cmds
+      - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-azdo-worker:
     networks:
@@ -280,6 +282,7 @@ services:
       - PERSIST_URL=http://mandy-kafka-api:8002/kafka/topic/publish
       - PERSIST_TOPIC=topic_projectm_cmd_persist
       - API_KEY=OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=
+      - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-insights-worker:
     networks:
@@ -293,7 +296,7 @@ services:
       - WORKER_TOPIC=topic_projectm_cmd_insights_structure
       - PERSIST_TOPIC=topic_projectm_cmd_persist
       - PERSIST_URL=http://mandy-kafka-api:8002/kafka/topic/publish
-      - STORE_URL=http://mandy-cb-api:8001/cb/qry
+      - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-azdo-proxy-worker:
     networks:
@@ -309,6 +312,7 @@ services:
       - PERSIST_URL=http://mandy-kafka-api:8002/kafka/topic/publish
       - AZDO_PROXY_BASE_URL=http://mandy-azdo-proxy-api:80
       - API_KEY=OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=
+      - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-ui-api:
     networks:

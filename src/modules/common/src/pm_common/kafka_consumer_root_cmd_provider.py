@@ -24,9 +24,9 @@ class KafkaConsumerRootCmdProvider(CmdProvider):
             msg_value = msg.value()
             decoded_msg_value = msg_value.decode("utf-8")
 
-            logging.info(
-                f"KafkaConsumerRootCmdProvider.provide: decoded message value: {decoded_msg_value}"
-            )
+            # logging.info(
+            #     f"KafkaConsumerRootCmdProvider.provide: decoded message value: {decoded_msg_value}"
+            # )
 
             structured_msg_data = json_loads(decoded_msg_value)
             obj = RootCmd(**structured_msg_data)

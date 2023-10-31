@@ -11,7 +11,7 @@
         :item="i"
       >
         <q-item-section>
-          <q-item-label>{{ i.id }}</q-item-label>
+          <q-item-label>{{ i.display || i.id }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-item-label>{{ i.status }}</q-item-label>

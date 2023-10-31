@@ -2,7 +2,7 @@
   <div class="qa-pa-md row items-start q-gutter-md">
     <ItemComponent
       v-for="i in items"
-      :key="i.id"
+      :key="i"
       :item="i"
       @item-click="onItemClick"
     />
@@ -14,10 +14,10 @@ import ItemComponent from "./ItemComponent.vue";
 export default {
   name: "ItemSelectorComponent",
   components: { ItemComponent },
-  props: { items: Array },
+  props: { items: Array, itemValue: String, itemLabel: String },
   setup(props, { emit }) {
     const emitEvent = (e) => {
-      emit(e.evtId, e.itemId);
+      emit(e.evtId, e);
     };
 
     const onItemClick = (e) => {

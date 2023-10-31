@@ -33,21 +33,15 @@
   </q-form>
 </template>
 <script>
-import { onMounted, reactive, toRefs, computed } from "vue";
+import { reactive, toRefs, computed } from "vue";
 import { useRouter } from "vue-router";
 import { NavigationService } from "@/services/navigation.service";
 import {
   useProjectDetailsStore,
   ProjectDetailsProvider,
 } from "@/stores/project-details.store";
-/* import FabActionComponent from "./FabActionComponent.vue"; */
-/* import BtnComponent from "./BtnComponent.vue"; */
 export default {
   name: "ProjectDetailsComponent",
-  /* components: { */
-  /*   FabActionComponent, */
-  /*   BtnComponent, */
-  /* }, */
   setup() {
     const router = useRouter();
     const nav = new NavigationService(router);
@@ -74,10 +68,6 @@ export default {
       await sync();
       nav.goToProjects();
     };
-
-    onMounted(async () => {
-      // await projectProvider.init(nav.projId);
-    });
 
     return {
       ...toRefs(data),

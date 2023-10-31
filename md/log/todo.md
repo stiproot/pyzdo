@@ -1,12 +1,13 @@
+[ ] Simplify WI clone: area path
+[ ] Simplify WI clone: iteration path
+
+---
 
 [ ] Default risk weighting and severity for missing fields
-
 [ ] Hyperlinks in nested tree blocks
 [ ] Risk weighting filter
-[ ] Grouped by Green, Amber and Red according to the overall Risk Impact [Low (1-14),  Medium (15-39),  High (40-50)]
-
+[ ] Grouped by Green, Amber and Red according to the overall Risk Impact [Low (1-14), Medium (15-39), High (40-50)]
 [ ] Define project queries in the UI
-
 [ ] Chron worker that processes stored queries
 [ ] Ability to query Couchbase API from UI
 [ ] Cleanup documentation
@@ -17,9 +18,10 @@
 [ ] Write end-to-end integration tests
 [ ] ELK
 
+[x] Landing page = projects
 [x] Import new data
 [x] UI (basic)
-[x] tree structure needs to have a root 
+[x] tree structure needs to have a root
 [x] String to enum
 [x] UI (tidy tree)
 [x] Align command models with blueprints
@@ -33,3 +35,11 @@
 [x] Consolidate models (remove excessive classes)
 [x] workflow hash
 [ ] ~~Look into replacing `requests` package~~
+
+1101238
+
+970810
+
+Software\Non-Aligned\Customers and Emerging Markets\Teams\N2 Chapmans Peak Project Team\2023\Sprint 12 2023
+
+Software\Customers and Emerging Markets\Rapid Response\Project\N2 Chapmans Peak Project Team

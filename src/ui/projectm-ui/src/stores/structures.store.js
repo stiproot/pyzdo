@@ -29,8 +29,6 @@ const actions = {
       getWeightedTree(id),
     ]);
 
-    console.log("resp1", resp1, "resp2", resp2);
-
     this.summarizedTree = resp1;
     this.weightedTree = resp2;
   },
@@ -91,7 +89,6 @@ export class StructuresProvider {
       callback();
       return;
     }
-    console.log("initThen", "not initialized -> initializing");
     Promise.all([this.init(id)]).then(callback);
   }
 

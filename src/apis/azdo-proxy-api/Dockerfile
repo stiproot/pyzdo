@@ -8,6 +8,7 @@ RUN dotnet restore .
 
 RUN dotnet publish . --no-restore --configuration Release --output /publish
 
+# from mcr.microsoft.com/dotnet/runtime-deps:7.0 as final
 from mcr.microsoft.com/dotnet/aspnet:7.0 as final
 
 RUN mkdir /app

@@ -5,11 +5,14 @@ const buildCmd = (data) => {
   const cmd = {
     cmdData: data,
     cmdMetadata: {
+      idempotency_id: data.id,
+      project_id: data.project_id,
       cmd_post_op: {
         store: {
           trgt_bucket: BUCKET,
           trgt_scope: SCOPES.DEFINITIONS,
           trgt_collection: COLLECTIONS.PROCESSES,
+          key: data.id,
         },
       },
     },

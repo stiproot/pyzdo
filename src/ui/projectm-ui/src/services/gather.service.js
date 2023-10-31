@@ -7,6 +7,9 @@ const findTrgtCollection = (data) => {
   if (data.indexOf("Epic") > -1) {
     return "epics";
   }
+  if (data.indexOf("Initiatives") > -1) {
+    return "initiatives";
+  }
   if (data.indexOf("Feature") > -1) {
     return "features";
   }
@@ -20,7 +23,7 @@ const findTrgtCollection = (data) => {
     return "bugs";
   }
 
-  throw new Error("Unknown work item type");
+  return "unknown";
 };
 
 const buildGatherCmd = (data) => {
@@ -40,6 +43,7 @@ const buildGatherCmd = (data) => {
       trgt_bucket: "project_m",
       trgt_scope: "azdo",
       trgt_collection: findTrgtCollection(ql),
+      key: processId,
     },
   };
   const cmdPreOpData = {};
@@ -58,35 +62,10 @@ const buildGatherCmd = (data) => {
     cmdMetadata
   );
 
-  console.log("gather_cmd:", cmd);
-
   return cmd;
 };
 
-// const buildGatherCmd = (projectId, processId, ql) => {
-//   return {
-//     cmd: {
-//       cmd_type: "GATHER_PROJECT_UNITS_OF_WORK",
-//       ql: ql,
-//     },
-//     metadata: {
-//       attributes: {
-//         project_id: projectId,
-//       },
-//       process: {
-//         process_id: processId,
-//       },
-//       store: {
-//         bucket_name: "project_m",
-//         scope_name: "azdo",
-//         trgt_collection: findTrgtCollection(ql),
-//       },
-//     },
-//   };
-// };
-
 export async function gather(data) {
   const req = buildGatherCmd(data);
-  console.log("gather_req:", req);
   await publishGatherCmd(req);
 }

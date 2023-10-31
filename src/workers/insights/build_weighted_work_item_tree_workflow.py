@@ -1,5 +1,8 @@
 from algos.build_risk_weighted_work_item_tree import build_risk_weighted_work_item_tree
-from queries import build_get_node_query_fn, build_get_node_fn, get_node_ids
+from queries import (
+    get_wi_collection_hash_for_project,
+    get_wi_root_collection_from_collection_hash,
+)
 from persists import persist_payload
 from pm_common import RootCmd
 
@@ -9,21 +12,19 @@ SCOPE_NAME = "azdo"
 
 
 def build_weighted_work_item_tree_workflow(cmd: RootCmd) -> int:
-    root_collection_name = cmd.cmd_data["root_collection"]
-
-    root_node_ids = get_node_ids(
-        bucket_name=BUCKET_NAME,
-        scope_name=SCOPE_NAME,
-        collection_name=root_collection_name,
+    collection_hash = get_wi_collection_hash_for_project(cmd)
+    root_collection_name = get_wi_root_collection_from_collection_hash(collection_hash)
+    root_node_ids = [
+        int(item["id"]) for item in collection_hash[root_collection_name].values()
+    ]
+    get_raw_node_fn = lambda id, node_type: collection_hash.get(node_type, {}).get(
+        id, {}
     )
-
-    get_node_fn = build_get_node_fn(build_get_node_query_fn(BUCKET_NAME, SCOPE_NAME))
 
     structured_nodes = []
     for node_id in root_node_ids:
-        id = node_id["id"]
         structure = build_risk_weighted_work_item_tree(
-            id, root_collection_name, get_node_fn
+            node_id, root_collection_name, get_raw_node_fn
         )
         structured_nodes.append(structure)
 

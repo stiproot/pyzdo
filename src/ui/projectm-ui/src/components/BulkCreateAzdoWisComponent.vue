@@ -12,11 +12,7 @@
     </q-form>
   </div>
 
-  <ProcessOrchestratorComponent
-    v-if="creating"
-    :blueprints="blueprints"
-    @processes-complete="handleCreateProcessesComplete"
-  />
+  <ProcessesComponent v-if="creating" :blueprints="processes" />
 
   <BtnComponent
     class="float-right"
@@ -31,7 +27,8 @@ import { generateGuid } from "@/services/guids.service";
 import { CMD_TYPES } from "@/services/cmd-types.enum.js";
 import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
 import BtnComponent from "./BtnComponent.vue";
-import ProcessOrchestratorComponent from "./ProcessOrchestratorComponent.vue";
+import ProcessesComponent from "./ProcessesComponent.vue";
+import { useProcessStore, ProcessProvider } from "@/stores/process.store";
 import {
   useBulkCreateAzdoWisStore,
   BulkCreateAzdoWisProvider,
@@ -40,47 +37,88 @@ export default {
   name: "BulkCreateAzdoWisComponent",
   components: {
     BtnComponent,
-    ProcessOrchestratorComponent,
+    ProcessesComponent,
   },
   setup() {
     const store = useBulkCreateAzdoWisStore();
     const provider = new BulkCreateAzdoWisProvider(store);
-
     const { init, upsert, wis } = provider;
+
+    const processProvider = new ProcessProvider(useProcessStore());
+    const { processes, refresh, syncAll, isStillRunning } = processProvider;
+
     const payload = ref("");
-    const blueprints = ref([]);
     const creating = ref(false);
 
     const data = reactive({
       wis,
       payload,
-      blueprints,
       creating,
+      processes,
     });
+
+    // const handleCreateClick = async () => {
+    //   const idempotencyId = generateGuid();
+    //   try {
+    //     await upsert(idempotencyId);
+    //     const procs = [
+    //       {
+    //         id: idempotencyId,
+    //         project_id: "default",
+    //         status: PROCESS_STATUSES.RUNNING,
+    //         cmd_type: CMD_TYPES.BULK_CREATE_UNITS_OF_WORK,
+    //         key: idempotencyId,
+    //       },
+    //     ];
+
+    //     blueprints.value = procs;
+    //     creating.value = true;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // };
 
     const handleCreateClick = async () => {
       const idempotencyId = generateGuid();
-      try {
-        await upsert(idempotencyId);
-        const procs = [
-          {
-            id: idempotencyId,
-            project_id: "default",
-            status: PROCESS_STATUSES.RUNNING,
-            cmd_type: CMD_TYPES.BULK_CREATE_UNITS_OF_WORK,
-          },
-        ];
+      const procs = [
+        {
+          id: idempotencyId,
+          display: "Builk creating work items",
+          project_id: "default",
+          status: PROCESS_STATUSES.RUNNING,
+          cmd_type: CMD_TYPES.BULK_CREATE_UNITS_OF_WORK,
+        },
+      ];
 
-        blueprints.value = procs;
-        creating.value = true;
-      } catch (e) {
-        console.log(e);
-      }
+      console.log("handleCreateClick", "procs", procs);
+
+      processes.value = procs;
+      creating.value = true;
+
+      await syncAll();
+      await upsert(idempotencyId);
+
+      initProcessInterval();
+    };
+
+    const initProcessInterval = () => {
+      let intervalId = setInterval(async () => {
+        if (isStillRunning.value) {
+          console.log("processes still running, refreshing...");
+          await refresh();
+        } else {
+          console.log("processes finished, cleaning interval...");
+          clearInterval(intervalId);
+          setTimeout(() => {
+            handleCreateProcessesComplete();
+          }, 2000);
+        }
+      }, 3000);
     };
 
     const handleCreateProcessesComplete = () => {
       init();
-      blueprints.value = [];
+      processes.value = [];
       creating.value = false;
     };
 

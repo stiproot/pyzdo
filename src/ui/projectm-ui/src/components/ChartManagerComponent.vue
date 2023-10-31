@@ -72,7 +72,7 @@ export default {
     const showChart = computed(() => nav.chartId !== undefined);
 
     const handleChartClick = (e) => {
-      nav.goToChart(nav.projId, e);
+      nav.goToChart(nav.projId, e.item.id);
     };
 
     function handleCloseClick() {

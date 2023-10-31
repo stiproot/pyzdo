@@ -6,18 +6,17 @@ import { generateGuid } from "@/services/guids.service";
 
 const defaultState = () => ({
   dashboardName: "",
-  iterationName: "",
-  iterationBasePath: "",
+  iterationPath: "",
   teamName: "",
-  queryFolderBasePath: "",
+  queryFolderBasePath:
+    "Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team/Project Metrics/Dashboard Queries",
   initiatives: [],
 });
 
 const ACTIONS = {
   INIT: "init",
   SET_NAME: "setName",
-  SET_ITERATION_NAME: "setIterationName",
-  SET_ITERATION_BASE_PATH: "setIterationBasePath",
+  SET_ITERATION_PATH: "setIterationPath",
   SET_TEAM_NAME: "setTeamName",
   SET_QUERY_FOLDER_BASE_PATH: "setQueryFolderBasePath",
   SET_INITIATIVES: "setInitiatives",
@@ -28,8 +27,7 @@ const ACTIONS = {
 
 const GETTERS = {
   GET_NAME: "getName",
-  GET_ITERATION_NAME: "getIterationName",
-  GET_ITERATION_BASE_PATH: "getIterationBasePath",
+  GET_ITERATION_PATH: "getIterationPath",
   GET_TEAM_NAME: "getTeamName",
   GET_QUERY_FOLDER_BASE_PATH: "getQueryFolderBasePath",
   GET_INITIATIVES: "getInitiatives",
@@ -41,16 +39,14 @@ const actions = {
   [ACTIONS.INIT](data) {
     const {
       dashboardName,
-      iterationName,
-      iterationBasePath,
+      iterationPath,
       teamName,
       queryFolderBasePath,
       initiatives,
     } = data || defaultState();
 
     this.dashboardName = dashboardName;
-    this.iterationName = iterationName;
-    this.iterationBasePath = iterationBasePath;
+    this.iterationPath = iterationPath;
     this.teamName = teamName;
     this.queryFolderBasePath = queryFolderBasePath;
     this.initiatives = initiatives;
@@ -61,8 +57,8 @@ const actions = {
   [ACTIONS.SET_ITERATION_NAME](data) {
     this.iterationName = data;
   },
-  [ACTIONS.SET_ITERATION_BASE_PATH](data) {
-    this.iterationBasePath = data;
+  [ACTIONS.SET_ITERATION_PATH](data) {
+    this.iterationPath = data;
   },
   [ACTIONS.SET_TEAM_NAME](data) {
     this.teamName = data;
@@ -95,11 +91,8 @@ const getters = {
   [GETTERS.GET_NAME]() {
     return this.dashboardName;
   },
-  [GETTERS.GET_ITERATION_NAME]() {
-    return this.iterationName;
-  },
-  [GETTERS.GET_ITERATION_BASE_PATH]() {
-    return this.iterationBasePath;
+  [GETTERS.GET_ITERATION_PATH]() {
+    return this.iterationPath;
   },
   [GETTERS.GET_TEAM_NAME]() {
     return this.teamName;
@@ -113,8 +106,7 @@ const getters = {
   [GETTERS.IS_VALID_STATE]() {
     return (
       this.dashboardName &&
-      this.iterationName &&
-      this.iterationBasePath &&
+      this.iterationPath &&
       this.teamName &&
       this.queryFolderBasePath &&
       this.initiatives.length > 0
@@ -173,20 +165,11 @@ export class CreateAzdoDashboardProvider {
     });
   }
 
-  get iterationName() {
+  get iterationPath() {
     return computed({
-      get: () => this._store[GETTERS.GET_ITERATION_NAME],
+      get: () => this._store[GETTERS.GET_ITERATION_PATH],
       set: (value) => {
-        this._store[ACTIONS.SET_ITERATION_NAME](value);
-      },
-    });
-  }
-
-  get iterationBasePath() {
-    return computed({
-      get: () => this._store[GETTERS.GET_ITERATION_BASE_PATH],
-      set: (value) => {
-        this._store[ACTIONS.SET_ITERATION_BASE_PATH](value);
+        this._store[ACTIONS.SET_ITERATION_PATH](value);
       },
     });
   }

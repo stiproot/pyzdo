@@ -15,7 +15,7 @@
         flat
         v-for="a in item.actions"
         :key="a.evtId"
-        @click="handleActionClick(a.evtId, item.id)"
+        @click="handleActionClick(a.evtId, item)"
         >{{ a.btnText }}</q-btn
       >
     </q-card-actions>
@@ -27,8 +27,8 @@ export default {
   name: "ItemComponent",
   props: { item: Object },
   setup(props, { emit }) {
-    const emitEvt = (evtId, itemId) => {
-      emit("item-click", { evtId: evtId, itemId: itemId });
+    const emitEvt = (evtId, item) => {
+      emit("item-click", { evtId: evtId, item: item });
     };
 
     const handleActionClick = (evtId, e) => {

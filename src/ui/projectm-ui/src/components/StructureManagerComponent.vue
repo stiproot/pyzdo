@@ -6,13 +6,9 @@
     <ItemSelectorComponent :items="enriched" @item-click="handleItemClick" />
   </div>
 
-  <StructureComponent v-if="editing && !structuring"></StructureComponent>
+  <StructureComponent v-if="editing && !structuring" />
 
-  <ProcessOrchestratorComponent
-    v-if="structuring && !editing"
-    :blueprints="blueprints"
-    @processes-complete="handleStructureProcessesComplete"
-  />
+  <ProcessesComponent v-if="structuring" :blueprints="processes" />
 
   <FabActionComponent>
     <BtnComponent
@@ -29,7 +25,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRefs, onMounted } from "vue";
+import { ref, reactive, toRefs } from "vue";
 import { useLoadingStore, LoadingProvider } from "@/stores/loading.store.js";
 import {
   useStructureStagingStore,
@@ -43,13 +39,14 @@ import ItemSelectorComponent from "./ItemSelectorComponent.vue";
 import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
 import StructureComponent from "./StructureComponent.vue";
-import ProcessOrchestratorComponent from "./ProcessOrchestratorComponent.vue";
 import { CMD_TYPES } from "@/services/cmd-types.enum.js";
 import { generateGuid } from "@/services/guids.service";
 import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
 import { useRouter } from "vue-router";
 import { NavigationService } from "@/services/navigation.service";
 import { structure } from "@/services/structures.service";
+import ProcessesComponent from "./ProcessesComponent.vue";
+import { useProcessStore, ProcessProvider } from "@/stores/process.store";
 
 export default {
   name: "StructureManagerComponent",
@@ -58,23 +55,28 @@ export default {
     FabActionComponent,
     BtnComponent,
     StructureComponent,
-    ProcessOrchestratorComponent,
+    ProcessesComponent,
   },
   setup() {
     const router = useRouter();
     const nav = new NavigationService(router);
+
     const loadingStore = useLoadingStore();
     const loadingProvider = new LoadingProvider(loadingStore);
+
     const structuresStore = useStructuresStore();
     const structuresProvider = new StructuresProvider(structuresStore);
+
     const structureStagingStore = useStructureStagingStore();
     const structureStagingProvider = new StructureStagingProvider(
       structureStagingStore
     );
 
+    const processProvider = new ProcessProvider(useProcessStore());
+    const { processes, refresh, syncAll, isStillRunning } = processProvider;
+
     const editing = ref(false);
     const structuring = ref(false);
-    const blueprints = ref([]);
     const CMD_TYPE_HASH = {
       summarized_tree: CMD_TYPES.BUILD_SUMMARIZED_WORK_ITEM_TREE,
       weighted_tree: CMD_TYPES.BUILD_WEIGHTED_WORK_ITEM_TREE,
@@ -86,8 +88,8 @@ export default {
       isLoading,
       structures,
       enriched: enrichedStructures,
-      blueprints,
       structuring,
+      processes,
     });
 
     const handleItemClick = (e) => {
@@ -106,9 +108,11 @@ export default {
         const procs = structures.value.map((i) => {
           return {
             id: generateGuid(),
+            display: i.id,
             project_id: nav.projId,
             status: PROCESS_STATUSES.RUNNING,
             cmd_type: CMD_TYPE_HASH[i.id],
+            key: i.id,
           };
         });
 
@@ -116,7 +120,9 @@ export default {
 
         structuring.value = true;
         editing.value = false;
-        blueprints.value = procs;
+        processes.value = procs;
+
+        await syncAll();
 
         await Promise.all(
           procs.map((proc) => {
@@ -124,21 +130,36 @@ export default {
               idempotencyId: proc.id,
               projectId: proc.project_id,
               cmdType: proc.cmd_type,
-              rootCollection: "epics",
+              key: proc.key,
             });
           })
         );
+
+        initProcessInterval();
       } catch (ex) {
         console.log(ex);
       }
     };
 
-    const handleStructureProcessesComplete = () => {
-      blueprints.value = [];
-      structuring.value = false;
+    const initProcessInterval = () => {
+      let intervalId = setInterval(async () => {
+        if (isStillRunning.value) {
+          console.log("processes still running, refreshing...");
+          await refresh();
+        } else {
+          console.log("processes finished, cleaning interval...");
+          clearInterval(intervalId);
+          setTimeout(() => {
+            handleStructureProcessesComplete();
+          }, 2000);
+        }
+      }, 3000);
     };
 
-    onMounted(() => {});
+    const handleStructureProcessesComplete = () => {
+      processes.value = [];
+      structuring.value = false;
+    };
 
     return {
       ...toRefs(data),

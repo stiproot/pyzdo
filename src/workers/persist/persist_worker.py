@@ -14,6 +14,9 @@ WORKER_TOPIC = env_var_provider.get_env_var(
 PERSIST_URL = env_var_provider.get_env_var(
     "PERSIST_URL", "http://localhost:8000/cb/cmd"
 )
+BULK_PERSIST_URL = env_var_provider.get_env_var(
+    "BULK_PERSIST_URL", "http://localhost:8000/cb/cmds"
+)
 print("ENVIRONMENT VARIABLES:")
 print(f"WORKER_TOPIC: {WORKER_TOPIC}")
 print(f"PERSIST_URL: {PERSIST_URL}")
@@ -32,7 +35,10 @@ def queue_cmds(queue: JoinableQueue) -> None:
 
 def process_cmds(queue: JoinableQueue):
     http_client = HttpClient(PERSIST_URL)
-    cmd_processor = PersistCmdProcessor(http_client=http_client)
+    bulk_http_client = HttpClient(BULK_PERSIST_URL)
+    cmd_processor = PersistCmdProcessor(
+        http_client=http_client, bulk_http_client=bulk_http_client
+    )
 
     while True:
         msg = queue.get()
@@ -70,5 +76,5 @@ def main():
 
 
 if __name__ == "__main__":
-    time.sleep(30)
+    # time.sleep(30)
     main()

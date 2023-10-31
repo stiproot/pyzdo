@@ -5,8 +5,7 @@ from pm_common import (
     CmdTypes,
     AzdoProxyHttpClient,
     EnvVarProvider,
-    build_post_proc_status_update_persist_cmd,
-    build_publish_to_topic_cmd,
+    update_proc_status,
 )
 
 
@@ -41,10 +40,4 @@ def process_azdo_proxy_cmd_workflow(cmd: RootCmd) -> int:
 
     print("resp", resp)
 
-    proc_status_update_persist_cmd = build_post_proc_status_update_persist_cmd(
-        status="COMPLETE", cmd=cmd, cmd_type=cmd_type
-    )
-    proc_status_update_publish_to_topic_cmd = build_publish_to_topic_cmd(
-        proc_status_update_persist_cmd, PERSIST_TOPIC
-    )
-    persist_proc.process(proc_status_update_publish_to_topic_cmd)
+    update_proc_status(status="COMPLETE", cmd=cmd)

@@ -1,47 +1,50 @@
 <template>
-  <div v-if="!editing" class="qa-pa-md row items-start q-gutter-md">
+  <div
+    v-if="!editing && !gathering"
+    class="qa-pa-md row items-start q-gutter-md"
+  >
     <ItemSelectorComponent
       :items="enrichedQueries"
       @item-click="handleItemClick"
       @delete-click="handleDeleteClick"
     />
   </div>
+
   <QueryComponent v-if="editing"> </QueryComponent>
-  <FabActionComponent>
+
+  <q-btn-group push>
     <BtnComponent
       icon="add"
       v-if="!editing && !gathering"
       @click="handleAddClick"
     />
+
     <BtnComponent
       v-if="editing && enrichedQueries.length && !gathering"
       @click="handleCloseClick"
     />
+
     <BtnComponent
       icon="check"
-      v-if="isValid && editing && !gathering"
+      v-if="editing && !gathering"
       @click="handleSaveClick"
     />
 
     <BtnComponent
-      v-if="!editing"
+      v-if="!gathering && !isModified"
       class="float-right"
       icon="replay"
       @click="handleGatherAllClick"
     />
 
     <BtnComponent
-      v-if="canSave && !gathering"
+      v-if="canSave && !gathering && editing"
       icon="check"
       @click="handleSaveClick"
     />
-  </FabActionComponent>
+  </q-btn-group>
 
-  <ProcessOrchestratorComponent
-    v-if="gathering"
-    :blueprints="blueprints"
-    @processes-complete="handleGatheringProcessesComplete"
-  />
+  <ProcessesComponent v-if="gathering" :blueprints="processes" />
 </template>
 <script>
 import { ref, computed, reactive, toRefs, onMounted } from "vue";
@@ -52,69 +55,82 @@ import {
   useProjectDetailsStore,
   ProjectDetailsProvider,
 } from "@/stores/project-details.store";
+import { useProcessStore, ProcessProvider } from "@/stores/process.store";
 import { useQueryStore, QueryProvider } from "@/stores/query.store.js";
 import { deepCopy } from "@/services/clone.service.js";
+import { isDiff } from "@/services/diff.service.js";
 import ItemSelectorComponent from "./ItemSelectorComponent.vue";
-import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
 import QueryComponent from "./QueryComponent.vue";
-import ProcessOrchestratorComponent from "./ProcessOrchestratorComponent.vue";
-import { CMD_TYPES } from "@/services/cmd-types.enum.js";
-import { PROCESS_STATUSES } from "@/services/process-statuses.enum";
-import { generateGuid } from "@/services/guids.service";
-import { gather } from "@/services/gather.service";
+import ProcessesComponent from "./ProcessesComponent.vue";
 
 export default {
   name: "QueryManagerComponent",
   components: {
     ItemSelectorComponent,
-    FabActionComponent,
     BtnComponent,
     QueryComponent,
-    ProcessOrchestratorComponent,
+    ProcessesComponent,
   },
   setup() {
-    const router = useRouter();
-    const nav = new NavigationService(router);
-    const loadingStore = useLoadingStore();
-    const loadingProvider = new LoadingProvider(loadingStore);
-    const projectStore = useProjectDetailsStore();
-    const projectProvider = new ProjectDetailsProvider(projectStore);
-    const queryStore = useQueryStore();
-    const queryProvider = new QueryProvider(queryStore);
+    const nav = new NavigationService(useRouter());
+
+    const processProvider = new ProcessProvider(useProcessStore());
+    const { processes, refresh, syncAll, isStillRunning } = processProvider;
+
+    const loadingProvider = new LoadingProvider(useLoadingStore());
+    const { isLoading } = loadingProvider;
+
+    const projectProvider = new ProjectDetailsProvider(
+      useProjectDetailsStore()
+    );
+    const {
+      enrichedQueries,
+      queries,
+      addQuery,
+      removeQuery,
+      mapQueriesToProcesses,
+      runQueries,
+    } = projectProvider;
+
+    const queryProvider = new QueryProvider(useQueryStore());
+    const { init, state, isStateValid } = queryProvider;
+
+    let originalState = queries.value;
+    const isModified = computed(() => isDiff(queries.value, originalState));
 
     const editing = ref(false);
-    const blueprints = ref([]);
     const gathering = ref(false);
-    const { isLoading } = loadingProvider;
-    const { enrichedQueries, queries, addQuery, removeQuery } = projectProvider;
-    const { init, state, isStateValid } = queryProvider;
     const canSave = computed(() => isStateValid.value);
+    const isNew = computed(() => nav.isNew);
 
     const data = reactive({
       init,
       canSave,
       isLoading,
       enrichedQueries,
-      blueprints,
       editing,
       gathering,
+      isNew,
+      processes,
+      isModified,
     });
 
     const handleGatheringProcessesComplete = () => {
-      blueprints.value = [];
+      processes.value = [];
       gathering.value = false;
     };
 
     const handleItemClick = (e) => {
       editing.value = true;
 
-      const item = queries.value.find((i) => i.id === e);
+      const item = queries.value.find((i) => i.name === e.item.name);
       data.init(item);
     };
 
     const handleDeleteClick = (e) => {
-      removeQuery(e);
+      removeQuery(e.item.name);
+      originalState = deepCopy(queries.value);
     };
 
     const handleAddClick = () => {
@@ -125,7 +141,7 @@ export default {
     const handleSaveClick = () => {
       data.isLoading = true;
       const query = state.value;
-      const existing = queries.value.find((i) => i.id === query.id);
+      const existing = queries.value.find((i) => i.name === query.name);
 
       if (existing) {
         existing.ql = query.ql;
@@ -133,37 +149,22 @@ export default {
         const clone = deepCopy(query);
         addQuery(clone);
       }
-      /* await sync(); */
+
       editing.value = false;
+      originalState = deepCopy(queries.value);
     };
 
     const handleGatherAllClick = async () => {
-      try {
-        const procs = queries.value.map((i) => {
-          return {
-            id: generateGuid(),
-            project_id: nav.projId,
-            status: PROCESS_STATUSES.RUNNING,
-            cmd_type: CMD_TYPES.GATHER_PROJECT_UNITS_OF_WORK,
-            ql: i.ql,
-          };
-        });
+      const procs = mapQueriesToProcesses(nav.projId);
+      console.log("handleGatherAllClick", "procs", procs);
 
-        blueprints.value = procs;
-        gathering.value = true;
+      processes.value = procs;
+      gathering.value = true;
 
-        await Promise.all(
-          procs.map((proc) => {
-            gather({
-              processId: proc.id,
-              projectId: proc.project_id,
-              ql: proc.ql,
-            });
-          })
-        );
-      } catch (ex) {
-        console.log(ex);
-      }
+      await syncAll();
+      await runQueries(procs);
+
+      initProcessInterval();
     };
 
     const handleCloseClick = () => {
@@ -171,18 +172,34 @@ export default {
       editing.value = false;
     };
 
+    const initProcessInterval = () => {
+      let intervalId = setInterval(async () => {
+        if (isStillRunning.value) {
+          console.log("processes still running, refreshing...");
+          await refresh();
+        } else {
+          console.log("processes finished, cleaning interval...");
+          clearInterval(intervalId);
+          setTimeout(() => {
+            handleGatheringProcessesComplete();
+          }, 2000);
+        }
+      }, 3000);
+    };
+
     const initState = () => {
+      console.log("initState", "isNewProject", nav.isNewProject());
       editing.value = nav.isNewProject();
+      originalState = deepCopy(queries.value);
     };
 
     onMounted(() => {
-      console.log("queryManagerComponent", "onMounted");
+      console.log("QueryManagerComponent", "onMounted");
       initState();
     });
 
     return {
       ...toRefs(data),
-      handleGatheringProcessesComplete,
       handleGatherAllClick,
       handleItemClick,
       handleAddClick,

@@ -2,20 +2,17 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 
 const defaultState = () => ({
-  id: null,
   name: null,
   ql: null,
 });
 
 const ACTIONS = {
   INIT: "init",
-  SET_ID: "setId",
   SET_NAME: "setName",
   SET_QL: "setQl",
 };
 
 const GETTERS = {
-  GET_ID: "getId",
   GET_NAME: "getName",
   GET_QL: "getQl",
   IS_STATE_VALID: "isStateValid",
@@ -24,13 +21,9 @@ const GETTERS = {
 
 const actions = {
   [ACTIONS.INIT](data) {
-    const { id, name, ql } = data || defaultState();
-    this.id = id;
+    const { name, ql } = data || defaultState();
     this.name = name;
     this.ql = ql;
-  },
-  [ACTIONS.SET_ID](data) {
-    this.id = data;
   },
   [ACTIONS.SET_NAME](data) {
     this.name = data;
@@ -41,9 +34,6 @@ const actions = {
 };
 
 const getters = {
-  [GETTERS.GET_ID]() {
-    return this.id;
-  },
   [GETTERS.GET_NAME]() {
     return this.name;
   },
@@ -51,7 +41,7 @@ const getters = {
     return this.ql;
   },
   [GETTERS.IS_STATE_VALID]() {
-    return this.id && this.ql;
+    return this.name && this.ql;
   },
   [GETTERS.GET_STATE]() {
     return this.$state;
@@ -72,15 +62,6 @@ export class QueryProvider {
 
   init(data) {
     this._store[ACTIONS.INIT](data);
-  }
-
-  get id() {
-    return computed({
-      get: () => this._store[GETTERS.GET_ID],
-      set: (value) => {
-        this._store[ACTIONS.SET_ID](value);
-      },
-    });
   }
 
   get name() {

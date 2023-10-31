@@ -5,8 +5,7 @@ import ProjectRootComponent from "../components/ProjectRootComponent.vue";
 const routes = [
   {
     path: "/",
-    name: "projects",
-    component: ProjectManagerComponent,
+    redirect: { name: "projects" },
   },
   {
     path: "/projects",
@@ -65,11 +64,11 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: "/filters",
-  //   name: "filters",
-  //   component: FilterControlsComponent,
-  // },
+  {
+    path: "/scroll",
+    name: "scroll",
+    component: () => import("../components/InfiniteScrollComponent.vue"),
+  },
 ];
 
 const router = createRouter({
