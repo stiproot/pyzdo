@@ -31,7 +31,7 @@
 
   <FabActionComponent>
     <BtnComponent
-      v-if="canSave && isModified"
+      v-if="isModified && canSave"
       icon="save"
       @click="handleSaveClick"
     />
@@ -94,9 +94,17 @@ export default {
       state,
     } = projectProvider;
 
-    let originalState = {};
-    const isModified = computed(() => isDiff(state.value, originalState));
     const canSave = computed(() => isStateValid.value);
+
+    let originalState = {};
+    const isModified = ref(false);
+    watch(
+      state.value,
+      (newVal) => {
+        isModified.value = isDiff(newVal, originalState);
+      },
+      { deep: true }
+    );
 
     const data = reactive({
       id,

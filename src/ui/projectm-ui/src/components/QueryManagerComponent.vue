@@ -31,16 +31,10 @@
     />
 
     <BtnComponent
-      v-if="!gathering && !isModified"
+      v-if="!gathering && !isModified && !editing"
       class="float-right"
       icon="replay"
       @click="handleGatherAllClick"
-    />
-
-    <BtnComponent
-      v-if="canSave && !gathering && editing"
-      icon="check"
-      @click="handleSaveClick"
     />
   </q-btn-group>
 
@@ -96,7 +90,7 @@ export default {
     const queryProvider = new QueryProvider(useQueryStore());
     const { init, state, isStateValid } = queryProvider;
 
-    let originalState = queries.value;
+    let originalState = {};
     const isModified = computed(() => isDiff(queries.value, originalState));
 
     const editing = ref(false);
@@ -156,7 +150,6 @@ export default {
 
     const handleGatherAllClick = async () => {
       const procs = mapQueriesToProcesses(nav.projId);
-      console.log("handleGatherAllClick", "procs", procs);
 
       processes.value = procs;
       gathering.value = true;
@@ -194,7 +187,6 @@ export default {
     };
 
     onMounted(() => {
-      console.log("QueryManagerComponent", "onMounted");
       initState();
     });
 

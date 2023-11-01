@@ -62,9 +62,19 @@ export default {
       risk_weight: 0,
     };
 
+    let setTimeoutId = 0;
+
     const triggerFilter = () => {
-      console.log("triggerFilter", filter);
-      emitEvent(filter);
+      if (setTimeoutId) {
+        clearTimeout(setTimeoutId);
+      }
+
+      console.log("triggerFilter", "setting timeout");
+      setTimeoutId = setTimeout(() => {
+        console.log("triggerFilter, emitting event", filter);
+        emitEvent(filter);
+        clearTimeout(setTimeoutId);
+      }, 1000);
     };
 
     const handleRiskWeightAdjusted = (e) => {

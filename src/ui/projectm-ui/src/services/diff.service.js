@@ -50,5 +50,25 @@ export function deepDiff(obj1, obj2) {
 }
 
 export function isDiff(obj1, obj2) {
+  if (!obj1) {
+    return false;
+  }
+
+  if (!obj2) {
+    return false;
+  }
+
+  if (Object.keys(obj1).length === 0) {
+    return false;
+  }
+
+  if (Object.keys(obj2).length === 0) {
+    return false;
+  }
+
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+    return true;
+  }
+
   return Object.keys(deepDiff(obj1, obj2)).length > 0;
 }

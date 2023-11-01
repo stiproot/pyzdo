@@ -1,13 +1,6 @@
 <template>
   <q-form class="q-gutter-md">
     <q-input
-      v-model="id"
-      label="Id *"
-      lazy-rules
-      :rules="[(val) => (val && val.length) || 'Id is required']"
-    />
-
-    <q-input
       v-model="name"
       label="Name *"
       lazy-rules
@@ -33,7 +26,7 @@
   </q-form>
 </template>
 <script>
-import { reactive, toRefs, computed } from "vue";
+import { reactive, toRefs, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { NavigationService } from "@/services/navigation.service";
 import {
@@ -63,6 +56,17 @@ export default {
       isStateValid,
       canSave,
     });
+
+    watch(
+      () => name.value,
+      (newVal) => {
+        if (newVal) {
+          id.value = name.value.toLowerCase().split(" ").join("_");
+          return;
+        }
+        id.value = null;
+      }
+    );
 
     const handleSaveClick = async () => {
       await sync();

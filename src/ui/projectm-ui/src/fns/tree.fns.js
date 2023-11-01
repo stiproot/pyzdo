@@ -13,6 +13,10 @@ export const enrichTree = (data) => {
 };
 
 export const filterTree = (tree, predicates) => {
+  return coreFilterTree(tree, predicates);
+};
+
+export const coreFilterTree = (tree, predicates) => {
   const filteredChildren = filterChildren(tree.children, predicates);
   const filteredTree = {
     ...tree,
@@ -26,7 +30,8 @@ export const filterChildren = (data, predicates) => {
   if (!data) {
     return [];
   }
-  const filteredData = orAccumFilter(data, predicates);
+
+  const filteredData = filterNode(data, predicates);
 
   const enriched = filteredData.map((node) => {
     const enrichedNode = {
@@ -38,6 +43,28 @@ export const filterChildren = (data, predicates) => {
   });
 
   return enriched;
+};
+
+export const filterNode = (data, predicates) => {
+  const filtered = data.filter((node) => {
+    if (node.type === "Task") {
+      if (predicates && predicates.length) {
+        let accum = true;
+
+        for (const i in predicates) {
+          if (predicates[i]) accum = accum && predicates[i](node);
+        }
+
+        return accum;
+      }
+
+      return true;
+    }
+
+    return true;
+  });
+
+  return filtered;
 };
 
 export const orAccumFilter = (data, predicates) => {
