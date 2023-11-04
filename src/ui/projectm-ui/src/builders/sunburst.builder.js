@@ -14,7 +14,7 @@ export function buildSunburstSvg(data) {
       d3
         .hierarchy(data)
         //.sum((d) => d.value)
-        .sum((d) => d.risk_weight)
+        .sum((d) => d.risk_impact)
         .sort((a, b) => b.value - a.value)
     );
 

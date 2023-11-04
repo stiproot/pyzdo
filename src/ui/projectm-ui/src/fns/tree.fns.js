@@ -12,6 +12,18 @@ export const enrichTree = (data) => {
   return enriched;
 };
 
+export const getTasks = (node, tasks) => {
+  if (node.children && node.children.length) {
+    node.children.forEach((child) => {
+      getTasks(child, tasks);
+    });
+  }
+
+  if (node.type === "Task") {
+    tasks.push(node);
+  }
+};
+
 export const filterTree = (tree, predicates) => {
   return coreFilterTree(tree, predicates);
 };
@@ -22,7 +34,6 @@ export const coreFilterTree = (tree, predicates) => {
     ...tree,
     children: filteredChildren,
   };
-  console.log("newTree", filteredTree);
   return filteredTree;
 };
 

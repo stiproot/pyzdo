@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRefs } from "vue";
+import { onMounted, ref, reactive, toRefs } from "vue";
 import { useLoadingStore, LoadingProvider } from "@/stores/loading.store.js";
 import {
   useStructureStagingStore,
@@ -58,43 +58,37 @@ export default {
     ProcessesComponent,
   },
   setup() {
-    const router = useRouter();
-    const nav = new NavigationService(router);
-
-    const loadingStore = useLoadingStore();
-    const loadingProvider = new LoadingProvider(loadingStore);
-
-    const structuresStore = useStructuresStore();
-    const structuresProvider = new StructuresProvider(structuresStore);
-
-    const structureStagingStore = useStructureStagingStore();
+    const nav = new NavigationService(useRouter());
+    const loadingProvider = new LoadingProvider(useLoadingStore());
+    const { isLoading } = loadingProvider;
+    const structuresProvider = new StructuresProvider(useStructuresStore());
+    const { enrichedStructures, structures } = structuresProvider;
     const structureStagingProvider = new StructureStagingProvider(
-      structureStagingStore
+      useStructureStagingStore()
     );
-
     const processProvider = new ProcessProvider(useProcessStore());
     const { processes, refresh, syncAll, isStillRunning } = processProvider;
 
     const editing = ref(false);
     const structuring = ref(false);
+
     const CMD_TYPE_HASH = {
       summarized_tree: CMD_TYPES.BUILD_SUMMARIZED_WORK_ITEM_TREE,
       weighted_tree: CMD_TYPES.BUILD_WEIGHTED_WORK_ITEM_TREE,
     };
 
-    const { isLoading } = loadingProvider;
-    const { enrichedStructures, structures } = structuresProvider;
     const data = reactive({
       isLoading,
       structures,
       enriched: enrichedStructures,
       structuring,
+      editing,
       processes,
     });
 
     const handleItemClick = (e) => {
       editing.value = true;
-      const item = enrichedStructures.value.find((i) => i.id === e);
+      const item = enrichedStructures.value.find((i) => i.id === e.item.id);
       structureStagingProvider.init(item);
     };
 
@@ -116,8 +110,6 @@ export default {
           };
         });
 
-        console.log("handleStructureAllClick", "procs", procs);
-
         structuring.value = true;
         editing.value = false;
         processes.value = procs;
@@ -137,17 +129,15 @@ export default {
 
         initProcessInterval();
       } catch (ex) {
-        console.log(ex);
+        console.error(ex);
       }
     };
 
     const initProcessInterval = () => {
       let intervalId = setInterval(async () => {
         if (isStillRunning.value) {
-          console.log("processes still running, refreshing...");
           await refresh();
         } else {
-          console.log("processes finished, cleaning interval...");
           clearInterval(intervalId);
           setTimeout(() => {
             handleStructureProcessesComplete();
@@ -161,9 +151,12 @@ export default {
       structuring.value = false;
     };
 
+    onMounted(async () => {
+      await structuresProvider.init(nav.projId);
+    });
+
     return {
       ...toRefs(data),
-      editing,
       handleItemClick,
       handleCloseClick,
       handleStructureAllClick,

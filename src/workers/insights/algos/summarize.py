@@ -2,7 +2,7 @@ from .raw_inspectors import (
     get_relation_type_from_relation_structure,
     get_id_from_relation_structure,
 )
-from pm_common import get_nested_property
+from pm_common import get_nested_property, get_nested_property_with_default
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -14,23 +14,53 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
     if not raw_node:
         return summary
 
+    risk_weighting_defaulted = False
+    severity_defaulted = False
+
     for prop in prop_rule_map:
         value = None
+        defaulted = False
         if prop["is_path"]:
-            value = get_nested_property(
+            # value = get_nested_property(
+            #     data=raw_node,
+            #     keys=prop["src_prop_path"],
+            #     delimiter=prop["path_separator"],
+            #     default=prop["default"],
+            # )
+            value, _defaulted = get_nested_property_with_default(
                 data=raw_node,
                 keys=prop["src_prop_path"],
                 delimiter=prop["path_separator"],
                 default=prop["default"],
             )
+            defaulted = _defaulted
+            if _defaulted:
+                logging.debug(
+                    f"Defaulting {prop['src_prop_path']} to {prop['default']}. Node id: {raw_node['id']}"
+                )
         else:
             value = raw_node[prop["src_prop_path"]]
+            if value is None:
+                value = prop["default"]
+                logging.debug(
+                    f"Defaulting {prop['src_prop_path']} to {prop['default']}. Node id: {raw_node['id']}"
+                )
+
+                defaulted = True
 
         if value is None:
             raise Exception("Invalid path")
 
         value = value if prop["map"] is None else prop["map"](value)
         summary[prop["trgt_prop_path"]] = value
+
+        if prop["trgt_prop_path"] == "risk_weighting":
+            risk_weighting_defaulted = defaulted
+
+        if prop["trgt_prop_path"] == "severity":
+            severity_defaulted = defaulted
+
+    summary["defaulted"] = risk_weighting_defaulted or severity_defaulted
 
     raw_relations = raw_node.get("relations", None)
     if raw_relations is None:

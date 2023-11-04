@@ -69,6 +69,11 @@ const routes = [
     name: "scroll",
     component: () => import("../components/InfiniteScrollComponent.vue"),
   },
+  {
+    path: "/list",
+    name: "list",
+    component: () => import("../components/ListComponent.vue"),
+  },
 ];
 
 const router = createRouter({

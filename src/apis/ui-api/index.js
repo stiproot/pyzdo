@@ -23,5 +23,5 @@ app.get(`${BASE_URL}/health`, (req, res) => {
   res.json({ healthy: true });
 });
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  // console.log(`Server is running on port ${PORT}`);
 });

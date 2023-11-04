@@ -1,25 +1,13 @@
+import { getRagColorHex } from "@/services/color.service";
 import * as d3 from "d3";
 
-export function buildNestedTreeMapSvg(data, max = 100) {
-  console.log("max", max);
+export function buildNestedTreeMapSvg(data) {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
-  // const color = d3
-  //   .scaleLinear()
-  //   .domain([0, max / 2, max])
-  //   .range(["#FFFFFF", "#268BD2", "#DA3637"]);
-
   const color = (d) => {
     if (d.type !== "Task") return "#FFFFFF";
-    const w = d.risk_weight || 0;
-    if (w > 30) {
-      return "#DA3637";
-    }
-    if (w > 20) {
-      return "#FFC107";
-    }
-    return "#77DD77";
+    return getRagColorHex(d.rag_status);
   };
 
   const treemapFn = d3
@@ -32,7 +20,7 @@ export function buildNestedTreeMapSvg(data, max = 100) {
 
   const hierachy = d3
     .hierarchy(data)
-    .sum((d) => d.risk_weight)
+    .sum((d) => d.risk_impact)
     .sort((a, b) => b.value - a.value);
 
   const root = treemapFn(hierachy);

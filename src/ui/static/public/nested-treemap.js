@@ -46,7 +46,7 @@ export function buildNestedTreeMap(_data, container) {
     .sum((d) => d.risk_weight)
     .sort((a, b) => b.value - a.value);
 
-  console.log("hierachy", hierachy);
+  // console.log("hierachy", hierachy);
 
   const root = treemapFn(hierachy);
 

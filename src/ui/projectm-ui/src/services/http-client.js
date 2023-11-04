@@ -12,12 +12,12 @@ const DEFAULT_HEADERS = {
  * @returns {Promise} - A Promise that resolves with the response data or rejects with an error.
  */
 async function post(route, data, headers = {}) {
-  console.log(
-    "process.env.VUE_APP_UI_API_BASE_URL",
-    process.env.VUE_APP_UI_API_BASE_URL
-  );
+  // console.log(
+  //   "process.env.VUE_APP_UI_API_BASE_URL",
+  //   process.env.VUE_APP_UI_API_BASE_URL
+  // );
   const url = `${BASE_URL()}${route}`;
-  console.log("http-client", "url", url);
+  // console.log("http-client", "url", url);
 
   const response = await fetch(url, {
     method: "POST",

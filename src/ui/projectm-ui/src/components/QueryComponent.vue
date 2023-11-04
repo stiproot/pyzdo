@@ -107,6 +107,11 @@ export default {
       }
 
       const tagsArr = tags.value.split(";");
+
+      if (!tagsArr.includes("ProjectMetrics")) {
+        tagsArr.push("ProjectMetrics");
+      }
+
       const tagFilter = tagsArr
         .map((t) => `[System.Tags] CONTAINS '${t}'`)
         .join(" AND ");
@@ -132,7 +137,6 @@ export default {
       } else {
         rows.value = [];
       }
-      console.log("handleTestClick", resp);
     };
 
     const handleQuerySelect = (item) => {

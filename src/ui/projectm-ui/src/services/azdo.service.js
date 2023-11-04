@@ -63,12 +63,12 @@ const buildGetTeamIterationsUrl = (team) =>
 //   }
 //   const headers = buildHeaders();
 //   const url = buildQueryUrl(req);
-//   console.log(url);
+//   // console.log(url);
 //   try {
 //     const response = await httpClient.get(url, headers);
 //     return response;
 //   } catch (error) {
-//     console.log(error);
+//     // console.log(error);
 //     return null;
 //   }
 // }
@@ -76,12 +76,11 @@ const buildGetTeamIterationsUrl = (team) =>
 export async function runWiql(wiql) {
   const headers = buildHeaders();
   const url = buildWiqlUrl();
-  console.log(url);
   try {
     const response = await httpClient.post(url, { query: wiql }, headers);
     return response;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 }
@@ -94,13 +93,12 @@ export async function filterQueries(filter) {
 
   const headers = buildHeaders();
   const url = buildFilterQueriesUrl(filter);
-  console.log(url);
 
   try {
     const response = await httpClient.get(url, headers);
     return response.value;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }
@@ -113,13 +111,12 @@ export async function getWiDetails(id) {
 
   const headers = buildHeaders();
   const url = buildGetWiDetailsUrl(id);
-  console.log(url);
 
   try {
     const resp = await httpClient.get(url, headers);
     return resp;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 }
@@ -127,13 +124,12 @@ export async function getWiDetails(id) {
 export async function getAllTeams() {
   const headers = buildHeaders();
   const url = buildGetAllTeamsUrl();
-  console.log(url);
 
   try {
     const resp = await teamsHttpClient.get(url, headers);
     return resp.value;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }
@@ -142,13 +138,11 @@ export async function getTeamIterations(team) {
   const headers = buildHeaders();
   const url = buildGetTeamIterationsUrl(team);
 
-  console.log(url);
-
   try {
     const resp = await _httpClient.get(url, headers);
     return resp.value;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return [];
   }
 }

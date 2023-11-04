@@ -17,7 +17,6 @@ export async function getUser(userId) {
     };
 
     const data = await query(req);
-    console.log("getUser", "data:", data);
     return data[0];
   } catch (error) {
     console.error("GET request error:", error);

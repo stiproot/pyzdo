@@ -103,7 +103,7 @@ const actions = {
     this.queries = this.queries.filter((query) => query.name !== name);
   },
   async [ACTIONS.RUN_QUERIES](procs) {
-    console.log("runQueries", procs);
+    // console.log("runQueries", procs);
     try {
       await Promise.all(
         procs.map((proc) => {

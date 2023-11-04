@@ -76,7 +76,7 @@ export default {
     };
 
     onMounted(async () => {
-      console.log("InitiativeComponent mounted", props.value);
+      // // console.log("InitiativeComponent mounted", props.value);
     });
 
     return {

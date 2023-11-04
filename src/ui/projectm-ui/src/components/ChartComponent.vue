@@ -1,13 +1,33 @@
 <template>
-  <div>
-    <filter-controls-component @filter="handleFilter" />
-  </div>
-  <q-page class="flex flex-center">
-    <div ref="chartContainer"></div>
-  </q-page>
+  <q-layout view="lHh Lpr lFf">
+    <q-drawer v-model="leftDrawerOpen" show-if-above side="left">
+      <div style="height: 50px"></div>
+      <ListComponent />
+    </q-drawer>
+
+    <q-page-container>
+      <div v-if="chartFiltersSupported">
+        <q-expansion-item expand-separator label="Filters" caption="">
+          <filter-controls-component @filter="handleFilter" />
+        </q-expansion-item>
+      </div>
+      <div v-if="chartSummarySupported">
+        <div v-if="avgVal">
+          Average:
+          <q-badge class="larget-font" rounded :color="avgColor">{{
+            avgVal
+          }}</q-badge>
+        </div>
+      </div>
+      <q-page class="flex flex-center">
+        <div ref="chartContainer"></div>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
+
 <script>
-import { toRefs, ref, reactive, onMounted, onUpdated } from "vue";
+import { toRefs, ref, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { NavigationService } from "@/services/navigation.service";
 import {
@@ -15,66 +35,58 @@ import {
   StructuresProvider,
 } from "@/stores/structures.store.js";
 import {
-  STRUCTURE_TYPES,
-  getChartStructureType,
+  CHART_TYPES,
+  CHART_TYPE_ID_HASH,
   getChartSvgBuilder,
 } from "@/services/charts.service.js";
 import FilterControlsComponent from "./FilterControlsComponent.vue";
-/* import { */
-/*   buildTagFilterPredicate, */
-/*   buildSeverityFilterPredicate, */
-/*   buildRiskWeightPredicate, */
-/* } from "@/fns/filter.fns"; */
-import { filterTree } from "@/fns/tree.fns";
+import ListComponent from "./ListComponent.vue";
+import { filterTree, getTasks } from "@/fns/tree.fns";
+import { getBadgeColor } from "@/services/color.service";
+
 export default {
   name: "ChartComponent",
-  components: { FilterControlsComponent },
+  components: { FilterControlsComponent, ListComponent },
   setup() {
     const router = useRouter();
     const nav = new NavigationService(router);
-    const store = useStructuresStore();
-    const provider = new StructuresProvider(store);
+    const provider = new StructuresProvider(useStructuresStore());
+    const { getWeightedTree, isInitialized } = provider;
+
+    const chartsSupportingFilters = [
+      CHART_TYPE_ID_HASH[CHART_TYPES.NESTED_TREEMAP],
+    ];
+    const chartsSupportingSummary = [
+      CHART_TYPE_ID_HASH[CHART_TYPES.NESTED_TREEMAP],
+    ];
+
     const chartContainer = ref(null);
+    const chartFiltersSupported = ref(false);
+    const chartSummarySupported = ref(false);
+    const leftDrawerOpen = ref(true);
+    const avgColor = ref(null);
+    const avgVal = ref(null);
+    const dataset = ref([]);
+    const accumFilterFn = ref(null);
 
-    const { getWeightedTree, getSummarizedTree, isInitialized } = provider;
     const data = reactive({
+      avgColor,
+      avgVal,
       getWeightedTree,
-      getSummarizedTree,
       isInitialized,
+      chartFiltersSupported,
+      chartSummarySupported,
+      leftDrawerOpen,
+      chartContainer,
     });
 
-    const DATA_HASH = {
-      [STRUCTURE_TYPES.WEIGHTED_TREE]: () => data.getWeightedTree,
-      [STRUCTURE_TYPES.SUMMARIZED_TREE]: () => data.getSummarizedTree,
-    };
-
-    onMounted(async () => {
-      provider.initThen(nav.projId, () => {
-        renderChart(nav.chartId);
-      });
-    });
-
-    onUpdated(async () => {
-      provider.initThen(nav.projId, () => {
-        renderChart(nav.chartId);
-      });
-    });
-
-    /* let filters = []; */
-    /* let tagFilters = []; */
-    /* let sevFilters = []; */
-    /* let riskWeightFilters = []; */
-
-    function handleFilter(e) {
-      console.log("chartComponent: handleFilter", e);
-
-      const { severities, roles, rags, risk_weight } = e;
+    const handleFilter = (e) => {
+      const { severities, roles, rags, risk_impact, defaulted } = e;
       const severityVals = severities.map((s) => s.value);
 
-      console.log("rags", rags);
-
-      const riskWeightFn = (node) => {
-        return node.risk_weight >= risk_weight;
+      const ragFn = (node) => rags.includes(node.rag_status);
+      const riskImpactFn = (node) => {
+        return node.risk_impact >= risk_impact;
       };
       const rolesFn = (node) => {
         const filtered = node.tags.filter((t) => roles.includes(t));
@@ -83,67 +95,71 @@ export default {
       const severityFn = (node) => {
         return severityVals.includes(node.severity);
       };
-
-      /* const ragsFn = (node) => { */
-      /*   return rags.includes(node.rag); */
-      /* }; */
-
-      const fn = (node) => {
-        return riskWeightFn(node) && rolesFn(node) && severityFn(node);
+      const defaultedFn = (node) => {
+        return defaulted === true ? node.defaulted === true : true;
       };
 
-      renderChart(nav.chartId, [fn]);
-    }
+      const fn = (node) => {
+        return (
+          riskImpactFn(node) &&
+          rolesFn(node) &&
+          severityFn(node) &&
+          ragFn(node) &&
+          defaultedFn(node)
+        );
+      };
 
-    /* function handleFilter(e) { */
-    /*   console.log("chartComponent: handleFilter", e); */
-    /*   filters = []; */
-    /*   const { severities, roles, rags, risk_weight } = e; */
+      accumFilterFn.value = fn;
+    };
 
-    /*   const tags = [...roles, ...rags]; */
-    /*   const sevs = severities.map((s) => s.value); */
+    const updateAvg = () => {
+      if (dataset.value.length === 0) return;
 
-    /*   const tagPreds = tags.map((t) => buildTagFilterPredicate(t)); */
-    /*   const sevPred = buildSeverityFilterPredicate(sevs); */
-    /*   const riskWeightPred = buildRiskWeightPredicate(risk_weight); */
+      const tasks = [];
+      getTasks(dataset.value, tasks);
 
-    /*   filters.push(...tagPreds); */
-    /*   tagFilters.push(...tagPreds); */
-    /*   filters.push(sevPred); */
-    /*   sevFilters.push(sevPred); */
-    /*   filters.push(riskWeightPred); */
-    /*   riskWeightFilters.push(riskWeightPred); */
+      let total = 0;
+      for (const task of tasks) {
+        total += task.risk_impact;
+      }
 
-    /*   renderChart(nav.chartId); */
-    /* } */
+      const avg = total / tasks.length;
+      avgVal.value = avg.toFixed(2);
+      avgColor.value = getBadgeColor(avg);
+    };
 
-    function renderChart(chartType, filterFns = []) {
+    const refreshDataset = () => {
+      const data = getWeightedTree.value;
+
+      if (!data) {
+        console.warn("refreshDataset", "no data");
+        dataset.value = [];
+        return;
+      }
+
+      const filterFns = accumFilterFn.value ? [accumFilterFn.value] : [];
+      const filtered = filterTree(data, filterFns);
+
+      dataset.value = filtered;
+    };
+
+    const renderChart = () => {
       removeSvgs();
 
-      if (provider.isInitialized.value === false) {
+      if (!dataset.value) {
+        console.warn("renderChart", "no data");
         return;
       }
 
-      const structureType = getChartStructureType(chartType);
+      const chartType = nav.chartId;
       const svgBuilder = getChartSvgBuilder(chartType);
-      const data = DATA_HASH[structureType]();
-      if (!data) {
-        return;
-      }
-
-      /* let filtered = data; */
-      /* filtered = filterTree(filtered, tagFilters); */
-      /* filtered = filterTree(filtered, sevFilters); */
-      /* filtered = filterTree(filtered, riskWeightFilters); */
-
-      let filtered = filterTree(data, filterFns);
-      const svg = svgBuilder(filtered);
+      const svg = svgBuilder(dataset.value);
       const container = chartContainer.value;
 
       container.appendChild(svg);
-    }
+    };
 
-    function removeSvgs() {
+    const removeSvgs = () => {
       const container = chartContainer.value;
       if (container && container.childNodes.length > 0) {
         for (const childNode of Array.from(container.childNodes)) {
@@ -152,11 +168,51 @@ export default {
           }
         }
       }
-    }
+    };
 
-    return { ...toRefs(data), chartContainer, handleFilter };
+    const initState = () => {
+      chartFiltersSupported.value = chartsSupportingFilters.includes(
+        nav.chartId
+      );
+      chartSummarySupported.value = chartsSupportingSummary.includes(
+        nav.chartId
+      );
+    };
+
+    watch(
+      () => getWeightedTree.value,
+      () => {
+        refreshDataset();
+      }
+    );
+
+    watch(
+      () => accumFilterFn.value,
+      () => {
+        refreshDataset();
+      }
+    );
+
+    watch(
+      () => dataset.value,
+      () => {
+        renderChart();
+        updateAvg();
+      }
+    );
+
+    onMounted(async () => {
+      await provider.init(nav.projId);
+      initState();
+    });
+
+    return { ...toRefs(data), handleFilter };
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.larget-font {
+  font-size: larger;
+}
+</style>

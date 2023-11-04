@@ -27,7 +27,6 @@ export class HttpClient {
 
   async post(path, data, headers = {}) {
     const url = `${this.BASE_URL}${path}`;
-    console.log("url:", url);
     const response = await fetch(url, {
       method: "POST",
       headers: {

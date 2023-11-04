@@ -40,10 +40,10 @@ export default {
     function initInterval() {
       let intervalId = setInterval(async () => {
         if (data.isStillRunning) {
-          console.log("still running");
+          // console.log("still running");
           await refresh();
         } else {
-          console.log("not still running");
+          // console.log("not still running");
           executing.value = false;
           clearInterval(intervalId);
           emitEvent();
@@ -53,7 +53,7 @@ export default {
 
     const start = async () => {
       if (props.blueprints && props.blueprints.length) {
-        console.log("starting", props.blueprints);
+        // console.log("starting", props.blueprints);
         processes.value = props.blueprints;
         await syncAll();
         executing.value = true;

@@ -17,7 +17,7 @@ export default {
     const model = ref(props.options);
 
     const emitEvent = () => {
-      console.log("filter-select-component", model.value);
+      // console.log("filter-select-component", model.value);
       const safe = model.value || [];
       emit("selected", safe);
     };

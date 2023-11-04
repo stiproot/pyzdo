@@ -6,7 +6,7 @@
           flat
           dense
           round
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          @click="minimized = !minimized"
           aria-label="Menu"
           icon="menu"
         />
@@ -15,7 +15,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2">
+    <q-drawer v-model="minimized" show-if-above bordered class="bg-grey-2">
       <q-list>
         <q-item-label header>menu</q-item-label>
 
@@ -72,8 +72,9 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { reactive, toRefs } from "vue";
 import LoadingComponent from "@/components/LoadingComponent.vue";
+import { useLayoutStore, LayoutProvider } from "@/stores/layout.store";
 
 export default {
   name: "LayoutDefault",
@@ -81,9 +82,16 @@ export default {
     LoadingComponent,
   },
   setup() {
-    const leftDrawerOpen = ref(false);
+    const layoutProvider = new LayoutProvider(useLayoutStore());
+
+    const { minimized } = layoutProvider;
+
+    const data = reactive({
+      minimized,
+    });
+
     return {
-      leftDrawerOpen,
+      ...toRefs(data),
     };
   },
 };

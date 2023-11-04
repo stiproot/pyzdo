@@ -48,7 +48,6 @@ const processCmd = async (req, res, cmdBuilder) => {
   try {
     const reqBody = req.body;
     const cmd = cmdBuilder(reqBody);
-    console.log("processCmd", cmd);
     const data = await client.post("kafka/topic/publish", cmd);
     res.json(data);
   } catch (error) {

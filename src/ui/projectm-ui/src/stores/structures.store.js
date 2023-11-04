@@ -37,9 +37,14 @@ const actions = {
   },
 };
 
+const notNullAndNotUndefined = (val) => val !== null && val !== undefined;
+
 const getters = {
   [GETTERS.IS_INITIALIZED]() {
-    return this.summarizedTree !== null && this.weightedTree !== null;
+    const initialized =
+      notNullAndNotUndefined(this.summarizedTree) ||
+      notNullAndNotUndefined(this.weightedTree);
+    return initialized;
   },
   [GETTERS.GET_SUMMARIZED_TREE]() {
     return this.summarizedTree;

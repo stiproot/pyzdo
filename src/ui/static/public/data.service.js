@@ -13,7 +13,7 @@ import { post } from "./http-client.js";
 //     };
 
 //     const data = await post("/data/query", req);
-//     console.log("GET response:", data);
+//     // console.log("GET response:", data);
 //     return data;
 //   } catch (error) {
 //     console.error("GET request error:", error);
@@ -33,7 +33,7 @@ export async function getTree(id) {
     };
 
     const data = await post("/data/query", req);
-    console.log("GET response:", data);
+    // console.log("GET response:", data);
     return data;
   } catch (error) {
     console.error("GET request error:", error);

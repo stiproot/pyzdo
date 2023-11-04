@@ -1,6 +1,14 @@
 from .summarize import summarize_node
 from .prop_rule_mappings import PROP_RULE_MAP
-from .risk_impact import calc_risk_impact
+from .critical_tags_alpha import CRITICAL_TAGS
+
+
+def is_critical(summary: dict) -> bool:
+    return any(tag in CRITICAL_TAGS for tag in summary["tags"])
+
+
+def calc_risk_impact(summary: dict):
+    return int(summary["risk_weighting"]) * int(summary["severity"])
 
 
 def calc_rag_status(risk_impact: int) -> str:
@@ -17,6 +25,10 @@ def enrich_summary_tree(summary: dict) -> None:
         risk_impact = calc_risk_impact(summary)
         summary["risk_impact"] = risk_impact
         summary["rag_status"] = calc_rag_status(risk_impact)
+        summary["is_critical"] = is_critical(summary)
+        summary[
+            "ext_url"
+        ] = f'https://dev.azure.com/Derivco/Software/_workitems/edit/{summary["id"]}'
     else:
         for child in summary["children"]:
             enrich_summary_tree(child)

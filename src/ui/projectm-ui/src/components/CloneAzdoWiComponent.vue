@@ -162,7 +162,7 @@ export default {
     //     cloningBlueprints.value = procs;
     //     cloning.value = true;
     //   } catch (ex) {
-    //     console.log(ex);
+    //     // console.log(ex);
     //   }
     // };
 
@@ -178,8 +178,6 @@ export default {
         },
       ];
 
-      console.log("handleCloneClick", "procs", procs);
-
       processes.value = procs;
       cloning.value = true;
 
@@ -192,10 +190,8 @@ export default {
     const initProcessInterval = () => {
       let intervalId = setInterval(async () => {
         if (isStillRunning.value) {
-          console.log("processes still running, refreshing...");
           await refresh();
         } else {
-          console.log("processes finished, cleaning interval...");
           clearInterval(intervalId);
           setTimeout(() => {
             handleCloneProcessesComplete();

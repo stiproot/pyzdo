@@ -51,7 +51,7 @@ export default {
     onMounted(async () => {
       data.isLoading = true;
       await projectsProvider.init();
-      console.log(process.env.VUE_APP_DEFAULT_QUERY_FOLDER);
+      // console.log(process.env.VUE_APP_DEFAULT_QUERY_FOLDER);
     });
 
     return {

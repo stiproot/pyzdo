@@ -10,7 +10,6 @@ class HttpClient {
 
   async get(path, headers = {}) {
     const url = `${this.BASE_URL}/${path}`;
-    console.log("get: url:", url);
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -28,7 +27,6 @@ class HttpClient {
 
   async post(path, data, headers = {}) {
     const url = `${this.BASE_URL}/${path}`;
-    console.log("post: url:", url);
     const response = await fetch(url, {
       method: "POST",
       headers: {

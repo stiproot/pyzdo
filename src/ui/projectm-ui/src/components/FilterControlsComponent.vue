@@ -4,7 +4,7 @@
       :minVal="0"
       :stepVal="5"
       :maxVal="40"
-      @adjusted="handleRiskWeightAdjusted"
+      @adjusted="handleRiskImpactAdjusted"
     />
     <div class="q-gutter-y-md column" style="max-width: 300px">
       <SelectFilterComponent
@@ -22,11 +22,12 @@
         :options="severityOptions"
         @selected="handleSeveritySelected"
       />
+      <q-toggle v-model="defaulted" color="red" label="Defaulted" />
     </div>
   </div>
 </template>
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import SliderFilterComponent from "./SliderFilterComponent.vue";
 import SelectFilterComponent from "./SelectFilterComponent.vue";
 export default {
@@ -46,6 +47,8 @@ export default {
     const rags = ["Red", "Amber", "Green"];
     const ragOptions = ref(rags);
 
+    const defaulted = ref(false);
+
     const severities = [
       { label: "(1) Negligible", value: 1 },
       { label: "(2) Minor", value: 2 },
@@ -59,58 +62,60 @@ export default {
       severities: severities,
       roles: roles,
       rags: rags,
-      risk_weight: 0,
+      risk_impact: 0,
+      defaulted: false,
     };
 
-    let setTimeoutId = 0;
+    watch(
+      () => defaulted.value,
+      (val) => {
+        filter.defaulted = val;
+        triggerFilter();
+      }
+    );
 
+    let setTimeoutId = 0;
     const triggerFilter = () => {
       if (setTimeoutId) {
         clearTimeout(setTimeoutId);
       }
 
-      console.log("triggerFilter", "setting timeout");
       setTimeoutId = setTimeout(() => {
-        console.log("triggerFilter, emitting event", filter);
         emitEvent(filter);
         clearTimeout(setTimeoutId);
       }, 1000);
     };
 
-    const handleRiskWeightAdjusted = (e) => {
-      console.log("handleRiskWeightAdusted", e);
-      filter.risk_weight = e;
+    const handleRiskImpactAdjusted = (e) => {
+      filter.risk_impact = e;
       triggerFilter();
     };
 
     const handleRagSelected = (e) => {
-      console.log("handleRagSelected", e);
       filter.rags = e;
       triggerFilter();
     };
 
     const handleRoleSelected = (e) => {
-      console.log("handleRoleSelected", e);
       filter.roles = e;
       triggerFilter();
     };
 
     const handleSeveritySelected = (e) => {
-      console.log("handleSeveritySelected", e);
       filter.severities = e;
       triggerFilter();
     };
 
     onMounted(() => {
-      console.log("FilterControlsComponent", "mounted");
       triggerFilter();
     });
 
     return {
+      defaulted,
       roleOptions,
       ragOptions,
       severityOptions,
-      handleRiskWeightAdjusted,
+      handleRiskImpactAdjusted,
       handleRagSelected,
       handleRoleSelected,
       handleSeveritySelected,

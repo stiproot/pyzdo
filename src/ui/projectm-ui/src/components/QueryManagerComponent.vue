@@ -168,10 +168,10 @@ export default {
     const initProcessInterval = () => {
       let intervalId = setInterval(async () => {
         if (isStillRunning.value) {
-          console.log("processes still running, refreshing...");
+          // console.log("processes still running, refreshing...");
           await refresh();
         } else {
-          console.log("processes finished, cleaning interval...");
+          // console.log("processes finished, cleaning interval...");
           clearInterval(intervalId);
           setTimeout(() => {
             handleGatheringProcessesComplete();
@@ -181,7 +181,7 @@ export default {
     };
 
     const initState = () => {
-      console.log("initState", "isNewProject", nav.isNewProject());
+      // console.log("initState", "isNewProject", nav.isNewProject());
       editing.value = nav.isNewProject();
       originalState = deepCopy(queries.value);
     };

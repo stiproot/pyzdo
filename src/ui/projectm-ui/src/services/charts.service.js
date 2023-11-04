@@ -15,6 +15,14 @@ export const CHART_TYPES = {
   FORCE_DIRECTED_TREE: "FORCE_DIRECTED_TREE",
 };
 
+export const CHART_TYPE_ID_HASH = {
+  [CHART_TYPES.NESTED_TREEMAP]: "nested-treemap",
+  [CHART_TYPES.PACKED_CIRCLE]: "packed-circle",
+  [CHART_TYPES.SUNBURST]: "sunburst",
+  [CHART_TYPES.FORCE_DIRECTED_TREE]: "force-directed-tree",
+  [CHART_TYPES.TIDY_TREE]: "tidy-tree",
+};
+
 export const STRUCTURE_TYPES = {
   SUMMARIZED_TREE: "SUMMARIZED_TREE",
   WEIGHTED_TREE: "WEIGHTED_TREE",
@@ -49,3 +57,16 @@ export const getChartStructureType = (chartType) => {
 
   return structureType;
 };
+
+export const CHART_TYPES_LIST = [
+  { id: "nested-treemap", description: "Nested Treemap" },
+  { id: "tidy-tree", description: "Tidy Tree" },
+  { id: "packed-circle", description: "Packed Circles" },
+  { id: "sunburst", description: "Sunburst" },
+  { id: "force-directed-tree", description: "Force directed tree" },
+];
+
+// const DATA_SRC_HASH = {
+//   [STRUCTURE_TYPES.WEIGHTED_TREE]: () => data.getWeightedTree,
+//   [STRUCTURE_TYPES.SUMMARIZED_TREE]: () => data.getSummarizedTree,
+// };

@@ -96,12 +96,12 @@ export default {
 
     function initInterval() {
       return setInterval(async () => {
-        console.log("initInterval: isStillRunning?", data.isStillRunning);
+        // // console.log("initInterval: isStillRunning?", data.isStillRunning);
         if (data.isStillRunning) {
-          console.log("still running");
+          // // console.log("still running");
           await refresh();
         } else {
-          console.log("not still running");
+          // // console.log("not still running");
           executing.value = false;
           emitEvent();
         }
@@ -180,7 +180,7 @@ export default {
     const handleRefreshClick = async () => {
       const procs = mapProcs();
       validateProcs(procs);
-      console.log("handleRefreshClick", props.blueprints);
+      // // console.log("handleRefreshClick", props.blueprints);
       processes.value = procs;
 
       if (procs.length) {
@@ -217,7 +217,7 @@ export default {
       init();
 
       if (props.blueprints.length) {
-        console.log("onMounted", "handleRefreshClick", props);
+        // // console.log("onMounted", "handleRefreshClick", props);
         await handleRefreshClick();
       }
     });

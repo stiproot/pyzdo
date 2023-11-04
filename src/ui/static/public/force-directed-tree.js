@@ -69,7 +69,7 @@ export function buildForceDirectedTree(_data, container) {
   // Append nodes.
 
   function radius(d) {
-    console.log("d", d);
+    // console.log("d", d);
     if (d.type === "Task") return 5;
     else if (d.type === "User Story") return 10;
     else if (d.type === "Feature") return 15;

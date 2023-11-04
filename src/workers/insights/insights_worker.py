@@ -20,6 +20,7 @@ GROUP_ID = env_var_provider.get_env_var(
 WORKER_TOPIC = env_var_provider.get_env_var(
     "WORKER_TOPIC", "topic_projectm_cmd_insights_structure"
 )
+DEBUGGING = env_var_provider.get_env_var("DEBUGGING", False)
 
 
 workflow_hash = {
@@ -75,5 +76,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # time.sleep(30)
+    if not DEBUGGING:
+        time.sleep(30)
     main()

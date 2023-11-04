@@ -74,7 +74,7 @@ export default {
     //     blueprints.value = procs;
     //     creating.value = true;
     //   } catch (e) {
-    //     console.log(e);
+    //     // console.log(e);
     //   }
     // };
 
@@ -90,8 +90,6 @@ export default {
         },
       ];
 
-      console.log("handleCreateClick", "procs", procs);
-
       processes.value = procs;
       creating.value = true;
 
@@ -104,10 +102,8 @@ export default {
     const initProcessInterval = () => {
       let intervalId = setInterval(async () => {
         if (isStillRunning.value) {
-          console.log("processes still running, refreshing...");
           await refresh();
         } else {
-          console.log("processes finished, cleaning interval...");
           clearInterval(intervalId);
           setTimeout(() => {
             handleCreateProcessesComplete();

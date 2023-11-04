@@ -174,8 +174,8 @@ export default {
     };
 
     onMounted(async () => {
-      console.log("InsightsManagerComponent mounted", props.tabId);
-      console.log(nav.projId);
+      // // console.log("InsightsManagerComponent mounted", props.tabId);
+      // // console.log(nav.projId);
       await projectProvider.init(nav.projId);
       await structuresProvider.init(nav.projId);
     });

@@ -1,23 +1,38 @@
 <template>
-  <div>
-    <ItemSelectorComponent
-      v-if="!showChart"
-      :items="charts"
-      @item-click="handleChartClick"
-    />
-  </div>
+  <ItemSelectorComponent
+    v-if="!showChart"
+    :items="charts"
+    @item-click="handleChartClick"
+  />
 
   <router-view></router-view>
-  <div>
-    <FabActionComponent>
-      <BtnComponent
-        icon="close"
-        color="secondary"
-        v-if="showChart"
-        @click="handleCloseClick"
-      />
-    </FabActionComponent>
-  </div>
+
+  <FabActionComponent>
+    <BtnComponent
+      icon="close"
+      color="secondary"
+      v-if="showChart"
+      @click="handleCloseClick"
+    />
+  </FabActionComponent>
+
+  <!--q-layout view="lHh Lpr lFf" v-if="showChart">
+    <q-drawer v-model="leftDrawerOpen" show-if-above side="left">
+      <ListComponent />
+    </q-drawer>
+
+    <q-page-container>
+      <router-view></router-view>
+      <FabActionComponent>
+        <BtnComponent
+          icon="close"
+          color="secondary"
+          v-if="showChart"
+          @click="handleCloseClick"
+        />
+      </FabActionComponent>
+    </q-page-container>
+  </q-layout-->
 </template>
 <script>
 import { ref, computed, onMounted } from "vue";
@@ -26,28 +41,26 @@ import { NavigationService } from "@/services/navigation.service";
 import ItemSelectorComponent from "./ItemSelectorComponent.vue";
 import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
+// import ListComponent from "./ListComponent.vue";
+import { CHART_TYPE_RGB_COLOR_HASH } from "@/services/color.service";
+import { CHART_TYPES_LIST } from "@/services/charts.service";
+
 export default {
   name: "ChartManagerComponent",
   components: {
     ItemSelectorComponent,
     FabActionComponent,
     BtnComponent,
+    // ListComponent,
   },
   setup() {
     const router = useRouter();
     const nav = new NavigationService(router);
-
-    const COLOR_HASH = {
-      "nested-treemap": "rgb(255, 238, 121)",
-      "tidy-tree": "rgb(216, 239, 251)",
-      "packed-circle": "rgb(91, 142, 145)",
-      sunburst: "rgb(249, 85, 88)",
-      "force-packed-tree": "rgb(133, 87, 3)",
-    };
+    // const leftDrawerOpen = ref(true);
 
     const enrichData = (data) => {
       data.forEach((c) => {
-        c.color = COLOR_HASH[c.id];
+        c.color = CHART_TYPE_RGB_COLOR_HASH[c.id];
         c.subTitle = c.id;
         c.actions = [
           {
@@ -58,16 +71,8 @@ export default {
       });
     };
 
-    const chartTypes = [
-      { id: "nested-treemap", description: "Nested Treemap" },
-      { id: "tidy-tree", description: "Tidy Tree" },
-      { id: "packed-circle", description: "Packed Circles" },
-      { id: "sunburst", description: "Sunburst" },
-      { id: "force-directed-tree", description: "Force directed tree" },
-    ];
-
-    enrichData(chartTypes);
-    const charts = ref(chartTypes);
+    enrichData(CHART_TYPES_LIST);
+    const charts = ref(CHART_TYPES_LIST);
     const chartType = ref(null);
     const showChart = computed(() => nav.chartId !== undefined);
 
@@ -90,6 +95,7 @@ export default {
     });
 
     return {
+      // leftDrawerOpen,
       charts,
       handleChartClick,
       handleCloseClick,

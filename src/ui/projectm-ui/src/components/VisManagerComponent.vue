@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-splitter v-model="splitterModel">
-      <template v-slot:before>
+      <template v-slot:before v-if="!hideTabs">
         <q-tabs v-model="tab" vertical class="text-teal">
           <q-tab name="charts" icon="code" label="" />
           <q-tab name="structures" icon="category" label="" />
@@ -41,6 +41,7 @@ import {
 } from "@/stores/structures.store";
 import ChartManagerComponent from "./ChartManagerComponent.vue";
 import StructureManagerComponent from "./StructureManagerComponent.vue";
+import { useLayoutStore, LayoutProvider } from "@/stores/layout.store";
 export default {
   name: "VisManagerComponent",
   components: {
@@ -56,6 +57,8 @@ export default {
   setup(props) {
     const router = useRouter();
     const nav = new NavigationService(router);
+    const layoutProvider = new LayoutProvider(useLayoutStore());
+    const { maximized } = layoutProvider;
 
     const structuresStore = useStructuresStore();
     const structuresProvider = new StructuresProvider(structuresStore);
@@ -68,19 +71,28 @@ export default {
       }
     );
 
+    const hideTabs = ref(false);
+    watch(
+      () => maximized.value,
+      () => {
+        hideTabs.value = maximized.value && tab.value === "charts";
+      }
+    );
+
     onMounted(async () => {
-      console.log(
-        "VisManagerComponent mounted",
-        "props.tabId:",
-        props.tabId,
-        "nav.projId:",
-        nav.projId
-      );
+      // console.log(
+      //   "VisManagerComponent mounted",
+      //   "props.tabId:",
+      //   props.tabId,
+      //   "nav.projId:",
+      //   nav.projId
+      // );
       await structuresProvider.init(nav.projId);
     });
 
     return {
       tab,
+      hideTabs,
     };
   },
 };

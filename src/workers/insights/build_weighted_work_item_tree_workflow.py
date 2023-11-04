@@ -1,4 +1,6 @@
-from algos.build_risk_weighted_work_item_tree import build_risk_weighted_work_item_tree
+from algos.build_risk_weighted_work_item_tree_alpha import (
+    build_risk_weighted_work_item_tree,
+)
 from queries import (
     get_wi_collection_hash_for_project,
     get_wi_root_collection_from_collection_hash,

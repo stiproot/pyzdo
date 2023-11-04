@@ -17,11 +17,11 @@ export async function getSummarizedTree(projectId) {
     COLLECTIONS.SUMMARIZED_TREES
   );
   const resp = await qry(req);
-  return resp[0];
+  return resp[0] || {};
 }
 
 export async function getWeightedTree(projectId) {
   const req = buildQry(WEIGHTED_TREE_ID, projectId, COLLECTIONS.WEIGHTED_TREES);
   const resp = await qry(req);
-  return resp[0];
+  return resp[0] || {};
 }
