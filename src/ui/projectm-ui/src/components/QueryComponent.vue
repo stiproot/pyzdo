@@ -96,6 +96,7 @@ export default {
     const { name, ql, isValid } = provider;
     const searching = ref(false);
     const data = reactive({ name, ql, isValid, tags, searching });
+    const PROJECT_METRICS_TAG = "Project Metrics";
 
     const clearTags = () => {
       tags.value = "";
@@ -108,8 +109,8 @@ export default {
 
       const tagsArr = tags.value.split(";");
 
-      if (!tagsArr.includes("ProjectMetrics")) {
-        tagsArr.push("ProjectMetrics");
+      if (!tagsArr.includes(PROJECT_METRICS_TAG)) {
+        tagsArr.push(PROJECT_METRICS_TAG);
       }
 
       const tagFilter = tagsArr

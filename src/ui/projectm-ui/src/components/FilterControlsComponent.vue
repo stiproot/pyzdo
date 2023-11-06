@@ -1,12 +1,17 @@
 <template>
   <div class="q-pa-md">
-    <SliderFilterComponent
+    <RangeFilterComponent
       :minVal="0"
       :stepVal="5"
-      :maxVal="40"
+      :maxVal="50"
       @adjusted="handleRiskImpactAdjusted"
     />
     <div class="q-gutter-y-md column" style="max-width: 300px">
+      <SelectFilterComponent
+        label="Area"
+        :options="areaOptions"
+        @selected="handleAreaSelected"
+      />
       <SelectFilterComponent
         label="Role"
         :options="roleOptions"
@@ -27,13 +32,13 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, watch } from "vue";
-import SliderFilterComponent from "./SliderFilterComponent.vue";
+import { toRefs, reactive, ref, onMounted, watch } from "vue";
+import RangeFilterComponent from "./RangeFilterComponent.vue";
 import SelectFilterComponent from "./SelectFilterComponent.vue";
 export default {
   name: "FilterControlsComponent",
   components: {
-    SliderFilterComponent,
+    RangeFilterComponent,
     SelectFilterComponent,
   },
   setup(props, { emit }) {
@@ -41,14 +46,26 @@ export default {
       emit("filter", data);
     };
 
-    const roles = ["Developer", "SDET", "Project Manager", "SEM", "BA"];
+    const areas = [
+      "Artifacts",
+      "Behaviours",
+      "Development",
+      "Environments",
+      "Project",
+      "Personnel",
+      "Testing",
+    ];
+    const areaOptions = ref(areas);
+    const roles = [
+      "Developer",
+      "SDET",
+      "Project Manager",
+      "SEM",
+      "Business Analyst",
+    ];
     const roleOptions = ref(roles);
-
     const rags = ["Red", "Amber", "Green"];
     const ragOptions = ref(rags);
-
-    const defaulted = ref(false);
-
     const severities = [
       { label: "(1) Negligible", value: 1 },
       { label: "(2) Minor", value: 2 },
@@ -57,12 +74,22 @@ export default {
       { label: "(5) Catastrophic", value: 5 },
     ];
     const severityOptions = ref(severities);
+    const defaulted = ref(false);
+
+    const data = reactive({
+      areaOptions,
+      severityOptions,
+      roleOptions,
+      ragOptions,
+      defaulted,
+    });
 
     const filter = {
+      areas: areas,
       severities: severities,
       roles: roles,
       rags: rags,
-      risk_impact: 0,
+      risk_impact_range: { min: 0, max: 50 },
       defaulted: false,
     };
 
@@ -87,7 +114,12 @@ export default {
     };
 
     const handleRiskImpactAdjusted = (e) => {
-      filter.risk_impact = e;
+      filter.risk_impact_range = e;
+      triggerFilter();
+    };
+
+    const handleAreaSelected = (e) => {
+      filter.areas = e;
       triggerFilter();
     };
 
@@ -111,10 +143,8 @@ export default {
     });
 
     return {
-      defaulted,
-      roleOptions,
-      ragOptions,
-      severityOptions,
+      ...toRefs(data),
+      handleAreaSelected,
       handleRiskImpactAdjusted,
       handleRagSelected,
       handleRoleSelected,

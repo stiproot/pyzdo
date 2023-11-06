@@ -5,7 +5,7 @@ from queries import (
     WORK_ITEM_TYPE_COLLECTION_HASH,
 )
 from persists import persist_payload
-from pm_common import RootCmd
+from pm_common import RootCmd, enrich_payload
 
 BUCKET_NAME = "project_m"
 SCOPE_NAME = "azdo"
@@ -31,6 +31,7 @@ def build_summarized_work_item_tree_workflow(cmd: RootCmd) -> int:
         summarized_nodes.append(summary)
 
     tree = {"id": "summarized_tree", "type": "root", "children": summarized_nodes}
+    enrich_payload(tree, cmd)
 
     persist_payload(
         payload=tree,

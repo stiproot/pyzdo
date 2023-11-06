@@ -81,26 +81,30 @@ export default {
     });
 
     const handleFilter = (e) => {
-      const { severities, roles, rags, risk_impact, defaulted } = e;
-      const severityVals = severities.map((s) => s.value);
+      const { areas, severities, roles, rags, risk_impact_range, defaulted } =
+        e;
 
-      const ragFn = (node) => rags.includes(node.rag_status);
-      const riskImpactFn = (node) => {
-        return node.risk_impact >= risk_impact;
+      const areaFn = (node) => {
+        const filtered = node.tags.filter((t) => areas.includes(t));
+        return filtered.length > 0;
       };
+      const ragFn = (node) => rags.includes(node.rag_status);
+      const riskImpactFn = (node) =>
+        node.risk_impact >= risk_impact_range.min &&
+        node.risk_impact <= risk_impact_range.max;
       const rolesFn = (node) => {
         const filtered = node.tags.filter((t) => roles.includes(t));
         return filtered.length > 0;
       };
-      const severityFn = (node) => {
-        return severityVals.includes(node.severity);
-      };
+      const severityVals = severities.map((s) => s.value);
+      const severityFn = (node) => severityVals.includes(node.severity);
       const defaultedFn = (node) => {
         return defaulted === true ? node.defaulted === true : true;
       };
 
       const fn = (node) => {
         return (
+          areaFn(node) &&
           riskImpactFn(node) &&
           rolesFn(node) &&
           severityFn(node) &&
