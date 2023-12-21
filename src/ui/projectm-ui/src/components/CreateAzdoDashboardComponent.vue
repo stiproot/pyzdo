@@ -123,6 +123,10 @@
           </q-card-section>
           <q-separator dark inset />
           <q-card-section>{{ i.desc }}</q-card-section>
+
+          <q-card-actions>
+            <q-btn flat @click="handleRemoveInitiativeClick(i)">Remove</q-btn>
+          </q-card-actions>
         </q-card>
       </div>
     </q-form>
@@ -277,10 +281,11 @@ export default {
       searchingIterations.value = false;
     };
 
-    // Software\Non-Aligned\Customers and Emerging Markets\Teams\N2 Chapmans Peak Project Team\2023\Sprint 14 2023
-
     const mergeInitiatives = (val) => {
+      console.log("val", val);
+      console.log("initiatives", initiatives);
       const existing = initiatives.value.find((i) => i.tag === val.tag);
+      console.log("existing", existing);
 
       if (existing) {
         existing.title = val.title;
@@ -300,26 +305,12 @@ export default {
       showInitiative.value = false;
     };
 
-    // const handleCreateClick = async () => {
-    //   const idempotencyId = generateGuid();
-
-    //   try {
-    //     await upsert(idempotencyId);
-    //     const procs = [
-    //       {
-    //         id: idempotencyId,
-    //         project_id: "default",
-    //         status: PROCESS_STATUSES.RUNNING,
-    //         cmd_type: CMD_TYPES.CREATE_DASHBOARD,
-    //       },
-    //     ];
-
-    //     blueprints.value = procs;
-    //     creating.value = true;
-    //   } catch (e) {
-    //     // console.log(e);
-    //   }
-    // };
+    const handleRemoveInitiativeClick = (val) => {
+      // mergeInitiatives(val);
+      removeInitiative(val);
+      // resetInitiativeModel();
+      // showInitiative.value = false;
+    };
 
     const handleCreateClick = async () => {
       const idempotencyId = generateGuid();
@@ -372,6 +363,7 @@ export default {
       showInitiative,
       isExpanded,
       handleCreateClick,
+      handleRemoveInitiativeClick,
       handleCreateProcessesComplete,
       handleAddClick,
       handleCloseClick,

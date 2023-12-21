@@ -9,6 +9,7 @@
 
   <FabActionComponent>
     <BtnComponent
+      style="background-color: white"
       icon="close"
       color="secondary"
       v-if="showChart"
@@ -42,8 +43,10 @@ import ItemSelectorComponent from "./ItemSelectorComponent.vue";
 import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
 // import ListComponent from "./ListComponent.vue";
-import { CHART_TYPE_RGB_COLOR_HASH } from "@/services/color.service";
-import { CHART_TYPES_LIST } from "@/services/charts.service";
+import {
+  CHART_TYPES_LIST,
+  CHART_TYPE_RGB_COLOR_HASH,
+} from "@/services/charts.service";
 
 export default {
   name: "ChartManagerComponent",
@@ -61,11 +64,12 @@ export default {
     const enrichData = (data) => {
       data.forEach((c) => {
         c.color = CHART_TYPE_RGB_COLOR_HASH[c.id];
-        c.subTitle = c.id;
+        c.icon = c.in_progress ? "construction" : null;
+        // c.subTitle = c.id;
         c.actions = [
           {
             evtId: "item-click",
-            btnText: c.id,
+            btnText: "view",
           },
         ];
       });

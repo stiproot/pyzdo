@@ -1,7 +1,12 @@
 <template>
   <q-card class="card-width" :style="{ backgroundColor: item.color }">
-    <q-card-section>
-      <div v-if="item.title" class="text-h6">{{ item.title }}</div>
+    <q-item-section avatar v-if="item.icon">
+      <q-avatar>
+        <q-icon :name="item.icon" />
+      </q-avatar>
+    </q-item-section>
+    <q-card-section v-if="item.title || item.subTitle">
+      <div v-if="item.title" class="text-h6 text-content">{{ item.title }}</div>
       <div v-if="item.subTitle" class="text-subtitle2">{{ item.subTitle }}</div>
     </q-card-section>
     <q-card-section v-if="item.description">{{
@@ -42,5 +47,10 @@ export default {
 <style>
 .card-width {
   max-width: 250px;
+}
+
+.text-content {
+  white-space: normal;
+  overflow: hidden;
 }
 </style>

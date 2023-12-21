@@ -4,7 +4,7 @@
       <q-item>
         <q-item-section avatar>
           <q-avatar>
-            <q-icon :style="{ color: color }" name="widgets" />
+            <q-icon :style="{ color: color }" name="interests" />
           </q-avatar>
         </q-item-section>
 

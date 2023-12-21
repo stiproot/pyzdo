@@ -222,7 +222,7 @@ services:
       - broker
     build: ./src/apis/kafka-api
     ports:
-      - 8001:8002
+      - 8006:8002
     environment:
       - BOOTSTRAP_SERVERS:broker:29092
       - CLIENT_ID=mandy-kafka-api
@@ -234,7 +234,7 @@ services:
       - mandy-db
     build: ./src/apis/couchbase-api
     ports:
-      - 8000:8001
+      - 8005:8001
     environment:
       - COUCHBASE_HOST=mandy-db
       - COUCHBASE_USERNAME=root
@@ -281,7 +281,7 @@ services:
       - WORKER_TOPIC=topic_projectm_cmd_insights_gather
       - PERSIST_URL=http://mandy-kafka-api:8002/kafka/topic/publish
       - PERSIST_TOPIC=topic_projectm_cmd_persist
-      - API_KEY=OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=
+      - API_KEY=azdo-pat
       - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-insights-worker:
@@ -311,7 +311,7 @@ services:
       - PERSIST_TOPIC=topic_projectm_cmd_persist
       - PERSIST_URL=http://mandy-kafka-api:8002/kafka/topic/publish
       - AZDO_PROXY_BASE_URL=http://mandy-azdo-proxy-api:80
-      - API_KEY=OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=
+      - API_KEY=azdo-pat
       - STORE_QUERY_URL=http://mandy-cb-api:8001/cb/qry
 
   mandy-ui-api:
@@ -322,7 +322,7 @@ services:
       - mandy-cb-api
     build: ./src/apis/ui-api
     ports:
-      - 3000:3002
+      - 3004:3002
     environment:
       - PORT=3001
       - NODE_ENV=production
@@ -338,9 +338,9 @@ services:
     ports:
       - 8080:80
     environment:
-      - VUE_APP_AZDO_API_KEY=OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=
+      - VUE_APP_AZDO_API_KEY=azdo-pat
       - VUE_APP_DEFAULT_QUERY_FOLDER=Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team/Reboot
-      - VUE_APP_UI_API_BASE_URL=http://localhost:3000/ui-api
+      - VUE_APP_UI_API_BASE_URL=http://localhost:3004/ui-api
 
 networks:
   mandy:

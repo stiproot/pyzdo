@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-sm">
-    <q-tree node-key="label" :nodes="enrichedTree" />
+    <q-tree node-key="label" default-expand-all :nodes="enrichedTree" />
   </div>
   <slot />
 </template>

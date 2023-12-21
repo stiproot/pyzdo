@@ -30,7 +30,7 @@ def build_summarized_work_item_tree_workflow(cmd: RootCmd) -> int:
         )
         summarized_nodes.append(summary)
 
-    tree = {"id": "summarized_tree", "type": "root", "children": summarized_nodes}
+    tree = {"type": "root", "children": summarized_nodes}
     enrich_payload(tree, cmd)
 
     persist_payload(

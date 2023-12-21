@@ -65,6 +65,61 @@
 					"response": []
 				},
 				{
+					"name": "query by name",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.Title] CONTAINS 'Simon'\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/wiql?api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"wiql"
+							],
+							"query": [
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get wi details [feature]",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -87,7 +142,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1066390?$expand=all&api-version=7.0",
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1066390?$expand=all&api-version=7.1",
 							"protocol": "https",
 							"host": [
 								"dev",
@@ -109,7 +164,7 @@
 								},
 								{
 									"key": "api-version",
-									"value": "7.0"
+									"value": "7.1"
 								}
 							]
 						}
@@ -205,6 +260,58 @@
 								"wit",
 								"workitems",
 								"1116071"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "all"
+								},
+								{
+									"key": "api-version",
+									"value": "7.0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get wi details [task] Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{base64-access-token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json-patch+json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://dev.azure.com/Derivco/Software/_apis/wit/workitems/1100157?$expand=all&api-version=7.0",
+							"protocol": "https",
+							"host": [
+								"dev",
+								"azure",
+								"com"
+							],
+							"path": [
+								"Derivco",
+								"Software",
+								"_apis",
+								"wit",
+								"workitems",
+								"1100157"
 							],
 							"query": [
 								{
@@ -600,7 +707,123 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'ProjectMetricsPilot'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"hdt\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"epics\"\n                }\n            }\n        }\n    }\n}",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'Epic' AND [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate' AND [System.Tags] CONTAINS 'Project Metrics'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"hdt\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"epics\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / project_s",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.Tags] CONTAINS 'project_s'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"e9bb6890-35a7-4140-ad3d-a9573887dde3\",\n            \"project_id\": \"project_s\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"project_s\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"unknown\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / project_x",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.Tags] CONTAINS 'project_x'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"e9bb6890-35a7-4140-ad3d-a9573887dde3\",\n            \"project_id\": \"project_x\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"project_x\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"unknown\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8006/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8006",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / hdt",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id],[System.WorkItemType],[System.Title],[System.AssignedTo],[System.State],[System.Tags] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.Tags] CONTAINS 'hdt' AND [System.Tags] CONTAINS 'ProjectTemplate'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"hdt_2\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"hdt\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"unknown\"\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8001/kafka/topic/publish",
+							"host": [
+								"localhost"
+							],
+							"port": "8001",
+							"path": [
+								"kafka",
+								"topic",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kafka api / hdt (one query)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_gather\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"GATHER\",\n        \"cmd_type\": \"GATHER_PROJECT_UNITS_OF_WORK\",\n        \"cmd_data\": {\n            \"ql\": \"SELECT [System.Id], [System.WorkItemType], [System.Title], [System.AssignedTo], [System.State], [System.Tags]  FROM WorkItems WHERE [System.Tags] CONTAINS 'N2CP-IS-HelpDesk' AND [System.Tags] CONTAINS 'ProjectTemplate'\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"0f5605a0-7bbc-484a-bb10-0c42f05fe323\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"hdt\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"azdo\",\n                    \"trgt_collection\": \"unknown\"\n                }\n            }\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -628,13 +851,13 @@
 			"name": "structure",
 			"item": [
 				{
-					"name": "kafka api / summarized tree",
+					"name": "kafka api / summarized tree / hdt",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_SUMMARIZED_WORK_ITEM_TREE\",\n        \"cmd_data\": {\n            \"root_collection\": \"epics\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_summarized_tree_001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"store\": {\n                    \"trgt_bucket\": \"hdt\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"summarized_trees\"\n                }\n            }\n        }\n    }\n}",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_WEIGHTED_WORK_ITEM_TREE\",\n        \"cmd_data\": {},\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_summarized_tree_004\",\n            \"project_id\": \"help_desk_real\",\n            \"cmd_post_op\": {\n                 \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"help_desk_real\"\n                            }\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"weighted_trees\"\n                }\n            }\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -657,13 +880,13 @@
 					"response": []
 				},
 				{
-					"name": "kafka api / weighted tree",
+					"name": "kafka api / weighted tree / project_x",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_WEIGHTED_WORK_ITEM_TREE\",\n        \"cmd_data\": {\n            \"root_collection\": \"epics\"\n        },\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_weighted_tree_001\",\n            \"project_id\": \"hdt\",\n            \"cmd_post_op\": {\n                \"store\": {\n                    \"trgt_bucket\": \"hdt\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"weighted_trees\"\n                }\n            }\n        }\n    }\n}",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_insights_structure\",\n    \"key\": \"1\",\n    \"payload\": {\n        \"cmd_category\": \"STRUCTURE\",\n        \"cmd_type\": \"BUILD_WEIGHTED_WORK_ITEM_TREE\",\n        \"cmd_data\": {},\n        \"cmd_metadata\": {\n            \"idempotency_id\": \"structure_weighted_tree_002\",\n            \"project_id\": \"project_x\",\n            \"cmd_post_op\": {\n                \"enrichment\": {\n                    \"add_property_map\": [\n                        {\n                            \"key\": \"__metadata__\",\n                            \"val\": {\n                                \"project_id\": \"project_x\"\n                            }\n                        },\n                        {\n                            \"key\": \"id\",\n                            \"val\": \"project_x_weighted_tree\"\n                        }\n                    ]\n                },\n                \"store\": {\n                    \"trgt_bucket\": \"project_m\",\n                    \"trgt_scope\": \"structures\",\n                    \"trgt_collection\": \"weighted_trees\"\n                }\n            }\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -671,11 +894,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8001/kafka/topic/publish",
+							"raw": "localhost:8006/kafka/topic/publish",
 							"host": [
 								"localhost"
 							],
-							"port": "8001",
+							"port": "8006",
 							"path": [
 								"kafka",
 								"topic",
@@ -811,6 +1034,36 @@
 					"response": []
 				},
 				{
+					"name": "ui api / create dashboard Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"EXT\",\n    \"cmd_type\": \"CREATE_DASHBOARD\",\n    \"cmd_data\": {\n        \"cmd\": {\n            \"dashboardName\": \"CP Sprint 14 2023\",\n            \"iterationName\": \"Sprint 14 2023\",\n            \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 14 2023\",\n            \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n            \"queryFolderBasePath\": \"Software\\\\Customers and Emerging Markets\\\\Rapid Response\\\\Project\\\\N2 Chapmans Peak Project Team\",\n            \"initiatives\": [\n                {\n                    \"title\": \"Reboot\",\n                    \"tag\": \"N2CP - Reboot\",\n                    \"desc\": \"Rebootish\",\n                    \"queryFolderName\": \"Rebootish\"\n                }\n            ]\n        }\n    },\n    \"cmd_metadata\": {\n        \"idempotency_id\": \"456e99ca-13f2-4d98-a4cd-c84b5b63327e\",\n        \"project_id\": \"default\",\n        \"cmd_pre_op\": {},\n        \"cmd_post_op\": {}\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/ui-api/proxy/azdo/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"ui-api",
+								"proxy",
+								"azdo",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "ui api / bulk create",
 					"request": {
 						"method": "POST",
@@ -900,6 +1153,66 @@
 					"response": []
 				},
 				{
+					"name": "azdo proxy api / bulk create devops",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmds\": [\n        {\n            \"type\": \"Feature\",\n            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n            \"title\": \"Create CI/CD Pipeline\",\n            \"description\": \"\",\n            \"acceptance_criteria\": \"\",\n            \"state\": \"New\",\n            \"tags\": \"KR-AutoPromoCreation\",\n            \"assigned_to\": \"Simon Stipcich\",\n            \"relation\": {\n                \"relation_type\": \"Child\",\n                \"url\": \"https://dev.azure.com/Derivco/Software/_workitems/edit/1183598\"\n            },\n            \"children\": [\n                {\n                    \"type\": \"User Story\",\n                    \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                    \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                    \"title\": \"Create CI Pipeline Template\",\n                    \"description\": \"\",\n                    \"acceptance_criteria\": \"\",\n                    \"state\": \"New\",\n                    \"tags\": \"\",\n                    \"story_points\": \"\",\n                    \"assigned_to\": \"Simon Stipcich\",\n                    \"children\": [\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"PromoMan CI Pipeline Comprehension\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"SonarQube Project Setup\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Add Pipeline Template to SDK Repo.\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Create Test Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Create on build Sonar runner\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Build Microservice Artifact Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Build Image Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Publish Image Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Publish Microservice Artifact Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"T1 Test Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Publish T1 Test Results Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Quality Gate Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        }\n                    ]\n                },\n                {\n                    \"type\": \"User Story\",\n                    \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                    \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                    \"title\": \"Create CD Pipeline Template\",\n                    \"description\": \"\",\n                    \"acceptance_criteria\": \"\",\n                    \"state\": \"New\",\n                    \"tags\": \"\",\n                    \"story_points\": \"\",\n                    \"assigned_to\": \"Simon Stipcich\",\n                    \"children\": [\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Create AKS DevTest Cluster\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Define Resource Groups\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Run T3 Tests on AKS Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Image Promotion Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Image Scanning Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        },\n                        {\n                            \"type\": \"Task\",\n                            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n                            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n                            \"title\": \"Deploy to Staging Task\",\n                            \"description\": \"\",\n                            \"state\": \"New\",\n                            \"tags\": \"\",\n                            \"assigned_to\": \"Simon Stipcich\",\n                            \"remaining\": \"\",\n                            \"original_estimate\": \"\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5079/azdo/bulk/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5079",
+							"path": [
+								"azdo",
+								"bulk",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / tmp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmds\": [\n        {\n            \"type\": \"Feature\",\n            \"area_path\": \"Software\\\\Integrated Solutions, Sports and AI\\\\Artificial Intelligence\\\\Project\\\\Cyberdyne Project Team\",\n            \"iteration_path\": \"Software\\\\Non-Aligned\\\\Integrated Solutions, Sports and AI\\\\Teams\\\\Cyberdyne Project Team\",\n            \"title\": \"Tmp\",\n            \"description\": \"\",\n            \"acceptance_criteria\": \"\",\n            \"state\": \"New\",\n            \"tags\": \"tmp\",\n            \"assigned_to\": \"Simon Stipcich\",\n            \"relation\": {\n                \"relation_type\": \"Child\",\n                \"url\": \"https://dev.azure.com/Derivco/Software/_workitems/edit/1183598\"\n            },\n            \"children\": []\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5081/azdo/bulk/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5081",
+							"path": [
+								"azdo",
+								"bulk",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "azdo proxy api / health",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {}
@@ -931,6 +1244,35 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"cmd\": {\n        \"iterationName\": \"Sprint 13 2023\",\n        \"iterationBasePath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\",\n        \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n        \"dashboardName\": \"Chapmans Peak Sprint 13\",\n        \"queryFolderBasePath\": \"Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team\",\n        \"initiatives\": [\n            {\n                \"title\": \"HDT - Product Enhancements\",\n                \"tag\": \"N2CP-IS-HelpDesk\",\n                \"desc\": \"\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            },\n            {\n                \"title\": \"Reboot\",\n                \"tag\": \"N2CP-Reboot\",\n                \"desc\": \"This goal is to spend 30% of our time towards process improvement, fixing technical debt and approved learning.\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            },\n            {\n                \"title\": \"Dreadnought Training\",\n                \"tag\": \"N2CP-DreadnoughtTraining\",\n                \"desc\": \"\",\n                \"queryFolderName\": \"Sprint 13 2023\"\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5079/azdo/dashboard",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5079",
+							"path": [
+								"azdo",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "azdo proxy api / create dashboard Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd\": {\n        \"dashboardName\": \"yyy\",\n        \"iterationPath\": \"Software\\\\Non-Aligned\\\\Customers and Emerging Markets\\\\Teams\\\\N2 Chapmans Peak Project Team\\\\2023\\\\Sprint 13 2023\",\n        \"teamName\": \"CEM - N2 Chapmans Peak Project Team\",\n        \"queryFolderBasePath\": \"Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team/Project Metrics/Dashboard Queries\",\n        \"initiatives\": [\n            {\n                \"title\": \"Reboot\",\n                \"tag\": \"N2CP - Reboot\",\n                \"desc\": \"Rebootish...\"\n            }\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1156,7 +1498,7 @@
 					"response": []
 				},
 				{
-					"name": "persist project properties",
+					"name": "cb api / project",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -1171,10 +1513,72 @@
 									"        \"created\": \"2023-09-01T09:40:40\"",
 									"    },",
 									"    store_metadata: {",
-									"        bucket_name: \"hdt\",",
-									"        scope_name: \"definition\",",
-									"        trgt_collection: \"properties\",",
+									"        bucket_name: \"core\",",
+									"        scope_name: \"projects\",",
+									"        trgt_collection: \"projects\",",
 									"        store_type: \"couchbase\"",
+									"    }",
+									"}",
+									"",
+									"pm.collectionVariables.set(\"persist-project-payload\", JSON.stringify(json));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cmd_category\": \"PERSIST\",\n    \"cmd_type\": \"PERSIST_TO_STORE\",\n    \"cmd_data\": {\n        \"id\": \"sibot123\",\n        \"name\": \"project_m\",\n        \"description\": \"...\", \n        \"owner\": \"Sibot\",\n        \"created\": \"2023-09-01T09:40:40\"\n    },\n    \"cmd_metadata\":{\n        \"cmd_post_op\":{\n            \"store\":{\n                \"trgt_bucket\": \"project_m\",\n                \"trgt_scope\": \"definitions\",\n                \"trgt_collection\": \"projects\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/cmd",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"cmd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "persist project properties",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let json = {",
+									"    \"cmd_category\": \"PERSIST\",",
+									"    \"cmd_type\": \"PERSIST_TO_STORE\",",
+									"    \"cmd_data\": {",
+									"        \"id\": \"sibot_x\",",
+									"        \"name\": \"sibot_x\",",
+									"        \"description\": \"\",",
+									"        \"owner\": \"Simon S.\",",
+									"        \"created\": \"2023-11-01T09:40:40\"",
+									"    },",
+									"    \"cmd_metadata\": {",
+									"        \"idempotency_id\": \"e9bb6890-35a7-4140-ad3d-a9573887dde3\",",
+									"        \"project_id\": \"sibot_x\",",
+									"        \"cmd_post_op\": {",
+									"            \"store\": {",
+									"                \"trgt_bucket\": \"project_m\",",
+									"                \"trgt_scope\": \"definitions\",",
+									"                \"trgt_collection\": \"projects\"",
+									"            }",
+									"        }",
 									"    }",
 									"}",
 									"",
@@ -1189,7 +1593,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"topic\": \"topic_projectm_cmd_persist\",\n    \"key\": \"12345\",\n    \"payload\": {{persist-project-properties-payload}}\n}",
+							"raw": "{\n    \"topic\": \"topic_projectm_cmd_persist\",\n    \"key\": \"0\",\n    \"payload\": {{persist-project-properties-payload}}\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1197,11 +1601,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8001/kafka/topic/publish",
+							"raw": "localhost:8006/kafka/topic/publish",
 							"host": [
 								"localhost"
 							],
-							"port": "8001",
+							"port": "8006",
 							"path": [
 								"kafka",
 								"topic",
@@ -1223,7 +1627,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from hdt.azdo.structured_trees where id = 'weighted_tree'\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"structured_trees\"\n    }\n}",
+							"raw": "{\n    \"payload\": {\n        \"ql\": \"select * from project_m.structures.weighted_trees where id = 'weighted_tree' and __metadata__.project_id = 'help_desk_real'\",\n        \"params\": []\n    },\n    \"filter\": {\n        \"node_type\": \"weighted_trees\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1231,11 +1635,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3001/ui-api/data/qry",
+							"raw": "localhost:3000/ui-api/data/qry",
 							"host": [
 								"localhost"
 							],
-							"port": "3001",
+							"port": "3000",
 							"path": [
 								"ui-api",
 								"data",
@@ -1269,6 +1673,90 @@
 							"path": [
 								"ui-api",
 								"data",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / get projects",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ql\": \"select * from project_m.definitions.projects\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8005/cb/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "8005",
+							"path": [
+								"cb",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / get tasks [project_x]",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ql\": \"select * from project_m.azdo.tasks where __metadata__.project_id = 'project_x'\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8005/cb/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "8005",
+							"path": [
+								"cb",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / get structures [project_x]",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ql\": \"select * from project_m.structures.weighted_trees where __metadata__.project_id = 'project_x'\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8005/cb/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "8005",
+							"path": [
+								"cb",
 								"qry"
 							]
 						}
@@ -1311,7 +1799,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"query\": \"SELECT id FROM PROJECTX.AZDO.FEATURE\",\n    \"params\": []\n}",
+							"raw": "{\n    \"query\": \"SELECT id FROM project_m.azdo.features\",\n    \"params\": []\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1319,14 +1807,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8000/cb/query",
+							"raw": "localhost:8000/cb/qry",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
 								"cb",
-								"query"
+								"qry"
 							]
 						}
 					},
@@ -1389,6 +1877,34 @@
 					"response": []
 				},
 				{
+					"name": "cb api / update proc status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ql\": \"UPDATE project_m.definitions.processes as c set c.status = 'COMPLETE' where c.id = 'e087b01e-64ca-4be1-8109-4cd66fd65472' AND c.project_id = 'project_s'\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"qry"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "cb api / query single feature",
 					"request": {
 						"method": "POST",
@@ -1411,6 +1927,34 @@
 							"path": [
 								"cb",
 								"query"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cb api / user_stories",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ql\": \"select * from project_m.azdo.features\",\n    \"params\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/cb/qry",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cb",
+								"qry"
 							]
 						}
 					},
@@ -1594,7 +2138,7 @@
 				"type": "text/javascript",
 				"exec": [
 					"// pm.collectionVariables.set('base64-access-token', 'OjdvNHlyNDI3cmkybGprbmV6M29sdjR3bXNwam55c3p5Z2RwZHZzZ29ua3ZwZ2xjaDVwaHE=');",
-					"pm.collectionVariables.set('base64-access-token', 'OmJpd3Myem5ucXM0YWt3czR4cm9jN2NkZ2h1M2E2a2M0NGdxaXE2MnlxNHNsYmh0aHF1a2E=');"
+					"pm.collectionVariables.set('base64-access-token', 'azdo-pat');"
 				]
 			}
 		},

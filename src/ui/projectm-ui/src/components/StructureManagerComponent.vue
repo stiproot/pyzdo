@@ -146,9 +146,10 @@ export default {
       }, 3000);
     };
 
-    const handleStructureProcessesComplete = () => {
+    const handleStructureProcessesComplete = async () => {
       processes.value = [];
       structuring.value = false;
+      await structuresProvider.init(nav.projId);
     };
 
     onMounted(async () => {

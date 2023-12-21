@@ -1,38 +1,13 @@
 <template>
-  <q-layout view="Lhh lpR fff Rt">
+  <q-layout view="lHh Lpr lFf">
+    <q-drawer v-model="leftDrawerOpen" show-if-above side="left">
+      <div style="height: 50px"></div>
+      <ListComponent />
+    </q-drawer>
+
     <q-page-container>
-      <q-drawer
-        v-if="listPanelSupported"
-        v-model="rightDrawerOpen"
-        :width="350"
-        show-if-above
-        bordered
-        side="right"
-      >
-        <div style="height: 50px"></div>
-        <ListComponent />
-      </q-drawer>
-
-      <div 
-        class="q-gutter-md q-justify-end"
-        v-if="listPanelSupported">
-        <q-btn
-          flat
-          dense
-          round
-          @click="handleMenuToggleClick"
-          aria-label=""
-          icon="menu"
-        />
-      </div>
-
       <div v-if="chartFiltersSupported">
-        <q-expansion-item
-          v-model="isExpanded"
-          expand-separator
-          label="Filters"
-          caption=""
-        >
+        <q-expansion-item expand-separator label="Filters" caption="">
           <q-card bordered>
             <filter-controls-component @filter="handleFilter" />
           </q-card>
@@ -40,19 +15,13 @@
       </div>
       <div v-if="chartSummarySupported">
         <div v-if="avgVal">
-          <span class="larger-font">Select Average: </span>
-          <q-badge class="larger-font" rounded :color="avgColor">{{
+          Average:
+          <q-badge class="larget-font" rounded :color="avgColor">{{
             avgVal
           }}</q-badge>
         </div>
-        <div v-if="projAvgVal">
-          <span class="larger-font">Project Average: </span>
-          <q-badge class="larger-font" rounded :color="projAvgColor">{{
-            projAvgVal
-          }}</q-badge>
-        </div>
       </div>
-      <br />
+
       <q-page class="flex flex-center">
         <div class="chart-container" ref="chartContainer"></div>
       </q-page>
@@ -69,18 +38,17 @@ import {
   StructuresProvider,
 } from "@/stores/structures.store.js";
 import {
-  CHARTS_SUPPORTING_FILTERS,
-  CHARTS_SUPPORTING_SUMMARY,
-  CHARTS_SUPPORTING_LIST_PANEL,
+  CHART_TYPES,
+  CHART_TYPE_ID_HASH,
   getChartSvgBuilder,
 } from "@/services/charts.service.js";
 import FilterControlsComponent from "./FilterControlsComponent.vue";
 import ListComponent from "./ListComponent.vue";
 import { filterTree, getTasks } from "@/fns/tree.fns";
-import { getBadgeColor, getRiskText } from "@/services/color.service";
+import { getBadgeColor } from "@/services/color.service";
 
 export default {
-  name: "ChartComponent",
+  name: "ChartComponentX",
   components: { FilterControlsComponent, ListComponent },
   setup() {
     const router = useRouter();
@@ -88,51 +56,49 @@ export default {
     const provider = new StructuresProvider(useStructuresStore());
     const { getWeightedTree, isInitialized } = provider;
 
+    const chartsSupportingFilters = [
+      CHART_TYPE_ID_HASH[CHART_TYPES.NESTED_TREEMAP],
+    ];
+    const chartsSupportingSummary = [
+      CHART_TYPE_ID_HASH[CHART_TYPES.NESTED_TREEMAP],
+    ];
+
     const chartContainer = ref(null);
     const chartFiltersSupported = ref(false);
     const chartSummarySupported = ref(false);
-    const listPanelSupported = ref(CHARTS_SUPPORTING_LIST_PANEL.includes(nav.chartId));
-
-    const rightDrawerOpen = ref(false);
-    const originalDataset = ref([]);
-    const dataset = ref([]);
-    const accumFilterFn = ref(null);
-    // const isExpanded = ref(chartFiltersSupported.value);
-    const isExpanded = ref(false);
-
+    const leftDrawerOpen = ref(true);
     const avgColor = ref(null);
     const avgVal = ref(null);
-    const avgText = ref(null);
-    const projAvgColor = ref(null);
-    const projAvgVal = ref(null);
+    const dataset = ref([]);
+    const accumFilterFn = ref(null);
 
     const data = reactive({
-      isExpanded,
+      avgColor,
+      avgVal,
       getWeightedTree,
       isInitialized,
       chartFiltersSupported,
       chartSummarySupported,
-      listPanelSupported,
-      rightDrawerOpen,
+      leftDrawerOpen,
       chartContainer,
-      avgColor,
-      avgVal,
-      avgText,
-      projAvgColor,
-      projAvgVal,
     });
 
-    const handleMenuToggleClick = () => {
-      rightDrawerOpen.value = !rightDrawerOpen.value;
-    };
-
     const handleFilter = (e) => {
-      if (!isExpanded.value) return;
+      // const { areas, severities, roles, rags, risk_impact_range, defaulted } = e;
       const { severities, rags, risk_impact_range, tagFilter, defaulted } = e;
+
+      // const areaFn = (node) => {
+      //   const filtered = node.tags.filter((t) => areas.includes(t));
+      //   return filtered.length > 0;
+      // };
       const ragFn = (node) => rags.includes(node.rag_status);
       const riskImpactFn = (node) =>
         node.risk_impact >= risk_impact_range.min &&
         node.risk_impact <= risk_impact_range.max;
+      // const rolesFn = (node) => {
+      //   const filtered = node.tags.filter((t) => roles.includes(t));
+      //   return filtered.length > 0;
+      // };
       const severityVals = severities.map((s) => s.value);
       const severityFn = (node) => severityVals.includes(node.severity);
       const defaultedFn = (node) => {
@@ -154,6 +120,8 @@ export default {
 
       const fn = (node) => {
         return (
+          // areaFn(node) &&
+          // rolesFn(node) &&
           tagsFn(node) &&
           riskImpactFn(node) &&
           severityFn(node) &&
@@ -163,22 +131,6 @@ export default {
       };
 
       accumFilterFn.value = fn;
-    };
-
-    const updateProjAvg = () => {
-      if (originalDataset.value.length === 0) return;
-
-      const tasks = [];
-      getTasks(originalDataset.value, tasks);
-
-      let total = 0;
-      for (const task of tasks) {
-        total += task.risk_impact;
-      }
-
-      const avg = total / tasks.length;
-      projAvgColor.value = getBadgeColor(avg);
-      projAvgVal.value = `${avg.toFixed(2)} (${getRiskText(avg)})`;
     };
 
     const updateAvg = () => {
@@ -193,13 +145,12 @@ export default {
       }
 
       const avg = total / tasks.length;
+      avgVal.value = avg.toFixed(2);
       avgColor.value = getBadgeColor(avg);
-      avgVal.value = `${avg.toFixed(2)} (${getRiskText(avg)})`;
     };
 
     const refreshDataset = () => {
       const data = getWeightedTree.value;
-      originalDataset.value = data;
 
       if (!data) {
         console.warn("refreshDataset", "no data");
@@ -224,7 +175,6 @@ export default {
       const chartType = nav.chartId;
       const svgBuilder = getChartSvgBuilder(chartType);
       const svg = svgBuilder(dataset.value);
-
       const container = chartContainer.value;
 
       container.appendChild(svg);
@@ -242,11 +192,10 @@ export default {
     };
 
     const initState = () => {
-      chartFiltersSupported.value = CHARTS_SUPPORTING_FILTERS.includes(
+      chartFiltersSupported.value = chartsSupportingFilters.includes(
         nav.chartId
       );
-      // isExpanded.value = chartFiltersSupported.value;
-      chartSummarySupported.value = CHARTS_SUPPORTING_SUMMARY.includes(
+      chartSummarySupported.value = chartsSupportingSummary.includes(
         nav.chartId
       );
     };
@@ -273,28 +222,20 @@ export default {
       }
     );
 
-    watch(
-      () => originalDataset.value,
-      () => {
-        updateProjAvg();
-      }
-    );
-
     onMounted(async () => {
       await provider.init(nav.projId);
       initState();
     });
 
-    return { ...toRefs(data), handleFilter, handleMenuToggleClick };
+    return { ...toRefs(data), handleFilter };
   },
 };
 </script>
 
 <style scoped>
-.larger-font {
+.larget-font {
   font-size: larger;
 }
-
 .chart-container {
   width: 100%;
   height: 100vh;

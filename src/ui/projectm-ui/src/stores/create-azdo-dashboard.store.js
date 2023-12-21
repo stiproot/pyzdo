@@ -9,7 +9,7 @@ const defaultState = () => ({
   iterationPath: "",
   teamName: "",
   queryFolderBasePath:
-    "Shared Queries/Customers and Emerging Markets/Rapid Response/N2 Chapmans Peak Project Team/Project Metrics/Dashboard Queries",
+    "Shared Queries/Integrated Solutions, Sports and AI/Artificial Intelligence/Cyberdyne Project Team/Dashboard Queries",
   initiatives: [],
 });
 
@@ -73,7 +73,7 @@ const actions = {
     this.initiatives.push(data);
   },
   [ACTIONS.REMOVE_INITIATIVE](data) {
-    this.initiatives = this.initiatives.filter((x) => x.id !== data.id);
+    this.initiatives = this.initiatives.filter((x) => x.tag !== data.tag);
   },
   async [ACTIONS.UPSERT](idempotencyId) {
     const cmd = {

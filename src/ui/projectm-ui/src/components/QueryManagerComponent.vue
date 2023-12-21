@@ -12,6 +12,7 @@
 
   <QueryComponent v-if="editing"> </QueryComponent>
 
+  <br />
   <q-btn-group push>
     <BtnComponent
       icon="add"

@@ -3,7 +3,7 @@
     <q-splitter v-model="splitterModel">
       <template v-slot:before v-if="!hideTabs">
         <q-tabs v-model="tab" vertical class="text-teal">
-          <q-tab name="charts" icon="code" label="" />
+          <q-tab name="charts" icon="bar_chart" label="" />
           <q-tab name="structures" icon="category" label="" />
         </q-tabs>
       </template>

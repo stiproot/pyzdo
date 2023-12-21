@@ -6,7 +6,7 @@
           flat
           dense
           round
-          @click="minimized = !minimized"
+          @click="maximized = !maximized"
           aria-label="Menu"
           icon="menu"
         />
@@ -15,25 +15,26 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="minimized" show-if-above bordered class="bg-grey-2">
+    <q-drawer v-model="maximized" show-if-above bordered class="bg-grey-2">
       <q-list>
         <q-item-label header>menu</q-item-label>
 
         <q-item clickable tag="a" to="/projects" exact>
           <q-item-section avatar>
-            <q-icon name="code" />
+            <q-icon name="interests" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Projects</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item clickable tag="a" to="/azdo/wis" exact>
+        <q-item clickable tag="a" to="azdo/wis?tab=clone" exact>
           <q-item-section avatar>
-            <q-icon name="code" />
+            <q-icon name="functions" />
           </q-item-section>
           <q-item-section>
             <q-item-label>AzDO</q-item-label>
+            <q-item-label caption>Azure DevOps functions</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -41,14 +42,14 @@
           clickable
           tag="a"
           target="_blank"
-          href="https://github.com/Simon-Stipcich_derivco/project-m"
+          href="https://dev.azure.com/Derivco/Community/_git/project-m"
         >
           <q-item-section avatar>
             <q-icon name="code" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>GitHub</q-item-label>
-            <q-item-label caption>github.com/project-m</q-item-label>
+            <q-item-label>Git</q-item-label>
+            <q-item-label caption>community/project-m</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -84,10 +85,10 @@ export default {
   setup() {
     const layoutProvider = new LayoutProvider(useLayoutStore());
 
-    const { minimized } = layoutProvider;
+    const { maximized } = layoutProvider;
 
     const data = reactive({
-      minimized,
+      maximized,
     });
 
     return {

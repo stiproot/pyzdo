@@ -6,7 +6,15 @@
           <th>
             <q-item>
               <q-item-section>
-                <q-toggle v-model="critical" color="red" label="Critical" />
+                <div class="toggle-container">
+                  <q-toggle
+                    v-model="critical"
+                    label="Highest Risk"
+                    left-label
+                    color="red"
+                  />
+                  <span class="toggle-label">Critical</span>
+                </div>
               </q-item-section>
             </q-item>
           </th>
@@ -164,11 +172,21 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .float-right {
   float: right;
 }
+
 .larger-font {
   font-size: larger;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-left: 7px;
 }
 </style>

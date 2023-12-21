@@ -10,14 +10,10 @@ function buildDimensions() {
   return dims;
 }
 
-export function buildSunburstSvg(data) {
+export function buildSunburstV2Svg(data) {
   const dims = buildDimensions();
 
-  // Specify the chart’s colors and approximate radius (it will be adjusted at the end).
-  const color = d3.scaleOrdinal(
-    d3.quantize(d3.interpolateRainbow, data.children.length + 1)
-  );
-
+  // Specify the chart’s approximate radius (it will be adjusted at the end).
   const width = dims.w;
   const height = dims.h;
   const radius = dims.r;
@@ -27,7 +23,7 @@ export function buildSunburstSvg(data) {
     d3.partition().size([2 * Math.PI, radius])(
       d3
         .hierarchy(data)
-        .sum((d) => d.risk_impact)
+        .sum((d) => d.remaining_work + d.original_estimate) // Use sum of remaining work and original estimate as the value
         .sort((a, b) => b.value - a.value)
     );
 
@@ -37,8 +33,8 @@ export function buildSunburstSvg(data) {
     .endAngle((d) => d.x1)
     .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
     .padRadius(radius / 2)
-    .innerRadius((d) => d.y0)
-    .outerRadius((d) => d.y1 - 1);
+    .innerRadius((d) => radius - d.y1) // Invert inner and outer radius to represent completion percentage
+    .outerRadius((d) => radius - d.y0 - 1); // Adjusted outer radius
 
   const root = partition(data);
 
@@ -56,8 +52,11 @@ export function buildSunburstSvg(data) {
     .data(root.descendants().filter((d) => d.depth))
     .join("path")
     .attr("fill", (d) => {
-      while (d.depth > 1) d = d.parent;
-      return color(d.data.title);
+      // const completionPercentage =
+      //   (d.data.original_estimate - d.value) / d.data.original_estimate;
+      // const completedColor = d3.interpolateTurbo(completionPercentage); // Use any color scale you prefer
+      // const remainingColor = d3.color(completedColor).darker(0.3); // Create a dull shade of the completed color
+      return `url(#gradient${d.data.title.replace(/\s/g, "")})`;
     })
     .attr("d", arc)
     .append("title")
@@ -69,6 +68,37 @@ export function buildSunburstSvg(data) {
           .reverse()
           .join("/")}\n${format(d.value)}`
     );
+
+  // Add gradients for the arcs.
+  const gradients = svg
+    .append("defs")
+    .selectAll("linearGradient")
+    .data(root.descendants().filter((d) => d.depth))
+    .join("linearGradient")
+    .attr("id", (d) => `gradient${d.data.title.replace(/\s/g, "")}`)
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", (d) => Math.cos(d.x0))
+    .attr("y1", (d) => Math.sin(d.x0))
+    .attr("x2", (d) => Math.cos(d.x1))
+    .attr("y2", (d) => Math.sin(d.x1));
+
+  gradients
+    .append("stop")
+    .attr("offset", "0%")
+    .attr("stop-color", (d) => {
+      const completionPercentage =
+        (d.data.original_estimate - d.value) / d.data.original_estimate;
+      return d3.interpolateTurbo(completionPercentage);
+    });
+
+  gradients
+    .append("stop")
+    .attr("offset", "100%")
+    .attr("stop-color", (d) => {
+      const completionPercentage =
+        (d.data.original_estimate - d.value) / d.data.original_estimate;
+      return d3.color(d3.interpolateTurbo(completionPercentage)).darker(0.3);
+    });
 
   // Add a label for each element.
   svg

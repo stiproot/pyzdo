@@ -39,8 +39,20 @@
     </div>
 
     <div class="q-gutter-y-md">
+      <!--SelectFilterComponent
+        label="Area"
+        :options="areaOptions"
+        @selected="handleAreaSelected"
+      /-->
+
+      <!--SelectFilterComponent
+        label="Role"
+        :options="roleOptions"
+        @selected="handleRoleSelected"
+      /-->
+
       <div class="q-pa-md">
-        <q-toggle v-model="defaulted" color="red" label="Unweighted" />
+        <q-toggle v-model="defaulted" color="red" label="Defaulted" />
       </div>
     </div>
   </div>
@@ -51,7 +63,7 @@ import RangeFilterComponent from "./RangeFilterComponent.vue";
 import SelectFilterComponent from "./SelectFilterComponent.vue";
 import TagFilterComponent from "./TagFilterComponent.vue";
 export default {
-  name: "FilterControlsComponent",
+  name: "FilterControlsComponentX",
   components: {
     RangeFilterComponent,
     SelectFilterComponent,
@@ -78,6 +90,24 @@ export default {
     ];
     const tagOptions = ref(tags);
 
+    // const areas = [
+    //   "Artifacts",
+    //   "Behaviours",
+    //   "Development",
+    //   "Environments",
+    //   "Project",
+    //   "Personnel",
+    //   "Testing",
+    // ];
+    // const areaOptions = ref(areas);
+    // const roles = [
+    //   "Developer",
+    //   "SDET",
+    //   "Project Manager",
+    //   "SEM",
+    //   "Business Analyst",
+    // ];
+    // const roleOptions = ref(roles);
     const rags = ["Red", "Amber", "Green"];
     const ragOptions = ref(rags);
     const severities = [
@@ -91,6 +121,8 @@ export default {
     const defaulted = ref(false);
 
     const data = reactive({
+      // areaOptions,
+      // roleOptions,
       tagOptions,
       severityOptions,
       ragOptions,
@@ -98,6 +130,8 @@ export default {
     });
 
     const filter = {
+      // areas: areas,
+      // roles: roles,
       severities: severities,
       tagFilter: { or: true, tags: tags },
       rags: rags,
@@ -130,6 +164,11 @@ export default {
       triggerFilter();
     };
 
+    // const handleAreaSelected = (e) => {
+    //   filter.areas = e;
+    //   triggerFilter();
+    // };
+
     const handleTagsSelected = (e) => {
       filter.tagFilter = e;
       triggerFilter();
@@ -139,6 +178,11 @@ export default {
       filter.rags = e;
       triggerFilter();
     };
+
+    // const handleRoleSelected = (e) => {
+    //   filter.roles = e;
+    //   triggerFilter();
+    // };
 
     const handleSeveritySelected = (e) => {
       filter.severities = e;
@@ -152,8 +196,10 @@ export default {
     return {
       ...toRefs(data),
       handleTagsSelected,
+      // handleAreaSelected,
       handleRiskImpactAdjusted,
       handleRagSelected,
+      // handleRoleSelected,
       handleSeveritySelected,
     };
   },

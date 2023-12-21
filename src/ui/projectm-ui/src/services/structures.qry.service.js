@@ -6,7 +6,14 @@ const SUMMARIZED_TREE_ID = "summarized_tree";
 const WEIGHTED_TREE_ID = "weighted_tree";
 
 const buildQry = (id, projectId, collection) => {
-  const qry = buildCoreQry(SCOPES.STRUCTURES, collection, id, projectId);
+  const structureId = `${projectId}_${id}`;
+
+  const qry = buildCoreQry(
+    SCOPES.STRUCTURES,
+    collection,
+    structureId,
+    projectId
+  );
   return qry;
 };
 

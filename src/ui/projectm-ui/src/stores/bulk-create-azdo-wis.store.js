@@ -26,6 +26,7 @@ const actions = {
     this.blueprints = blueprints;
   },
   async [ACTIONS.UPSERT](idempotencyId) {
+    console.log(this.blueprints);
     const payload = JSON.parse(this.blueprints);
     const cmd = {
       idempotencyId: idempotencyId || generateGuid(),

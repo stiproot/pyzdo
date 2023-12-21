@@ -56,7 +56,7 @@ export class NavigationService {
   goToWis() {
     this._router.push({
       name: "azdo.wis",
-      query: { tab: "bulk" },
+      query: { tab: "clone" },
     });
   }
 

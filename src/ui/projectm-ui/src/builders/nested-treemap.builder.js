@@ -32,7 +32,8 @@ export function buildNestedTreeMapSvg(data) {
     .attr("viewBox", [0, 0, width, height])
     .attr(
       "style",
-      "max-width: 100%; height: auto; overflow: visible; font: 10px sans-serif;"
+      // "max-width: 100%; height: auto; overflow: visible; font: 10px sans-serif;"
+      "max-width: 100%; height: auto; overflow: hidden; font: 17px sans-serif;cursor:pointer"
     );
 
   const shadowId = `shadow-${Math.random().toString(36).substr(2, 9)}`;
@@ -72,7 +73,12 @@ export function buildNestedTreeMapSvg(data) {
     .attr("id", (d) => (d.nodeUid = nodeUidId).id)
     .attr("fill", (d) => color(d.data))
     .attr("width", (d) => d.x1 - d.x0)
-    .attr("height", (d) => d.y1 - d.y0);
+    .attr("height", (d) => d.y1 - d.y0)
+    .on("click", (d) => {
+      if (d.target && d.target.__data__ && d.target.__data__.data) {
+        window.open(d.target.__data__.data.ext_url, "_blank");
+      }
+    });
 
   node
     .append("clipPath")
@@ -84,7 +90,10 @@ export function buildNestedTreeMapSvg(data) {
     .append("text")
     .attr("clip-path", (d) => d.clipUid)
     .selectAll("tspan")
-    .data((d) => [format(d.value), d.data.type].concat(d.data.title.split(" ")))
+    // .data((d) => [format(d.value), d.data.type].concat(d.data.title.split(" ")))
+    .data((d) =>
+      [format(d.value), d.data.type].concat(d.data.title.substring(0, 25))
+    )
     .join("tspan")
     .text((d) => d);
 

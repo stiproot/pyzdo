@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { handleNodeClick, getStateColor } from "./common.fns";
 
 export function buildTidyTreeSvg(data) {
   const width = window.innerWidth;
@@ -45,6 +46,7 @@ export function buildTidyTreeSvg(data) {
     .selectAll()
     .data(root.links())
     .join("path")
+    .attr("stroke", (d) => getStateColor(d.target.data.state))
     .attr(
       "d",
       d3
@@ -64,8 +66,11 @@ export function buildTidyTreeSvg(data) {
 
   node
     .append("circle")
-    .attr("fill", (d) => (d.children ? "#555" : "#999"))
-    .attr("r", 2.5);
+    .attr("r", 4)
+    //.attr("fill", (d) => (d.children ? "#555" : "#999"))
+    .attr("fill", (d) => getStateColor(d.data.state))
+    .attr("style", "cursor: pointer;")
+    .on("click", handleNodeClick);
 
   // const format = d3.format(",d");
   // const formatEffort = (d) =>

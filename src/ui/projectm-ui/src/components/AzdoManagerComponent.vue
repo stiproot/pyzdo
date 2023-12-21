@@ -14,7 +14,7 @@
         </q-item-section>
       </q-item>
       <q-separator vertical />
-      <q-card-section>Some useful functions.</q-card-section>
+      <q-card-section>Azure DevOps Work Item functions.</q-card-section>
     </q-card-section>
   </q-card>
 

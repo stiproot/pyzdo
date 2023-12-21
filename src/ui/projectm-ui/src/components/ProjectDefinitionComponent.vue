@@ -1,41 +1,43 @@
 <template>
-  <q-splitter v-model="splitterModel">
-    <template v-slot:before>
-      <q-tabs v-model="tab" vertical class="text-teal">
-        <q-tab name="queries" icon="code" label="" />
-        <q-tab name="info" icon="info" label="" />
-      </q-tabs>
-    </template>
+  <q-page>
+    <q-splitter v-model="splitterModel">
+      <template v-slot:before>
+        <q-tabs v-model="tab" vertical class="text-teal">
+          <q-tab name="queries" icon="rule" label="" />
+          <q-tab name="info" icon="info" label="" />
+        </q-tabs>
+      </template>
 
-    <template v-slot:after>
-      <q-tab-panels
-        v-model="tab"
-        animated
-        swipeable
-        vertical
-        transition-prev="jump-up"
-        transition-next="jump-up"
-      >
-        <q-tab-panel name="queries">
-          <div class="text-h4 q-mb-md">Queries</div>
-          <QueryManagerComponent />
-        </q-tab-panel>
+      <template v-slot:after>
+        <q-tab-panels
+          v-model="tab"
+          animated
+          swipeable
+          vertical
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="queries">
+            <div class="text-h4 q-mb-md">Queries</div>
+            <QueryManagerComponent />
+          </q-tab-panel>
 
-        <q-tab-panel name="info">
-          <div class="text-h4 q-mb-md">Info</div>
-          <ProjectDetailsComponent />
-        </q-tab-panel>
-      </q-tab-panels>
-    </template>
-  </q-splitter>
+          <q-tab-panel name="info">
+            <div class="text-h4 q-mb-md">Info</div>
+            <ProjectDetailsComponent />
+          </q-tab-panel>
+        </q-tab-panels>
+      </template>
+    </q-splitter>
 
-  <FabActionComponent>
-    <BtnComponent
-      v-if="isModified && canSave"
-      icon="save"
-      @click="handleSaveClick"
-    />
-  </FabActionComponent>
+    <FabActionComponent>
+      <BtnComponent
+        v-if="isModified && canSave"
+        icon="save"
+        @click="handleSaveClick"
+      />
+    </FabActionComponent>
+  </q-page>
 </template>
 <script>
 import { computed, onMounted, reactive, toRefs, ref, watch } from "vue";

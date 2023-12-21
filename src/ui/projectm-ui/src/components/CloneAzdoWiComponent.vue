@@ -33,6 +33,7 @@
     </q-form>
 
     <q-separator />
+    <br />
 
     <q-expansion-item
       v-if="!cloning"
@@ -220,5 +221,9 @@ export default {
 <style>
 .float-right {
   float: right;
+}
+.q-expansion-item {
+  border: 1px solid #ccc; /* Customize the border style and color */
+  border-radius: 5px; /* Optional: Add border-radius for rounded corners */
 }
 </style>

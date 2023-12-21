@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, onMounted } from "vue";
+import { reactive, toRefs, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useLoadingStore, LoadingProvider } from "@/stores/loading.store";
 import { useProjectsStore, ProjectsProvider } from "@/stores/projects.store";
@@ -31,6 +31,7 @@ export default {
     const loadingProvider = new LoadingProvider(loadingStore);
     const projectsStore = useProjectsStore();
     const projectsProvider = new ProjectsProvider(projectsStore);
+    const INTERVAL_TIME = 2000;
 
     const { isLoading } = loadingProvider;
     const { enrichedProjects } = projectsProvider;
@@ -48,10 +49,24 @@ export default {
       nav.newProject();
     };
 
+    let intervalId = 0;
+    const initInterval = () => {
+      intervalId = setInterval(async () => {
+        // data.isLoading = true;
+        await projectsProvider.init();
+      }, INTERVAL_TIME);
+    };
+
+    onUnmounted(() => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    });
+
     onMounted(async () => {
       data.isLoading = true;
       await projectsProvider.init();
-      // console.log(process.env.VUE_APP_DEFAULT_QUERY_FOLDER);
+      initInterval();
     });
 
     return {

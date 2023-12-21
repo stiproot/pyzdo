@@ -8,11 +8,15 @@ const TRGT_COLLECTION_HASH = {
   [CMD_TYPES.BUILD_SUMMARIZED_WORK_ITEM_TREE]: "summarized_trees",
 };
 
+const buildId = (projectId, trgtCollection) =>
+  `${projectId}_${trgtCollection.slice(0, -1)}`;
+
 const buildStructureCmd = (data) => {
-  const { cmdType, idempotencyId, projectId, key } = data;
+  const { cmdType, idempotencyId, projectId } = data;
+  const trgtCollection = TRGT_COLLECTION_HASH[cmdType];
+  const id = buildId(projectId, trgtCollection);
 
   const cmdData = {};
-
   const cmdPostOp = {
     enrichment: {
       add_property_map: [
@@ -20,13 +24,17 @@ const buildStructureCmd = (data) => {
           key: "__metadata__",
           val: { project_id: projectId },
         },
+        {
+          key: "id",
+          val: id,
+        },
       ],
     },
     store: {
       trgt_bucket: "project_m",
       trgt_scope: "structures",
-      trgt_collection: TRGT_COLLECTION_HASH[cmdType],
-      key: key,
+      trgt_collection: trgtCollection,
+      key: id,
     },
   };
   const cmdPreOp = {};

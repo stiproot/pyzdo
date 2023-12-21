@@ -35,6 +35,7 @@
           />
         </template>
       </q-input>
+
       <q-input
         v-model="ql"
         label="WIQL *"
@@ -50,6 +51,13 @@
         @blur="handleTagsBlur"
       />
 
+      <q-input
+        v-model="ids"
+        label="Ids (semi-colon separated)"
+        lazy-rules
+        @blur="handleIdsBlur"
+      />
+
       <BtnComponent icon="expand_more" @click="handleTestClick" />
     </q-form>
   </div>
@@ -60,18 +68,34 @@
     </div>
 
     <div v-if="rows && rows.length">
-      <q-table title="Work Items" :rows="rows" :columns="columns" row-key="id">
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="id" :props="props">
-              {{ props.row.id }}
-            </q-td>
-            <q-td key="url" :props="props">
-              <a :href="props.row.url" target="_blank"> {{ props.row.url }}</a>
-            </q-td>
-          </q-tr>
-        </template>
-      </q-table>
+      <q-expansion-item
+        v-model="isResultsExpanded"
+        expand-separator
+        label="Results"
+        caption=""
+      >
+        <q-card bordered>
+          <q-table
+            title="Work Items"
+            :rows="rows"
+            :columns="columns"
+            row-key="id"
+          >
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="id" :props="props">
+                  {{ props.row.id }}
+                </q-td>
+                <q-td key="url" :props="props">
+                  <a :href="props.row.url" target="_blank">
+                    {{ props.row.url }}</a
+                  >
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-card>
+      </q-expansion-item>
     </div>
   </div>
 
@@ -88,15 +112,26 @@ export default {
   name: "QueryComponent",
   components: { BtnComponent, InfiniteScrollComponent },
   setup() {
+    const PROJECT_METRICS_TAG = "Project Metrics";
     const store = useQueryStore();
     const provider = new QueryProvider(store);
+    const { name, ql, isValid } = provider;
 
     const rows = ref(null);
     const tags = ref(null);
-    const { name, ql, isValid } = provider;
+    const ids = ref(null);
     const searching = ref(false);
-    const data = reactive({ name, ql, isValid, tags, searching });
-    const PROJECT_METRICS_TAG = "Project Metrics";
+    const isResultsExpanded = ref(false);
+
+    const data = reactive({
+      name,
+      ql,
+      isValid,
+      tags,
+      searching,
+      ids,
+      isResultsExpanded,
+    });
 
     const clearTags = () => {
       tags.value = "";
@@ -113,11 +148,63 @@ export default {
         tagsArr.push(PROJECT_METRICS_TAG);
       }
 
-      const tagFilter = tagsArr
+      const idsArr = extractIdsFromQl();
+      const idsPred = buildIdsPredicate(idsArr);
+      const tagsPred = buildTagsPredicate(tagsArr);
+      const wiql = buildWiql(tagsPred, idsPred);
+
+      ql.value = wiql;
+      name.value = buildQryName(tagsArr);
+    };
+
+    const buildTagsPredicate = (tags) => {
+      if (!tags || !tags.length) return null;
+      const pred = tags
         .map((t) => `[System.Tags] CONTAINS '${t}'`)
         .join(" AND ");
+      return pred;
+    };
 
-      const wiql =
+    const buildIdsPredicate = (ids) => {
+      if (!ids || !ids.length) return null;
+      const pred = `(${ids.map((t) => `[System.Id] = ${t}`).join(" OR ")})`;
+      return pred;
+    };
+
+    const buildQryName = (tags) => tags.join("_");
+
+    const extractTagsFromQl = () => {
+      if (!ql.value) return [];
+
+      const tagsRe = /\[System\.Tags\]\s+CONTAINS\s+'([^']+)'/g;
+      const tagValueRe = /(?<=\[System\.Tags\] CONTAINS ').+(?=')/g;
+
+      const systemTagsContains = ql.value.match(tagsRe);
+      const tagsArr = systemTagsContains
+        .map((m) => m.match(tagValueRe))
+        .map((m) => m[0]);
+
+      return tagsArr;
+    };
+
+    const extractIdsFromQl = () => {
+      if (!ql.value) return [];
+
+      const idsRe = /\[System\.Id\]\s+[=]\s\d+/g;
+      const idValRe = /\d+/;
+
+      const systemIdEquals = ql.value.match(idsRe);
+      if (!systemIdEquals) return [];
+
+      const idsArr = systemIdEquals
+        .map((m) => m.match(idValRe))
+        .map((m) => m[0]);
+
+      return idsArr;
+    };
+
+    const buildWiql = (tagsPred, idsPred) => {
+      let wiql =
         `SELECT ` +
         `[System.Id], ` +
         `[System.WorkItemType], ` +
@@ -125,16 +212,41 @@ export default {
         `[System.AssignedTo], ` +
         `[System.State], ` +
         `[System.Tags]  ` +
-        `FROM WorkItems WHERE ${tagFilter}`;
+        `FROM WorkItems WHERE `;
 
-      ql.value = wiql;
-      name.value = tagsArr.join("_");
+      if (idsPred && !tagsPred) wiql += `${idsPred}`;
+      if (tagsPred && !idsPred) wiql += `${tagsPred}`;
+      if (idsPred && tagsPred) wiql += `${tagsPred} AND ${idsPred}`;
+
+      return wiql;
+    };
+
+    const handleIdsBlur = async () => {
+      if (!ids.value || !ids.value.length) {
+        return;
+      }
+
+      const tagsArr = extractTagsFromQl();
+      const tagsPred = buildTagsPredicate(tagsArr);
+
+      let idArr = ids.value.split(";");
+      const idsFromQl = extractIdsFromQl();
+
+      idsFromQl.forEach((i) => {
+        if (!idArr.includes(i)) idArr.push(i);
+      });
+
+      const idsPred = buildIdsPredicate(idArr);
+
+      ql.value = buildWiql(tagsPred, idsPred);
+      name.value = buildQryName(tagsArr);
     };
 
     const handleTestClick = async () => {
       const resp = await runWiql(data.ql);
       if (resp) {
         rows.value = resp.workItems;
+        isResultsExpanded.value = rows.value.length > 0;
       } else {
         rows.value = [];
       }
@@ -177,6 +289,7 @@ export default {
       handleTagsBlur,
       handleTestClick,
       handleQuerySelect,
+      handleIdsBlur,
       clearTags,
       columns,
       rows,
@@ -184,4 +297,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style scoped>
+.q-expansion-item {
+  border: 1px solid #ccc; /* Customize the border style and color */
+  border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+}
+</style>

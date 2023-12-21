@@ -30,7 +30,7 @@ def build_weighted_work_item_tree_workflow(cmd: RootCmd) -> int:
         )
         structured_nodes.append(structure)
 
-    tree = {"id": "weighted_tree", "type": "root", "children": structured_nodes}
+    tree = {"type": "root", "children": structured_nodes}
     enrich_payload(tree, cmd)
 
     persist_payload(

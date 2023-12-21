@@ -2,8 +2,8 @@
   <q-splitter v-model="splitterModel">
     <template v-slot:before>
       <q-tabs v-model="tab" vertical class="text-teal">
-        <q-tab name="bulk" icon="code" label="" />
-        <q-tab name="clone" icon="category" label="" />
+        <q-tab name="clone" icon="content_copy" label="" />
+        <q-tab name="bulk" icon="add" label="" />
       </q-tabs>
     </template>
 
@@ -16,14 +16,14 @@
         transition-prev="jump-up"
         transition-next="jump-up"
       >
-        <q-tab-panel name="bulk">
-          <div class="text-h4 q-mb-md">Bulk Create</div>
-          <BulkCreateAzdoWisComponent />
-        </q-tab-panel>
-
         <q-tab-panel name="clone">
           <div class="text-h4 q-mb-md">Clone</div>
           <CloneAzdoWiComponent />
+        </q-tab-panel>
+
+        <q-tab-panel name="bulk">
+          <div class="text-h4 q-mb-md">Bulk Create</div>
+          <BulkCreateAzdoWisComponent />
         </q-tab-panel>
       </q-tab-panels>
     </template>
@@ -43,7 +43,7 @@ export default {
   props: {
     tabId: {
       type: String,
-      default: () => "bulk",
+      default: () => "clone",
     },
   },
   setup(props) {
