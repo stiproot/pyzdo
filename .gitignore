@@ -5,8 +5,6 @@ dist/
 
 PAT.txt
 
-clone.sh
-
 /src/apis/couchbase-api/src/.env
 /src/apis/kafka-api/src/.env
 /src/apis/ui-api/.env
@@ -15,6 +13,7 @@ clone.sh
 /src/workers/azdo_proxy/.env
 /src/workers/insights/.env
 /src/workers/persist/.env
+clone.sh
 
 # User-specific files
 *.suo

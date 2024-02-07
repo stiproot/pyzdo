@@ -18,6 +18,8 @@ sleep 10
 /opt/couchbase/init-create-collection.sh project_m azdo tasks
 /opt/couchbase/init-create-collection.sh project_m azdo impediments
 /opt/couchbase/init-create-collection.sh project_m azdo bugs
+/opt/couchbase/init-create-collection.sh project_m azdo programmes
+/opt/couchbase/init-create-collection.sh project_m azdo medium_projects
 /opt/couchbase/init-create-collection.sh project_m azdo null
 /opt/couchbase/init-create-collection.sh project_m structures summarized_trees
 /opt/couchbase/init-create-collection.sh project_m structures weighted_trees

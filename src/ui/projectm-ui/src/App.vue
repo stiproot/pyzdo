@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="">
+    <q-header style="background-color: #5d7e99;" elevated class="">
       <q-toolbar>
         <q-btn
           flat
@@ -10,8 +10,8 @@
           aria-label="Menu"
           icon="menu"
         />
-        <q-toolbar-title> project_m(andy) </q-toolbar-title>
-        <div>v0.0.1-beta</div>
+        <q-toolbar-title>project_m(andy)</q-toolbar-title>
+        <div>v0.0.2-beta</div>
       </q-toolbar>
     </q-header>
 

@@ -34,6 +34,8 @@ trgt_collection_hash = {
     "Task": "tasks",
     "Bug": "bugs",
     "Impediment": "impediments",
+    "Programme": "programmes",
+    "Medium Project": "medium_projects",
 }
 
 
@@ -41,24 +43,6 @@ def get_trgt_collection(payload: dict) -> str:
     wi_type = payload["fields"]["System.WorkItemType"]
     trgt_collection = trgt_collection_hash.get(wi_type, "null")
     return trgt_collection
-
-
-# DEPRECATED...
-# def build_persist_cmd(payload: dict, cmd: RootCmd) -> RootCmd:
-#     store_metadata = cmd._cmd_post_op_store_().copy()
-
-#     if store_metadata["trgt_collection"] == "unknown":
-#         trgt_collection = get_trgt_collection(payload)
-#         store_metadata["trgt_collection"] = trgt_collection
-
-#     cmd = RootCmd(
-#         cmd_category=CmdCategories.PERSIST.value,
-#         cmd_type=CmdTypes.PERSIST_TO_STORE.value,
-#         cmd_data=payload,
-#         cmd_metadata={"cmd_post_op": {"store": store_metadata}},
-#     )
-
-#     return cmd
 
 
 def build_bulk_persist_cmd(

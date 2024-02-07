@@ -53,6 +53,14 @@ export class NavigationService {
     });
   }
 
+  goToActions(projId) {
+    this._router.push({
+      name: "project.definition",
+      params: { projectId: projId },
+      query: { tab: "actions" },
+    });
+  }
+
   goToWis() {
     this._router.push({
       name: "azdo.wis",

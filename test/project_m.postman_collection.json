@@ -2137,8 +2137,8 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"// pm.collectionVariables.set('base64-access-token', 'OjdvNHlyNDI3cmkybGprbmV6M29sdjR3bXNwam55c3p5Z2RwZHZzZ29ua3ZwZ2xjaDVwaHE=');",
-					"pm.collectionVariables.set('base64-access-token', 'azdo-pat');"
+					"// pm.collectionVariables.set('base64-access-token', '');",
+					"pm.collectionVariables.set('base64-access-token', '');"
 				]
 			}
 		},

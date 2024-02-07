@@ -1,0 +1,15 @@
+# kafka-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+spec:
+  selector:
+    app: kafka-broker
+  ports:
+  - protocol: TCP
+    port: 9092
+    targetPort: 9092
+  - protocol: TCP
+    port: 9101
+    targetPort: 9101

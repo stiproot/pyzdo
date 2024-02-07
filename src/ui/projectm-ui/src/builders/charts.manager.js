@@ -12,6 +12,8 @@ import { buildBubbleChartSvg } from "./bubble-chart.builder.js";
 import { buildRadialClusterSvg } from "./radial-cluster.builder.js";
 import { buildSequencesSunburstSvg } from "./sequences-sunburst.builder.js";
 import { buildGridSvg } from "./grid.builder.js";
+import { buildMldlcSvg } from "./mldlc.builder.js";
+import { buildSdlcSvg } from "./sdlc.builder.js";
 
 export function buildNestedTreeMap(data) {
   const tasks = filterByType(data, "Task");
@@ -93,5 +95,15 @@ export function buildGrid(data) {
   //   children: tasks,
   // };
   const svg = buildGridSvg(tasks);
+  return svg;
+}
+
+export function buildMldlc(data) {
+  const svg = buildMldlcSvg(data);
+  return svg;
+}
+
+export function buildSdlc(data) {
+  const svg = buildSdlcSvg(data);
   return svg;
 }

@@ -54,14 +54,15 @@ const getters = {
   },
   [GETTERS.GET_STRUCTURES]() {
     return [
-      { id: "summarized_tree", structure: this.summarizedTree },
-      { id: "weighted_tree", structure: this.weightedTree },
+      { id: "summarized_tree", display: "summarized tree", structure: this.summarizedTree },
+      { id: "weighted_tree", display: "weighted tree", structure: this.weightedTree },
     ];
   },
   [GETTERS.GET_ENRICHED_STRUCTURES]() {
     return this[GETTERS.GET_STRUCTURES].map((i) => ({
       ...i,
-      title: i.name || i.id,
+      title: 'build',
+      description: `Build ${i.display || i.id}`,
       actions: [
         {
           evtId: "item-click",

@@ -304,4 +304,11 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+/* .rect {
+  fill: lightblue;
+  stroke: black;
+  stroke-width: 2;
+} */
+
 </style>

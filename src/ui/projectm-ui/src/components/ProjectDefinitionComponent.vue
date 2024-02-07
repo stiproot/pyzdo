@@ -4,6 +4,7 @@
       <template v-slot:before>
         <q-tabs v-model="tab" vertical class="text-teal">
           <q-tab name="queries" icon="rule" label="" />
+          <q-tab name="actions" icon="build" label="" />
           <q-tab name="info" icon="info" label="" />
         </q-tabs>
       </template>
@@ -20,6 +21,11 @@
           <q-tab-panel name="queries">
             <div class="text-h4 q-mb-md">Queries</div>
             <QueryManagerComponent />
+          </q-tab-panel>
+
+          <q-tab-panel name="actions">
+            <div class="text-h4 q-mb-md">Actions</div>
+            <ActionsManagerComponent />
           </q-tab-panel>
 
           <q-tab-panel name="info">
@@ -54,6 +60,7 @@ import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
 import { isDiff } from "@/services/diff.service";
 import { deepCopy } from "@/services/clone.service";
+import ActionsManagerComponent from "./ActionsManagerComponent.vue";
 
 export default {
   name: "ProjectDefinitionComponent",
@@ -62,7 +69,8 @@ export default {
     ProjectDetailsComponent,
     FabActionComponent,
     BtnComponent,
-  },
+    ActionsManagerComponent
+},
   props: {
     tabId: {
       type: String,

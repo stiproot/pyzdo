@@ -1,15 +1,19 @@
 using Xo.AzDO.Engine.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+namespace Azdo.Proxy.Api.Extensions;
+
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAzdoProxyApiServices(this IServiceCollection @this)
     {
         @this.AddServices();
 
-        @this.TryAddSingleton<IManager<CloneWiReq, CloneWiResp>, CloneManager>();
-        @this.TryAddSingleton<IManager<BulkCreateWiReq, BulkCreateWiResp>, BulkCreateManager>();
-        @this.TryAddSingleton<IManager<CreateDashboardReq, CreateDashboardResp>, DashboardManager>();
+        @this.TryAddSingleton<IManager<CloneWiReq, CloneWiResp>, CloneWiManager>();
+        @this.TryAddSingleton<IManager<BulkCreateWiReq, BulkCreateWiResp>, BulkCreateWiManager>();
+        @this.TryAddSingleton<IManager<CreateDashReq, CreateDashResp>, CreateDashboardManager>();
+        @this.TryAddSingleton<IManager<UpdateWiReq, UpdateWiResp>, UpdateWiManager>();
+        @this.TryAddSingleton<IManager<UpdateWiHierarchyReq, UpdateWiHierarchyResp>, UpdateWiHierarchyManager>();
 
         return @this;
     }

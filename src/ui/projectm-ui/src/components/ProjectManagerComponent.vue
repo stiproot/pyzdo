@@ -4,6 +4,7 @@
       :items="projects"
       @view-click="handleViewClick"
       @visuals-click="handleVisualsClick"
+      @actions-click="handleActionsClick"
     />
   </div>
 
@@ -45,6 +46,10 @@ export default {
       nav.goToVis(e.item.id);
     };
 
+    const handleActionsClick = (e) => {
+      nav.goToActions(e.item.id);
+    };
+
     const handleAddClick = () => {
       nav.newProject();
     };
@@ -73,6 +78,7 @@ export default {
       ...toRefs(data),
       handleViewClick,
       handleVisualsClick,
+      handleActionsClick,
       handleAddClick,
     };
   },

@@ -1,3 +1,6 @@
+
+namespace Azdo.Proxy.Api;
+
 internal static class Endpoints
 {
     public static void MapEndpoints(this WebApplication @this)
@@ -14,7 +17,19 @@ internal static class Endpoints
             return Results.Ok(res);
         });
 
-        @this.MapPost("/azdo/dashboard", async (CreateDashboardReq req, IManager<CreateDashboardReq, CreateDashboardResp> manager) =>
+        @this.MapPost("/azdo/dashboard", async (CreateDashReq req, IManager<CreateDashReq, CreateDashResp> manager) =>
+        {
+            var res = await manager.ManageAsync(req);
+            return Results.Ok(res);
+        });
+
+        @this.MapPatch("/azdo/workitems/update", async (UpdateWiReq req, IManager<UpdateWiReq, UpdateWiResp> manager) =>
+        {
+            var res = await manager.ManageAsync(req);
+            return Results.Ok(res);
+        });
+
+        @this.MapPatch("/azdo/workitems/update/hierarchy", async (UpdateWiHierarchyReq req, IManager<UpdateWiHierarchyReq, UpdateWiHierarchyResp> manager) =>
         {
             var res = await manager.ManageAsync(req);
             return Results.Ok(res);

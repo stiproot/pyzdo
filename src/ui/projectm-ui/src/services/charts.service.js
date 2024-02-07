@@ -10,8 +10,15 @@ import {
   buildSequencesSunburst,
   buildSimplePackedCircle,
   buildGrid,
+  buildMldlc,
+  buildSdlc
 } from "@/builders/charts.manager.js";
 import { kebabToUpperCaseSnake } from "@/fns/case.fns.js";
+
+export const DLC_TYPES = {
+  SDLC: "SDLC",
+  MLDLC: "MLDLC"
+}
 
 export const CHART_TYPES = {
   NESTED_TREEMAP: "NESTED_TREEMAP",
@@ -25,6 +32,8 @@ export const CHART_TYPES = {
   SEQUENCES_SUNBURST: "SEQUENCES_SUNBURST",
   SIMPLE_PACKED_CIRCLE: "SIMPLE_PACKED_CIRCLE",
   GRID: "GRID",
+  MLDLC: "MLDLC",
+  SDLC: "SDLC"
 };
 
 export const CHART_TYPE_ID_HASH = {
@@ -39,6 +48,8 @@ export const CHART_TYPE_ID_HASH = {
   [CHART_TYPES.SEQUENCES_SUNBURST]: "sequences-sunburst",
   [CHART_TYPES.SIMPLE_PACKED_CIRCLE]: "simple-packed-circle",
   [CHART_TYPES.GRID]: "grid",
+  [CHART_TYPES.MLDLC]: "mldlc",
+  [CHART_TYPES.SDLC]: "sdlc"
 };
 
 export const STRUCTURE_TYPES = {
@@ -52,13 +63,15 @@ export const CHART_TO_STRUCTURE_TYPE_HASH = {
   [CHART_TYPES.SUNBURST]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.FORCE_DIRECTED_TREE]: STRUCTURE_TYPES.SUMMARIZED_TREE,
   // [CHART_TYPES.TIDY_TREE]: STRUCTURE_TYPES.SUMMARIZED_TREE,
-  [CHART_TYPES.TIDY_TREE]: STRUCTURE_TYPES.WEIGHTED_TREE,
+  [CHART_TYPES.TIDY_TREE]: STRUCTURE_TYPES.SUMMARIZED_TREE,
   [CHART_TYPES.ZOOMABLE_SUNBURST]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.BUBBLE_CHART]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.RADIAL_CLUSTER]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.SEQUENCES_SUNBURST]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.SIMPLE_PACKED_CIRCLE]: STRUCTURE_TYPES.WEIGHTED_TREE,
   [CHART_TYPES.GRID]: STRUCTURE_TYPES.WEIGHTED_TREE,
+  [CHART_TYPES.MLDLC]: STRUCTURE_TYPES.SUMMARIZED_TREE,
+  [CHART_TYPES.SDLC]: STRUCTURE_TYPES.SUMMARIZED_TREE
 };
 
 export const CHART_TYPE_TO_BUILDER_HASH = {
@@ -73,6 +86,8 @@ export const CHART_TYPE_TO_BUILDER_HASH = {
   [CHART_TYPES.SEQUENCES_SUNBURST]: buildSequencesSunburst,
   [CHART_TYPES.SIMPLE_PACKED_CIRCLE]: buildSimplePackedCircle,
   [CHART_TYPES.GRID]: buildGrid,
+  [CHART_TYPES.MLDLC]: buildMldlc,
+  [CHART_TYPES.SDLC]: buildSdlc,
 };
 
 export const getChartSvgBuilder = (chartType) => {
@@ -94,12 +109,14 @@ export const CHART_TYPES_LIST = [
   { id: "tidy-tree", description: "Tidy Tree", in_progress: false },
   { id: "radial-cluster", description: "Radial Cluster", in_progress: false },
   { id: "packed-circle", description: "Packed Circles", in_progress: false },
-  {
-    id: "simple-packed-circle",
-    description: "Simple Packed Circle",
-    in_progress: true,
-  },
-  { id: "sunburst", description: "Sunburst", in_progress: true },
+  { id: "mldlc", description: "MLDLC", in_progress: true },
+  { id: "sdlc", description: "SDLC", in_progress: true },
+  // {
+  //   id: "simple-packed-circle",
+  //   description: "Simple Packed Circle",
+  //   in_progress: true,
+  // },
+  // { id: "sunburst", description: "Sunburst", in_progress: true },
   {
     id: "force-directed-tree",
     description: "Force directed tree",
@@ -110,13 +127,13 @@ export const CHART_TYPES_LIST = [
     description: "Zoomable Sunburst",
     in_progress: true,
   },
-  { id: "bubble-chart", description: "Bubble Chart", in_progress: true },
-  {
-    id: "sequences-sunburst",
-    description: "Sequences Sunburst",
-    in_progress: true,
-  },
-  { id: "grid", description: "Grid", in_progress: true },
+  // { id: "bubble-chart", description: "Bubble Chart", in_progress: true },
+  // {
+  //   id: "sequences-sunburst",
+  //   description: "Sequences Sunburst",
+  //   in_progress: true,
+  // },
+  // { id: "grid", description: "Grid", in_progress: true },
 ];
 
 // const DATA_SRC_HASH = {
@@ -127,14 +144,16 @@ export const CHART_TYPES_LIST = [
 export const CHART_TYPE_RGB_COLOR_HASH = {
   "nested-treemap": "rgb(255, 238, 121)",
   "tidy-tree": "rgb(216, 239, 251)",
-  "radial-cluster": "rgb(153, 86, 135)",
+  "radial-cluster": "rgb(182, 139, 199)",
   "packed-circle": "rgb(91, 142, 145)",
   sunburst: "rgb(249, 85, 88)",
-  "force-directed-tree": "rgb(133, 87, 3)",
-  "zoomable-sunburst": "rgb(93, 217, 120)",
+  "force-directed-tree": "rgb(242, 211, 124)",
+  "zoomable-sunburst": "rgb(94, 167, 181)",
   "bubble-chart": "rgb(155, 119, 191)",
   "sequences-sunburst": "rgb(242, 211, 124)",
   "simple-packed-circle": "rgb(174, 201, 155)",
+  "sdlc": "rgb(148, 235, 161)",
+  "mldlc": "rgb(132, 196, 167)",
 };
 
 export const CHARTS_SUPPORTING_FILTERS = [

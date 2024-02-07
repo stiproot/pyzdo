@@ -1,5 +1,8 @@
 FROM couchbase:latest
 
+# VOLUME /opt/couchbase/var/lib/couchbase
+# VOLUME_IF_NECESSARY /opt/couchbase/var/lib/couchbase/index
+
 COPY init-init-cluster.sh /opt/couchbase/init-init-cluster.sh
 COPY init-create-bucket.sh /opt/couchbase/init-create-bucket.sh
 COPY init-create-scope.sh /opt/couchbase/init-create-scope.sh

@@ -7,6 +7,26 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+# todo: epics under epics is a thing...
+child_collection_hash = {
+    "Programme": ["medium_projects"],
+    "Initiative": ["epics"],
+    "Medium Project": ["epics"],
+    "Epic": ["features", "epics"],
+    "Feature": ["user_stories"],
+    "User Story": ["tasks", "bugs", "impediments"],
+    "Task": []
+}
+
+def get_child_node(get_raw_node_fn, relation_id, unit_of_work_type):
+    child_types = child_collection_hash[unit_of_work_type]
+    for child_type in child_types:
+        raw_child_node = get_raw_node_fn(relation_id, child_type)
+        if not raw_child_node:
+            logging.warning(f"Could not find child node. Node id: {relation_id}, type: {child_type}. Moving onto the next child type.")
+            continue
+        return raw_child_node
+    return None
 
 def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict:
     summary = {}
@@ -21,12 +41,6 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
         value = None
         defaulted = False
         if prop["is_path"]:
-            # value = get_nested_property(
-            #     data=raw_node,
-            #     keys=prop["src_prop_path"],
-            #     delimiter=prop["path_separator"],
-            #     default=prop["default"],
-            # )
             value, _defaulted = get_nested_property_with_default(
                 data=raw_node,
                 keys=prop["src_prop_path"],
@@ -93,20 +107,11 @@ def summarize_node(raw_node: dict, prop_rule_map: list, get_raw_node_fn) -> dict
             parent_id = relation_id
 
         if relation_type == "child":
-            child_type = ""
             unit_of_work_type = summary["type"]
-            if unit_of_work_type == "Initiative":
-                child_type = "epics"
-            elif unit_of_work_type == "Epic":
-                child_type = "features"
-            elif unit_of_work_type == "Feature":
-                child_type = "user_stories"
-            else:
-                child_type = "tasks"
 
-            raw_child_node = get_raw_node_fn(relation_id, child_type)
+            raw_child_node = get_child_node(get_raw_node_fn, relation_id, unit_of_work_type)
             if not raw_child_node:
-                logging.debug(f"Could not find child node. Node id: {relation_id}")
+                logging.warning(f"Could not find child node. Node id: {relation_id}.")
                 continue
 
             child_summary = summarize_node(

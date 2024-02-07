@@ -22,6 +22,12 @@ const findTrgtCollection = (data) => {
   if (data.indexOf("Bug") > -1) {
     return "bugs";
   }
+  if (data.indexOf("Programme") > -1) {
+    return "programmes";
+  }
+  if (data.indexOf("Medium Project") > -1) {
+    return "medium_projects";
+  }
 
   return "unknown";
 };

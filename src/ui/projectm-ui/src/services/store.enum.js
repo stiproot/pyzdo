@@ -17,4 +17,6 @@ export const COLLECTIONS = {
   WEIGHTED_TREES: "weighted_trees",
   PROCESSES: "processes",
   PROJECTS: "projects",
+  PROGRAMMES: "programmes",
+  MEDIUM_PROJECTS: "medium_projects",
 };

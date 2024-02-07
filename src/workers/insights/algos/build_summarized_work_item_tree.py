@@ -1,4 +1,5 @@
 from .summarize import summarize_node
+from .enrichers import enrich_tree_recurs, enrich_with_perc_complete
 
 field_map = [
     {
@@ -93,5 +94,8 @@ def build_summarized_work_item_tree(
     summary = summarize_node(
         raw_node=node, prop_rule_map=field_map, get_raw_node_fn=get_raw_node_fn
     )
+
+    enrich_tree_recurs(summary)
+    enrich_with_perc_complete(summary)
 
     return summary

@@ -1,107 +1,163 @@
 import * as d3 from "d3";
 
-const percs = (d) => {
-  // % of children complete
-  let percChildrenCompleted = null;
-  if (d.children && d.children.length > 0) {
-    const completed = d.children.filter((c) => c.state === "Closed");
-    const perc = (completed.length / d.children.length) * 100;
-    percChildrenCompleted = `Children Complete: ${Math.floor(perc)}%`;
-  }
+function calcPercComplete(node) {
 
-  // % effort
-  let percEffort = null;
-  if ((d.completed_work && d.completed_work > 0) || d.state === "Closed") {
-    percEffort = `Effort Complete: ${100}%`;
+  if (node.children.length === 0) {
+    node.percentComplete = node.state === "Closed" ? 100 : 0;
   } else {
-    const numerator = d.remaining_work < 0 ? 0 : d.remaining_work;
-    const denominator = d.original_estimate < 0 ? 0 : d.original_estimate;
 
-    if (denominator === 0 || numerator === 0) {
-      percEffort = `Effort Complete: ${0}%`;
-    } else {
-      const perc = (numerator / denominator) * 100;
-      percEffort = `Effort Complete: ${Math.floor(perc)}%`;
+    let totalChildren = node.children.length;
+
+    let numerator = 0;
+    const denominator = totalChildren * 100;
+
+    // for (const child of node.children) {
+    //   calcPercComplete(child);
+    //   if (child.percentComplete === 100) {
+    //     completedChildren++;
+    //   }
+    // }
+
+    for (const child of node.children) {
+      calcPercComplete(child);
+
+      if (child.percentComplete !== undefined) {
+        numerator += child.percentComplete;
+      }
     }
-  }
 
-  return [percChildrenCompleted, percEffort];
+    // node.percentComplete = (completedChildren / totalChildren) * 100;
+    node.percentComplete = numerator / denominator * 100;
+  }
+}
+
+const enrichWithDisplays = (n) => {
+  n.display_lines = [];
+  n.display_lines.push(
+    `ID: ${n.id}`, 
+    `Title: ${n.title}`, 
+    `Type: ${n.type}`, 
+    `State: ${n.state}`, 
+    `Complete: ${Math.floor(n.percentComplete)}%` 
+  );
+
+  for (const d of n.children) {
+    enrichWithDisplays(d);
+  }
 };
 
-const displays = (d) => {
-  const lines = [`ID: ${d.id}`, `Title: ${d.title}`];
+// const percs = (d) => {
+//   // % of children complete
+//   let percChildrenCompleted = null;
+//   if (d.children && d.children.length > 0) {
+//     const completed = d.children.filter((c) => c.state === "Closed");
+//     const perc = (completed.length / d.children.length) * 100;
+//     percChildrenCompleted = `Children Complete: ${Math.floor(perc)}%`;
+//   }
 
-  const percentages = percs(d);
-  if (!percentages) {
-    console.warn("no percentages");
-  } else {
-    for (const p of percentages) {
-      if (p) lines.push(p);
-    }
-  }
+//   // % effort
+//   let percEffort = null;
+//   if ((d.completed_work && d.completed_work > 0) || d.state === "Closed") {
+//     percEffort = `Effort Complete: ${100}%`;
+//   } else {
+//     const numerator = d.remaining_work < 0 ? 0 : d.remaining_work;
+//     const denominator = d.original_estimate < 0 ? 0 : d.original_estimate;
 
-  if (d.type === "Task") {
-    lines.push(
-      `Remaining Work: ${
-        d.completed_work && d.completed_work > 0
-          ? "0 hours"
-          : d.remaining_work >= 0
-          ? `${d.remaining_work} hours`
-          : "unspecified"
-      }`
-    );
-    lines.push(
-      `Original Estimate: ${
-        d.original_estimate > 0 ? `${d.original_estimate} hours` : "unspecified"
-      }`
-    );
-  }
+//     if (denominator === 0 || numerator === 0) {
+//       percEffort = `Effort Complete: ${0}%`;
+//     } else {
+//       const perc = (numerator / denominator) * 100;
+//       percEffort = `Effort Complete: ${Math.floor(perc)}%`;
+//     }
+//   }
 
-  lines.push(`Assigned To: ${d.assigned_to}`);
-  lines.push(`State: ${d.state}`);
+//   return [percChildrenCompleted, percEffort];
+// };
 
-  d.display_lines = lines;
-};
+// const displays = (d) => {
+//   const lines = [`ID: ${d.id}`, `Title: ${d.title}`];
 
-export const enrich = (n) => {
-  (n.children ?? []).forEach((c) => enrich(c));
+//   const percentages = percs(d);
+//   if (!percentages) {
+//     console.warn("no percentages");
+//   } else {
+//     for (const p of percentages) {
+//       if (p) lines.push(p);
+//     }
+//   }
 
-  if (n.type === "Task") {
-    displays(n);
-    return;
-  }
+//   if (d.type === "Task") {
+//     lines.push(
+//       `Remaining Work: ${
+//         d.completed_work && d.completed_work > 0
+//           ? "0 hours"
+//           : d.remaining_work >= 0
+//           ? `${d.remaining_work} hours`
+//           : "unspecified"
+//       }`
+//     );
+//     lines.push(
+//       `Original Estimate: ${
+//         d.original_estimate > 0 ? `${d.original_estimate} hours` : "unspecified"
+//       }`
+//     );
+//   }
 
-  const remaining_work = n.children.reduce((acc, c) => {
-    return acc + (c.remaining_work ?? 0);
-  }, 0);
+//   lines.push(`Assigned To: ${d.assigned_to}`);
+//   lines.push(`State: ${d.state}`);
 
-  n.remaining_work = remaining_work;
+//   d.display_lines = lines;
+// };
 
-  const original_estimate = n.children.reduce((acc, c) => {
-    return acc + (c.original_estimate ?? 0);
-  }, 0);
+// export const enrich = (n) => {
 
-  n.original_estimate = original_estimate;
+//   (n.children ?? []).forEach((c) => enrich(c));
 
-  displays(n);
+//   if (n.type === "Task") {
+//     displays(n);
+//     return;
+//   }
+
+//   const remaining_work = n.children.reduce((acc, c) => {
+//     return acc + (c.remaining_work ?? 0);
+//   }, 0);
+
+//   n.remaining_work = remaining_work;
+
+//   const original_estimate = n.children.reduce((acc, c) => {
+//     return acc + (c.original_estimate ?? 0);
+//   }, 0);
+
+//   n.original_estimate = original_estimate;
+
+//   displays(n);
+// };
+
+const WORK_ITEM_TYPE_COLOR_HASH = {
+  "Task": "#c7a148",
+  "User Story": "#0078D7",
+  "Feature": "#6d42bd",
+  "Epic": "#bd6342",
+  "Initiative": "#3439cf",
+  "Medium Project": "#2fc0f5",
+  "Programme": "#b9c2c9"
 };
 
 export function buildPackedCircleSvg(data) {
-  enrich(data);
+
+  console.log(data);
+
+  calcPercComplete(data);
+  enrichWithDisplays(data);
+  // enrich(data);
 
   const width = window.innerWidth;
   const height = width;
 
   const color = (d) => {
     if (!d) return "#ffffff";
-
     const type = d.data.type;
-    if (type === "Task") return "#c7a148";
-    if (type === "User Story") return "#0078D7";
-    if (type === "Feature") return "#6d42bd";
-    if (type === "Epic") return "#bd6342";
-    if (type === "Initiative") return "#3439cf";
-    return "#ffffff";
+    return WORK_ITEM_TYPE_COLOR_HASH[type] ?? "#ffffff";
   };
 
   const pack = (data) =>
@@ -147,53 +203,6 @@ export function buildPackedCircleSvg(data) {
       "click",
       (event, d) => focus !== d && (zoom(event, d), event.stopPropagation())
     );
-
-  // const perc = (d) => {
-  //   if (
-  //     (d.data.completed_work && d.data.completed_work > 0) ||
-  //     d.data.state === "Closed"
-  //   )
-  //     return 100;
-  //   const numerator = d.data.remaining_work < 0 ? 0 : d.data.remaining_work;
-  //   const denominator =
-  //     d.data.original_estimate < 0 ? 0 : d.data.original_estimate;
-
-  //   if (denominator === 0 || numerator === 0) return 0;
-
-  //   const perc = (numerator / denominator) * 100;
-  //   return perc;
-  // };
-
-  // const textRows = (d) => {
-  //   const percentageComplete = `Complete: ${Math.floor(perc(d))}%`;
-
-  //   const lines = [`ID: ${d.data.id}`, `Title: ${d.data.title}`];
-  //   if (percentageComplete) lines.push(percentageComplete);
-
-  //   if (d.data.type === "Task") {
-  //     lines.push(
-  //       `Remaining Work: ${
-  //         d.data.completed_work && d.data.completed_work > 0
-  //           ? "0 hours"
-  //           : d.data.remaining_work >= 0
-  //           ? `${d.data.remaining_work} hours`
-  //           : "unspecified"
-  //       }`
-  //     );
-  //     lines.push(
-  //       `Original Estimate: ${
-  //         d.data.original_estimate > 0
-  //           ? `${d.data.original_estimate} hours`
-  //           : "unspecified"
-  //       }`
-  //     );
-  //   }
-
-  //   lines.push(d.data.assigned_to);
-  //   // lines.push(riskImpact);
-
-  //   return lines;
-  // };
 
   // Append the text labels.
   const label = svg

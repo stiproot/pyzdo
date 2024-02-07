@@ -112,7 +112,7 @@ export default {
   name: "QueryComponent",
   components: { BtnComponent, InfiniteScrollComponent },
   setup() {
-    const PROJECT_METRICS_TAG = "Project Metrics";
+    // const PROJECT_METRICS_TAG = "Project Metrics";
     const store = useQueryStore();
     const provider = new QueryProvider(store);
     const { name, ql, isValid } = provider;
@@ -144,9 +144,9 @@ export default {
 
       const tagsArr = tags.value.split(";");
 
-      if (!tagsArr.includes(PROJECT_METRICS_TAG)) {
-        tagsArr.push(PROJECT_METRICS_TAG);
-      }
+      // if (!tagsArr.includes(PROJECT_METRICS_TAG)) {
+      //   tagsArr.push(PROJECT_METRICS_TAG);
+      // }
 
       const idsArr = extractIdsFromQl();
       const idsPred = buildIdsPredicate(idsArr);

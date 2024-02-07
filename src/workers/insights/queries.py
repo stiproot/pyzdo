@@ -13,23 +13,27 @@ couchbase_http_client = CouchbaseHttpClient(base_url=STORE_QUERY_URL)
 
 
 COLLECTIONS = [
+    "programmes",
+    "medium_projects",
     "initiatives",
     "epics",
     "features",
     "user_stories",
     "tasks",
     "bugs",
-    "impediments",
+    "impediments"
 ]
 
 WORK_ITEM_TYPE_COLLECTION_HASH = {
+    "Programme": "programmes",
+    "Medium Project": "medium_projects",
     "Initiative": "initiatives",
     "Epic": "epics",
     "Feature": "features",
     "User Story": "user_stories",
     "Task": "tasks",
     "Bug": "bugs",
-    "Impediment": "impediments",
+    "Impediment": "impediments"
 }
 
 

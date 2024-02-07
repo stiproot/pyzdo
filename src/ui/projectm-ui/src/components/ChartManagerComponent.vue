@@ -16,24 +16,6 @@
       @click="handleCloseClick"
     />
   </FabActionComponent>
-
-  <!--q-layout view="lHh Lpr lFf" v-if="showChart">
-    <q-drawer v-model="leftDrawerOpen" show-if-above side="left">
-      <ListComponent />
-    </q-drawer>
-
-    <q-page-container>
-      <router-view></router-view>
-      <FabActionComponent>
-        <BtnComponent
-          icon="close"
-          color="secondary"
-          v-if="showChart"
-          @click="handleCloseClick"
-        />
-      </FabActionComponent>
-    </q-page-container>
-  </q-layout-->
 </template>
 <script>
 import { ref, computed, onMounted } from "vue";
@@ -42,7 +24,6 @@ import { NavigationService } from "@/services/navigation.service";
 import ItemSelectorComponent from "./ItemSelectorComponent.vue";
 import FabActionComponent from "./FabActionComponent.vue";
 import BtnComponent from "./BtnComponent.vue";
-// import ListComponent from "./ListComponent.vue";
 import {
   CHART_TYPES_LIST,
   CHART_TYPE_RGB_COLOR_HASH,
@@ -54,18 +35,15 @@ export default {
     ItemSelectorComponent,
     FabActionComponent,
     BtnComponent,
-    // ListComponent,
   },
   setup() {
     const router = useRouter();
     const nav = new NavigationService(router);
-    // const leftDrawerOpen = ref(true);
 
     const enrichData = (data) => {
       data.forEach((c) => {
         c.color = CHART_TYPE_RGB_COLOR_HASH[c.id];
         c.icon = c.in_progress ? "construction" : null;
-        // c.subTitle = c.id;
         c.actions = [
           {
             evtId: "item-click",
@@ -99,7 +77,6 @@ export default {
     });
 
     return {
-      // leftDrawerOpen,
       charts,
       handleChartClick,
       handleCloseClick,

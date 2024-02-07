@@ -102,7 +102,7 @@ export default {
         const procs = structures.value.map((i) => {
           return {
             id: generateGuid(),
-            display: i.id,
+            display: `Building ${i.display}`,
             project_id: nav.projId,
             status: PROCESS_STATUSES.RUNNING,
             cmd_type: CMD_TYPE_HASH[i.id],

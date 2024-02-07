@@ -34,6 +34,7 @@ const getters = {
         actions: [
           { evtId: "view-click", btnText: "view" },
           { evtId: "visuals-click", btnText: "visuals" },
+          { evtId: "actions-click", btnText: "actions" },
         ],
       };
     });

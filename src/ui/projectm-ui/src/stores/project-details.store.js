@@ -175,7 +175,7 @@ const getters = {
   [GETTERS.GET_ENRICHED_QUERIES]() {
     return this.queries.map((query) => ({
       ...query,
-      title: query.name,
+      description: query.name,
       actions: [
         {
           evtId: "item-click",

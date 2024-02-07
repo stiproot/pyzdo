@@ -1,7 +1,13 @@
 import * as d3 from "d3";
 import { handleNodeClick, getStateColor } from "./common.fns";
+// import { enrichWithAccumChildPercComplete } from "./enrichers";
 
 export function buildTidyTreeSvg(data) {
+
+  // enrichWithAccumChildPercComplete(data);
+
+  console.log(data);
+
   const width = window.innerWidth;
 
   // Compute the tree height; this approach will allow the height of the
@@ -80,7 +86,13 @@ export function buildTidyTreeSvg(data) {
     .attr("dy", "0.31em")
     .attr("x", (d) => (d.children ? -6 : 6))
     .attr("text-anchor", (d) => (d.children ? "end" : "start"))
-    .text((d) => [d.data.id, d.data.type, d.data.title])
+    .text((d) => [
+      d.data.id, 
+      d.data.type, 
+      d.data.title,
+      // `Complete: ${Math.floor(d.data.percentComplete)}%`
+      `Complete: ${d.data.perc_complete}%`
+    ])
     .clone(true)
     .lower()
     .attr("stroke", "white");

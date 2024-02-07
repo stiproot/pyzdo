@@ -28,6 +28,12 @@ curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
 	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.tasks'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
+	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.programmes'
+
+curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
+	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.medium_projects'
+
+curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
 	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.impediments'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \

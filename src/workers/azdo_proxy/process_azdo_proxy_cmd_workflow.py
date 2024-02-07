@@ -35,6 +35,10 @@ def process_azdo_proxy_cmd_workflow(cmd: RootCmd) -> int:
         resp = azdo_proxy_client.cloneWi(cmd_data)
     elif cmd_type == CmdTypes.CREATE_DASHBOARD:
         resp = azdo_proxy_client.createDashboard(cmd_data)
+    elif cmd_type == CmdTypes.UPDATE_UNIT_OF_WORK:
+        resp = azdo_proxy_client.updateWi(cmd_data)
+    elif cmd_type == CmdTypes.UPDATE_UNIT_OF_WORK_HIERARCHY:
+        resp = azdo_proxy_client.updateWiHierarchy(cmd_data)
     else:
         raise Exception("Unknown cmd_type")
 

@@ -4,6 +4,7 @@
       <q-tabs v-model="tab" vertical class="text-teal">
         <q-tab name="clone" icon="content_copy" label="" />
         <q-tab name="bulk" icon="add" label="" />
+        <q-tab name="update" icon="build" label="" />
       </q-tabs>
     </template>
 
@@ -21,6 +22,11 @@
           <CloneAzdoWiComponent />
         </q-tab-panel>
 
+        <q-tab-panel name="update">
+          <div class="text-h4 q-mb-md">Update</div>
+          <UpdateAzdoWiComponent />
+        </q-tab-panel>
+
         <q-tab-panel name="bulk">
           <div class="text-h4 q-mb-md">Bulk Create</div>
           <BulkCreateAzdoWisComponent />
@@ -34,11 +40,13 @@ import { watch, ref } from "vue";
 import { useRouter } from "vue-router";
 import CloneAzdoWiComponent from "./CloneAzdoWiComponent.vue";
 import BulkCreateAzdoWisComponent from "./BulkCreateAzdoWisComponent.vue";
+import UpdateAzdoWiComponent from "./UpdateAzdoWiComponent.vue";
 export default {
   name: "AzdoWiManagerComponent",
   components: {
     CloneAzdoWiComponent,
     BulkCreateAzdoWisComponent,
+    UpdateAzdoWiComponent
   },
   props: {
     tabId: {

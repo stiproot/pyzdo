@@ -20,6 +20,8 @@ workflow_hash = {
     CmdTypes.CREATE_DASHBOARD: process_azdo_proxy_cmd_workflow,
     CmdTypes.BULK_CREATE_UNITS_OF_WORK: process_azdo_proxy_cmd_workflow,
     CmdTypes.CLONE_UNIT_OF_WORK: process_azdo_proxy_cmd_workflow,
+    CmdTypes.UPDATE_UNIT_OF_WORK: process_azdo_proxy_cmd_workflow,
+    CmdTypes.UPDATE_UNIT_OF_WORK_HIERARCHY: process_azdo_proxy_cmd_workflow,
 }
 
 
