@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine as restore-build-publish
 
 WORKDIR /src
 
-COPY ./src/Azdo.Proxy.Api/. .
+COPY ./src/azdo_proxy_api/. .
 
 RUN dotnet restore .
 
@@ -18,4 +18,4 @@ COPY --from=restore-build-publish /publish /app
 
 USER $APP_UID
 
-ENTRYPOINT ["dotnet", "./Azdo.Proxy.Api.dll"]
+ENTRYPOINT ["dotnet", "./azdo_proxy_api.dll"]
