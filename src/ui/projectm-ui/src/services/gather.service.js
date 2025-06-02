@@ -46,7 +46,7 @@ const buildGatherCmd = (data) => {
       ],
     },
     store: {
-      trgt_bucket: "project_m",
+      trgt_bucket: "pyzdo",
       trgt_scope: "azdo",
       trgt_collection: findTrgtCollection(ql),
       key: processId,

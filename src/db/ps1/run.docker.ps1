@@ -11,7 +11,7 @@ Write-Host "img_name: $img_name"
 
 docker build -t $img_name .
 
-docker run --network mandy -d --name $name `
+docker run --network pyzdo -d --name $name `
     -p 8091-8097:8091-8097 `
     -p 9123:9123 `
     -p 11207:11207 `

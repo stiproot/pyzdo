@@ -1,5 +1,5 @@
 
-[project_m]
+[pyzdo]
     [azdo]
         [initiatives]
         [epics]

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyzdo-azdo-proxy-worker
+  namespace: pyzdo-dev
+  labels:
+    app: pyzdo-azdo-proxy-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pyzdo-azdo-proxy-worker
+  template:
+    metadata:
+      labels:
+        app: pyzdo-azdo-proxy-worker
+    spec:
+      containers:
+        - name: pyzdo-azdo-proxy-worker
+          image: pyzdo-azdo-proxy-worker:latest
+          imagePullPolicy: Never
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "kafka-service:9092"
+            - name: WORKER_TOPIC
+              value: "topic_projectm_cmd_azdo_proxy"
+            - name: GROUP_ID
+              value: "azdo_proxy_worker_001"
+            - name: PERSIST_TOPIC
+              value: "topic_projectm_cmd_persist"
+            - name: PERSIST_URL
+              value: "http://pyzdo-kafka-api:8004/kafka/topic/publish"
+            - name: AZDO_PROXY_BASE_URL
+              value: "http://pyzdo-azdo-proxy-api:5080"
+            - name: API_KEY
+              value: "xyz"
+            - name: STORE_QUERY_URL
+              value: "http://pyzdo-cb-api:8003/cb/qry"

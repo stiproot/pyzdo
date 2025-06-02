@@ -415,7 +415,7 @@ export const sample_data = [
                   "ProjectX",
                   "WICreationTool-Clone-230907",
                 ],
-                title: "Project Contributes to Derivco 5 Year Goal?",
+                title: "Project Contributes to Xo 5 Year Goal?",
                 type: "Task",
               },
             ],

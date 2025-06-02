@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyzdo-ui
+  namespace: pyzdo-dev
+  labels:
+    app: pyzdo-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pyzdo-ui
+  template:
+    metadata:
+      labels:
+        app: pyzdo-ui
+    spec:
+      containers:
+        - name: pyzdo-ui
+          image: pyzdo-ui:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          env:
+            - name: VUE_APP_AZDO_API_KEY
+              value: "xyz"
+            - name: VUE_APP_DEFAULT_QUERY_FOLDER
+              value: "Shared Queries/TeamZ"
+            - name: VUE_APP_UI_API_BASE_URL
+              value: "http://localhost:3004/ui-api"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ext-pyzdo-ui
+  namespace: pyzdo-dev
+spec:
+  selector:
+    app: pyzdo-ui
+  type: LoadBalancer
+  ports:
+    - name: port-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 80
+---

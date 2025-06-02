@@ -6,7 +6,7 @@
     "payload": {
         "cmd": {
             "cmd_type": "GATHER_PROJECT_UNITS_OF_WORK",
-            "ql": "SELECT [System.Title] FROM WorkItems WHERE [System.TeamProject] = 'Software' AND [System.WorkItemType] = 'User Story' AND [System.Tags] CONTAINS 'Feature' AND [System.Tags] CONTAINS 'ProjectTemplate' ORDER BY [System.Title]"
+            "ql": "SELECT [System.Title] FROM WorkItems WHERE [System.TeamProject] = 'XoProj' AND [System.WorkItemType] = 'User Story' AND [System.Tags] CONTAINS 'Feature' AND [System.Tags] CONTAINS 'ProjectTemplate' ORDER BY [System.Title]"
         },
         "metadata": {
             "project": {

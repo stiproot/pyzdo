@@ -1,4 +1,4 @@
-export const BUCKET = "project_m";
+export const BUCKET = "pyzdo";
 
 export const SCOPES = {
   DEFINITIONS: "definitions",

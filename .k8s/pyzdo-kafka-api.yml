@@ -1,0 +1,60 @@
+# pyzdo-kafka-api
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyzdo-kafka-api
+  namespace: pyzdo-dev
+  labels:
+    app: pyzdo-kafka-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pyzdo-kafka-api
+  template:
+    metadata:
+      labels:
+        app: pyzdo-kafka-api
+    spec:
+      containers:
+        - name: pyzdo-kafka-api
+          image: pyzdo-kafka-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8002
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "kafka-service:9092"
+            - name: CLIENT_ID
+              value: "pyzdo-kafka-api"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyzdo-kafka-api
+  namespace: pyzdo-dev
+spec:
+  selector:
+    app: pyzdo-kafka-api
+  type: ClusterIP
+  ports:
+    - name: port-8004
+      protocol: TCP
+      port: 8004
+      targetPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ext-pyzdo-kafka-api
+  namespace: pyzdo-dev
+spec:
+  selector:
+    app: pyzdo-kafka-api
+  type: LoadBalancer
+  ports:
+    - name: port-8006
+      protocol: TCP
+      port: 8006
+      targetPort: 8002
+---

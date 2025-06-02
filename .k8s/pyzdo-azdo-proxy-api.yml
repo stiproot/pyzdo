@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pyzdo-azdo-proxy-api
+  namespace: pyzdo-dev
+  labels:
+    app: pyzdo-azdo-proxy-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pyzdo-azdo-proxy-api
+  template:
+    metadata:
+      labels:
+        app: pyzdo-azdo-proxy-api
+    spec:
+      containers:
+        - name: pyzdo-azdo-proxy-api
+          image: pyzdo-azdo-proxy-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5079
+          env:
+            - name: PAT
+              value: "xyz"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyzdo-azdo-proxy-api
+  namespace: pyzdo-dev
+spec:
+  selector:
+    app: pyzdo-azdo-proxy-api
+  type: ClusterIP
+  ports:
+    - name: port-5080
+      protocol: TCP
+      port: 5080
+      targetPort: 5079
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ext-pyzdo-azdo-proxy-api
+  namespace: pyzdo-dev
+spec:
+  selector:
+    app: pyzdo-azdo-proxy-api
+  type: LoadBalancer
+  ports:
+    - name: port-5081
+      protocol: TCP
+      port: 5081
+      targetPort: 5079
+---

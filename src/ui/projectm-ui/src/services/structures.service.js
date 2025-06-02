@@ -31,7 +31,7 @@ const buildStructureCmd = (data) => {
       ],
     },
     store: {
-      trgt_bucket: "project_m",
+      trgt_bucket: "pyzdo",
       trgt_scope: "structures",
       trgt_collection: trgtCollection,
       key: id,

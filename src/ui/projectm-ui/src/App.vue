@@ -10,7 +10,7 @@
           aria-label="Menu"
           icon="menu"
         />
-        <q-toolbar-title>project_m(andy)</q-toolbar-title>
+        <q-toolbar-title>pyzdo(andy)</q-toolbar-title>
         <div>v0.0.2-beta</div>
       </q-toolbar>
     </q-header>
@@ -42,14 +42,14 @@
           clickable
           tag="a"
           target="_blank"
-          href="https://dev.azure.com/Derivco/Community/_git/project-m"
+          href="https://dev.azure.com/Xo/Community/_git/pyzdo"
         >
           <q-item-section avatar>
             <q-icon name="code" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Git</q-item-label>
-            <q-item-label caption>community/project-m</q-item-label>
+            <q-item-label caption>community/pyzdo</q-item-label>
           </q-item-section>
         </q-item>
 

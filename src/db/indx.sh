@@ -4,43 +4,43 @@ CLUSTER_USERNAME="root"
 CLUSTER_PASSWORD="R007__.."
 COUCHBASE_URL="http://127.0.0.1:8093/query/service"
 
-# curl -u root:R007__.. -v -X POST http://127.0.0.1:8093/query/service -d 'statement=CREATE PRIMARY INDEX ON project_m.definitions.projects'
+# curl -u root:R007__.. -v -X POST http://127.0.0.1:8093/query/service -d 'statement=CREATE PRIMARY INDEX ON pyzdo.definitions.projects'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.definitions.projects'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.definitions.projects'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.definitions.processes'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.definitions.processes'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.initiatives'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.initiatives'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.epics'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.epics'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.features'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.features'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.user_stories'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.user_stories'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.tasks'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.tasks'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.programmes'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.programmes'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.medium_projects'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.medium_projects'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.impediments'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.impediments'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.azdo.bugs'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.azdo.bugs'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.structures.summarized_trees'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.structures.summarized_trees'
 
 curl -u "$CLUSTER_USERNAME:$CLUSTER_PASSWORD" -v -X POST "$COUCHBASE_URL" \
-	-d 'statement=CREATE PRIMARY INDEX ON project_m.structures.weighted_trees'
+	-d 'statement=CREATE PRIMARY INDEX ON pyzdo.structures.weighted_trees'
